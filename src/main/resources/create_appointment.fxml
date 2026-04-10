@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Accordion?>
+<?import javafx.scene.control.TitledPane?>
+
+<VBox spacing="0" alignment="TOP_CENTER" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.hospitalmanagement.CreateAppointmentController" style="-fx-background-color: #f5f5f5;" prefWidth="950" prefHeight="720">
+    <children>
+        <!-- Header -->
+        <VBox alignment="CENTER" spacing="8" style="-fx-background-color: linear-gradient(to right, #00b3a6, #00d4c8); -fx-padding:25;">
+            <children>
+                <HBox alignment="CENTER" spacing="8">
+                    <children>
+                        <Label text="📅 Randevu Oluştur" style="-fx-font-size:28px; -fx-font-weight:bold; -fx-text-fill:white;" />
+                        <Label fx:id="selectedDoctorLabel" text="" style="-fx-font-size:20px; -fx-font-weight:bold; -fx-text-fill:#ffffcc;" />
+                    </children>
+                </HBox>
+                <Label fx:id="hospitalInfoLabel" text="" style="-fx-font-size:14px; -fx-text-fill:rgba(255,255,255,0.95);" />
+            </children>
+        </VBox>
+        
+        <!-- Main Content -->
+        <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS" style="-fx-background-color: transparent; -fx-background: transparent;">
+            <content>
+                <VBox spacing="20" style="-fx-padding:25;">
+                    <children>
+                        <!-- Filter Section -->
+                        <VBox spacing="15" style="-fx-background-color:white; -fx-background-radius:12; -fx-padding:20; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 10, 0, 0, 2);">
+                            <children>
+                                <Label text="🔍 Filtreleme" style="-fx-font-size:18px; -fx-font-weight:bold; -fx-text-fill:#00b3a6;" />
+                                
+                                <HBox spacing="15" alignment="CENTER_LEFT" fillHeight="true">
+                                    <children>
+                                        <VBox spacing="6" HBox.hgrow="ALWAYS" minWidth="0" prefWidth="100">
+                                            <Label text="Şehir" style="-fx-font-size:13px; -fx-text-fill:#555; -fx-font-weight:600;" />
+                                            <ComboBox fx:id="cityCombo" maxWidth="Infinity" minWidth="0" prefHeight="40" promptText="Şehir Seçin" style="-fx-font-size:14px; -fx-border-color:#d0d0d0; -fx-background-color:white; -fx-background-radius:8; -fx-border-radius:8; -fx-border-width:1.5;" />
+                                        </VBox>
+                                        <VBox spacing="6" HBox.hgrow="ALWAYS" minWidth="0" prefWidth="100">
+                                            <Label text="Hastane" style="-fx-font-size:13px; -fx-text-fill:#555; -fx-font-weight:600;" />
+                                            <ComboBox fx:id="hospitalCombo" maxWidth="Infinity" minWidth="0" prefHeight="40" promptText="Hastane Seçin" style="-fx-font-size:14px; -fx-border-color:#d0d0d0; -fx-background-color:white; -fx-background-radius:8; -fx-border-radius:8; -fx-border-width:1.5;" />
+                                        </VBox>
+                                        <VBox spacing="6" HBox.hgrow="ALWAYS" minWidth="0" prefWidth="100">
+                                            <Label text="Klinik" style="-fx-font-size:13px; -fx-text-fill:#555; -fx-font-weight:600;" />
+                                            <ComboBox fx:id="specialtyCombo" maxWidth="Infinity" minWidth="0" prefHeight="40" promptText="Klinik Seçin" style="-fx-font-size:14px; -fx-border-color:#d0d0d0; -fx-background-color:white; -fx-background-radius:8; -fx-border-radius:8; -fx-border-width:1.5;" />
+                                        </VBox>
+                                        <VBox spacing="6" HBox.hgrow="ALWAYS" minWidth="0" prefWidth="100">
+                                            <Label text="Doktor" style="-fx-font-size:13px; -fx-text-fill:#555; -fx-font-weight:600;" />
+                                            <ComboBox fx:id="doctorCombo" maxWidth="Infinity" minWidth="0" prefHeight="40" promptText="Doktor Seçin" style="-fx-font-size:14px; -fx-border-color:#d0d0d0; -fx-background-color:white; -fx-background-radius:8; -fx-border-radius:8; -fx-border-width:1.5;" />
+                                        </VBox>
+                                    </children>
+                                </HBox>
+                            </children>
+                        </VBox>
+                        
+                        <!-- Date Selection Tabs -->
+                        <VBox spacing="12" style="-fx-background-color:white; -fx-background-radius:12; -fx-padding:20; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 10, 0, 0, 2);">
+                            <children>
+                                <HBox alignment="CENTER_LEFT" spacing="10">
+                                    <children>
+                                        <Label text="📅 Tarih Seçimi" style="-fx-font-size:18px; -fx-font-weight:bold; -fx-text-fill:#00b3a6;" HBox.hgrow="ALWAYS" />
+                                        <Button fx:id="prevDateButton" text="◄" prefWidth="40" prefHeight="40" style="-fx-font-size:18px; -fx-font-weight:bold;" styleClass="btn-secondary" onAction="#scrollDatesPrevious" />
+                                        <Button fx:id="nextDateButton" text="►" prefWidth="40" prefHeight="40" style="-fx-font-size:18px; -fx-font-weight:bold;" styleClass="btn-secondary" onAction="#scrollDatesNext" />
+                                    </children>
+                                </HBox>
+                                <ScrollPane fx:id="dateScrollPane" fitToHeight="true" style="-fx-background-color: transparent; -fx-background: transparent;" pannable="true" hbarPolicy="NEVER">
+                                    <content>
+                                        <HBox fx:id="dateTabsContainer" spacing="10" style="-fx-padding:5;" />
+                                    </content>
+                                </ScrollPane>
+                            </children>
+                        </VBox>
+                        
+                        <!-- Time Slots Accordion -->
+                        <VBox spacing="12" VBox.vgrow="ALWAYS" style="-fx-background-color:white; -fx-background-radius:12; -fx-padding:20; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 10, 0, 0, 2);">
+                            <children>
+                                <Label text="🕐 Randevu Saati Seçimi" style="-fx-font-size:18px; -fx-font-weight:bold; -fx-text-fill:#00b3a6;" />
+                                <Label fx:id="selectedDateLabel" text="Lütfen yukarıdan bir tarih seçin" style="-fx-font-size:14px; -fx-text-fill:#666; -fx-font-style:italic;" />
+                                <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS" style="-fx-background-color: transparent; -fx-background: transparent;" pannable="true">
+                                    <content>
+                                        <Accordion fx:id="timeSlotsAccordion" style="-fx-background-color: transparent;">
+                                            <!-- Dynamically populated with TitledPane for each hour -->
+                                        </Accordion>
+                                    </content>
+                                </ScrollPane>
+                            </children>
+                        </VBox>
+                        
+                        <!-- Notes Section -->
+                        <VBox spacing="12" style="-fx-background-color:white; -fx-background-radius:12; -fx-padding:20; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 10, 0, 0, 2);">
+                            <children>
+                                <Label text="📝 Randevu Notları (İsteğe Bağlı)" style="-fx-font-size:16px; -fx-text-fill:#00b3a6; -fx-font-weight:600;" />
+                                <TextArea fx:id="notesArea" prefRowCount="3" wrapText="true" promptText="Randevunuzla ilgili özel notlar veya taleplerinizi buraya yazabilirsiniz..." style="-fx-font-size:14px; -fx-border-color:#d0d0d0; -fx-border-radius:8; -fx-background-radius:8; -fx-border-width:1.5; -fx-padding:10;" />
+                            </children>
+                        </VBox>
+                        
+                        <!-- Action Buttons -->
+                        <HBox spacing="15" alignment="CENTER" style="-fx-padding:10 0 10 0;">
+                            <children>
+                                <Button fx:id="createButton" onAction="#handleCreate" text="✓ Randevu Oluştur" prefWidth="240" prefHeight="50" style="-fx-background-color: linear-gradient(to bottom, #00d4c8, #00b3a6); -fx-text-fill:white; -fx-font-size:17px; -fx-font-weight:bold; -fx-background-radius:25; -fx-cursor:hand; -fx-effect: dropshadow(gaussian, rgba(0,179,166,0.3), 8, 0, 0, 3);" />
+                                <Button fx:id="closeButton" onAction="#handleClose" text="✕ Kapat" prefWidth="180" prefHeight="50" style="-fx-background-color:white; -fx-border-color:#d0d0d0; -fx-border-width:2; -fx-text-fill:#666; -fx-font-size:17px; -fx-background-radius:25; -fx-border-radius:25; -fx-cursor:hand;" />
+                            </children>
+                        </HBox>
+                    </children>
+                </VBox>
+            </content>
+        </ScrollPane>
+    </children>
+</VBox>

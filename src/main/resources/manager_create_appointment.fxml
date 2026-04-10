@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+
+<ScrollPane fitToWidth="true" fitToHeight="true" 
+    xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+    fx:controller="com.hospitalmanagement.ManagerCreateAppointmentController"
+    style="-fx-background-color: #f8f9fa; -fx-border-color: transparent;">
+    <content>
+<VBox maxWidth="-Infinity" minWidth="-Infinity" prefWidth="900.0"
+    style="-fx-background-color: #f8f9fa; -fx-padding: 20;" spacing="15">
+
+    <children>
+        <!-- Header -->
+        <HBox alignment="CENTER" spacing="10" style="-fx-background-color: linear-gradient(to right, #00b3a6, #00d4c8); -fx-background-radius: 12; -fx-padding: 15;">
+            <VBox alignment="CENTER_LEFT" HBox.hgrow="ALWAYS" spacing="5">
+                <Label text="Hasta Adına Randevu Oluştur" textFill="WHITE" style="-fx-font-size: 20px; -fx-font-weight: bold;"/>
+                <Label fx:id="selectedDoctorLabel" text="Doktor: -" textFill="#ecf0f1" style="-fx-font-size: 13px;"/>
+                <Label fx:id="hospitalInfoLabel" text="Hastane: -" textFill="#ecf0f1" style="-fx-font-size: 13px;"/>
+            </VBox>
+        </HBox>
+
+        <HBox spacing="15" VBox.vgrow="ALWAYS">
+            <!-- Left Column -->
+            <VBox spacing="15" HBox.hgrow="ALWAYS" maxWidth="Infinity">
+                <!-- Patient Selection Section -->
+                <VBox spacing="10" style="-fx-background-color: white; -fx-background-radius: 12; -fx-padding: 15; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 8, 0, 0, 2);">
+                    <Label text="👤 Hasta Seçimi" style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #00b3a6;"/>
+                    <Separator/>
+                    <VBox spacing="10">
+                        <HBox spacing="10" alignment="CENTER_LEFT">
+                             <TextField fx:id="patientSearchField" promptText="Hasta adı" HBox.hgrow="ALWAYS" prefHeight="35" style="-fx-font-size: 13px;"/>
+                             <Button text="🔍 Ara" onAction="#searchPatient" prefHeight="35" style="-fx-padding: 5 15; -fx-font-size: 13px;" styleClass="btn-secondary"/>
+                        </HBox>
+                        <HBox spacing="10" alignment="CENTER_LEFT">
+                            <Label text="Seçili:" style="-fx-font-weight: 600; -fx-font-size: 13px;"/>
+                            <Label fx:id="selectedPatientLabel" text="-" style="-fx-text-fill: #333; -fx-font-size: 13px; -fx-font-weight: bold;"/>
+                        </HBox>
+                    </VBox>
+                </VBox>
+
+                <!-- Filter Section -->
+                <VBox spacing="10" style="-fx-background-color: white; -fx-background-radius: 12; -fx-padding: 15; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 8, 0, 0, 2);">
+                    <Label text="🔍 Filtrele" style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #00b3a6;"/>
+                    <Separator/>
+                    <GridPane hgap="10" vgap="10">
+                        <columnConstraints>
+                            <ColumnConstraints hgrow="ALWAYS" percentWidth="50"/>
+                            <ColumnConstraints hgrow="ALWAYS" percentWidth="50"/>
+                        </columnConstraints>
+                        
+                        <VBox spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                            <Label text="Şehir:" style="-fx-font-weight: 600; -fx-font-size: 12px;"/>
+                            <ComboBox fx:id="cityCombo" promptText="Şehir" maxWidth="Infinity" prefHeight="35" style="-fx-font-size: 12px;"/>
+                        </VBox>
+                        <VBox spacing="5" GridPane.columnIndex="1" GridPane.rowIndex="0">
+                            <Label text="Uzmanlık:" style="-fx-font-weight: 600; -fx-font-size: 12px;"/>
+                            <ComboBox fx:id="specialtyCombo" promptText="Uzmanlık" maxWidth="Infinity" prefHeight="35" style="-fx-font-size: 12px;"/>
+                        </VBox>
+                        <VBox spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="1">
+                            <Label text="Hastane:" style="-fx-font-weight: 600; -fx-font-size: 12px;"/>
+                            <ComboBox fx:id="hospitalCombo" promptText="Hastane" maxWidth="Infinity" prefHeight="35" style="-fx-font-size: 12px;"/>
+                        </VBox>
+                        <VBox spacing="5" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                            <Label text="Doktor:" style="-fx-font-weight: 600; -fx-font-size: 12px;"/>
+                            <ComboBox fx:id="doctorCombo" promptText="Doktor" maxWidth="Infinity" prefHeight="35" style="-fx-font-size: 12px;"/>
+                        </VBox>
+                    </GridPane>
+                </VBox>
+                
+                <!-- Notes -->
+                <VBox spacing="10" style="-fx-background-color: white; -fx-background-radius: 12; -fx-padding: 15; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 8, 0, 0, 2);" VBox.vgrow="ALWAYS">
+                    <Label text="📝 Notlar" style="-fx-font-size: 16px; -fx-font-weight: 600; -fx-text-fill: #333;"/>
+                    <TextArea fx:id="notesArea" promptText="Notlar..." prefHeight="60" wrapText="true" style="-fx-font-size: 13px;" VBox.vgrow="ALWAYS"/>
+                </VBox>
+            </VBox>
+
+            <!-- Right Column -->
+            <VBox spacing="15" HBox.hgrow="ALWAYS" maxWidth="Infinity">
+                <!-- Date Selection -->
+                <VBox spacing="10" style="-fx-background-color: white; -fx-background-radius: 12; -fx-padding: 15; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 8, 0, 0, 2);">
+                    <Label text="📅 Tarih Seçimi" style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #00b3a6;"/>
+                    <Separator/>
+                    <ScrollPane fitToHeight="true" prefHeight="60" style="-fx-background-color: transparent; -fx-border-color: transparent;">
+                        <HBox fx:id="dateTabsContainer" spacing="10" style="-fx-padding: 5;" alignment="CENTER_LEFT"/>
+                    </ScrollPane>
+                </VBox>
+
+                <!-- Time Slots -->
+                <VBox spacing="10" style="-fx-background-color: white; -fx-background-radius: 12; -fx-padding: 15; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 8, 0, 0, 2);" VBox.vgrow="ALWAYS">
+                    <HBox alignment="CENTER_LEFT" spacing="10">
+                        <Label text="⏰ Saat Seçimi" style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #00b3a6;"/>
+                        <Label fx:id="selectedDateLabel" text="Tarih ve saat seçiniz" style="-fx-font-size: 12px; -fx-text-fill: #666; -fx-font-style: italic;"/>
+                    </HBox>
+                    <Separator/>
+                    <ScrollPane fitToWidth="true" style="-fx-background-color: transparent; -fx-border-color: #e0e0e0; -fx-border-radius: 8;" VBox.vgrow="ALWAYS">
+                        <Accordion fx:id="timeSlotsAccordion" style="-fx-padding: 5;"/>
+                    </ScrollPane>
+                </VBox>
+            </VBox>
+        </HBox>
+
+        <!-- Action Buttons -->
+        <HBox alignment="CENTER" spacing="20" style="-fx-padding: 5 0 0 0;">
+            <Button fx:id="createButton" text="✓ Randevu Oluştur" onAction="#handleCreate" disable="true"
+                    prefHeight="40" prefWidth="180"
+                    style="-fx-background-color: linear-gradient(#00b3a6, #009988); -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14px; -fx-background-radius: 10; -fx-cursor: hand;"/>
+            <Button fx:id="closeButton" text="✗ İptal" onAction="#handleClose"
+                    prefHeight="40" prefWidth="120"
+                    style="-fx-background-color: #e0e0e0; -fx-text-fill: #333; -fx-font-weight: bold; -fx-font-size: 14px; -fx-background-radius: 10; -fx-cursor: hand;"/>
+        </HBox>
+    </children>
+</VBox>
+    </content>
+</ScrollPane>
