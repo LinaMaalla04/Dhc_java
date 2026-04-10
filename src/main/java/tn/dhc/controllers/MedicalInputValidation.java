@@ -169,74 +169,7 @@ public final class MedicalInputValidation {
         String b = canonicalGraviteLabel(filterSelection);
         return !a.isEmpty() && a.equals(b);
     }
-
-    public static List<FieldIssue> collectFicheIssues(String poids, String taille, String glycemie,
-                                                      String libelle, String gravite, String recommandation,
-                                                      String allergie, String maladieChronique, String tension,
-                                                      String grpSanguin, LocalDate dateFiche) {
-        List<FieldIssue> issues = new ArrayList<>();
-        if (libelle == null || libelle.isBlank()) {
-            issues.add(new FieldIssue("libelle", "Le libellé de la maladie est obligatoire."));
-        } else {
-            if (libelle.trim().length() < 2) {
-                issues.add(new FieldIssue("libelle", "Le libellé doit contenir au moins 2 caractères."));
-            }
-            if (libelle.length() > 200) {
-                issues.add(new FieldIssue("libelle", "Le libellé ne doit pas dépasser 200 caractères."));
-            }
-        }
-        if (!isValidGravite(gravite)) {
-            issues.add(new FieldIssue("gravite", "La gravité doit être Faible, Modérée ou Élevée."));
-        }
-        if (recommandation != null && recommandation.length() > 2000) {
-            issues.add(new FieldIssue("recommandation", "Les recommandations ne doivent pas dépasser 2000 caractères."));
-        }
-        if (allergie != null && allergie.length() > 500) {
-            issues.add(new FieldIssue("allergie", "Le champ allergies ne doit pas dépasser 500 caractères."));
-        }
-        if (maladieChronique != null && maladieChronique.length() > 500) {
-            issues.add(new FieldIssue("chronique", "La maladie chronique ne doit pas dépasser 500 caractères."));
-        }
-        if (tension != null && !tension.isBlank()) {
-            String t = tension.trim();
-            if (t.length() > 40) {
-                issues.add(new FieldIssue("tension", "La tension ne doit pas dépasser 40 caractères (ex. 120/80)."));
-            } else if (t.length() < 2) {
-                issues.add(new FieldIssue("tension", "La tension doit contenir au moins 2 caractères ou rester vide."));
-            }
-        }
-        if (grpSanguin != null && !grpSanguin.isBlank()) {
-            String g = grpSanguin.trim();
-            if (g.length() > 12) {
-                issues.add(new FieldIssue("grpSanguin", "Le groupe sanguin ne doit pas dépasser 12 caractères."));
-            }
-        }
-
-        Double po = parseOptionalDouble(poids, "poids", "Le poids est obligatoire.", "Poids : nombre invalide.", issues);
-        Double ta = parseOptionalDouble(taille, "taille", "La taille est obligatoire.", "Taille : nombre invalide.", issues);
-        Double gl = parseOptionalDouble(glycemie, "glycemie", "La glycémie est obligatoire.", "Glycémie : nombre invalide.", issues);
-
-        if (po != null && (po < 2 || po > 400)) {
-            issues.add(new FieldIssue("poids", "Le poids doit être compris entre 2 et 400 kg."));
-        }
-        if (ta != null && (ta < 40 || ta > 260)) {
-            issues.add(new FieldIssue("taille", "La taille doit être comprise entre 40 et 260 cm."));
-        }
-        if (gl != null && (gl < 0.2 || gl > 50)) {
-            issues.add(new FieldIssue("glycemie", "La glycémie doit être comprise entre 0,2 et 50 (valeur clinique usuelle)."));
-        }
-        if (dateFiche != null) {
-            LocalDate min = LocalDate.of(1920, 1, 1);
-            LocalDate max = LocalDate.now().plusYears(1);
-            if (dateFiche.isBefore(min)) {
-                issues.add(new FieldIssue("date", "La date de la fiche ne peut pas être antérieure à 1920."));
-            }
-            if (dateFiche.isAfter(max)) {
-                issues.add(new FieldIssue("date", "La date de la fiche ne peut pas dépasser un an dans le futur."));
-            }
-        }
-        return issues;
-    }
+    
 
     private static Double parseOptionalDouble(String raw, String fieldId, String blankMsg, String badMsg,
                                               List<FieldIssue> issues) {
@@ -312,4 +245,17 @@ public final class MedicalInputValidation {
     }
 
     /** Messages uniques pour une boîte de dialogue (ordre conservé). */
-  
+    public static String formatIssueMessages(List<FieldIssue> issues) {
+        Set<String> seen = new LinkedHashSet<>();
+        StringBuilder sb = new StringBuilder();
+        for (FieldIssue i : issues) {
+            if (seen.add(i.message())) {
+                if (!sb.isEmpty()) {
+                    sb.append('\n');
+                }
+                sb.append("• ").append(i.message());
+            }
+        }
+        return sb.toString();
+    }
+}
