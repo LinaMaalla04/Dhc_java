@@ -103,37 +103,7 @@ public class Front {
         return (f.getLibelleMaladie() != null ? f.getLibelleMaladie() : "Fiche") + " · " + d;
     }
 
-    private void exportOrdonnanceToPdf(Ordonnance sel) {
-        User me = UserService.getCurrentUser();
-        if (me == null || patientOrdonnancesFlow == null) {
-            return;
-        }
-        Fiche fiche = ficheService.getOneById(sel.getFicheId());
-        if (fiche == null) {
-            alert(Alert.AlertType.ERROR, "Fiche liée introuvable.");
-            return;
-        }
-        List<Medicament> meds = ordonnanceService.findMedicamentsByOrdonnance(sel.getId());
-        User prescripteur = sel.getMedecinUserId() != null ? userService.getOneById(sel.getMedecinUserId()) : null;
-
-        FileChooser fc = new FileChooser();
-        fc.setTitle("Enregistrer l'ordonnance PDF");
-        fc.setInitialFileName("ordonnance-" + sel.getId() + ".pdf");
-        fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("PDF", "*.pdf"));
-        Stage stage = (Stage) patientOrdonnancesFlow.getScene().getWindow();
-        java.io.File file = fc.showSaveDialog(stage);
-        if (file == null) {
-            return;
-        }
-        Path path = file.toPath();
-        try {
-            OrdonnancePdfExporter.write(sel, fiche, me, prescripteur, meds, path);
-            alert(Alert.AlertType.INFORMATION, "PDF enregistré :\n" + path.toAbsolutePath());
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            alert(Alert.AlertType.ERROR, "Impossible d'écrire le PDF : " + ex.getMessage());
-        }
-    }
+    
 
     @FXML
     public void deconnexion(ActionEvent event) {
