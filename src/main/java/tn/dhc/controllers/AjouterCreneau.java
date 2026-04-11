@@ -2,6 +2,7 @@ package tn.dhc.controllers;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+<<<<<<< HEAD
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -12,6 +13,12 @@ import tn.dhc.entities.Creneau;
 import tn.dhc.services.CreneauService;
 
 import java.io.IOException;
+=======
+import javafx.scene.control.*;
+import tn.dhc.entities.Creneau;
+import tn.dhc.services.CreneauService;
+
+>>>>>>> d47e962 (Events CRUD)
 import java.time.LocalDate;
 import java.time.LocalTime;
 
@@ -34,6 +41,10 @@ public class AjouterCreneau {
 
     private final CreneauService creneauService = new CreneauService();
 
+<<<<<<< HEAD
+=======
+    // INIT COMBOBOX
+>>>>>>> d47e962 (Events CRUD)
     @FXML
     public void initialize() {
 
@@ -49,7 +60,11 @@ public class AjouterCreneau {
         addCreneauFin.setValue("08:30");
     }
 
+<<<<<<< HEAD
 
+=======
+    // AJOUT BDD
+>>>>>>> d47e962 (Events CRUD)
     @FXML
     void ajouterCreneau(ActionEvent event) {
 
@@ -85,6 +100,7 @@ public class AjouterCreneau {
 
             showAlert(Alert.AlertType.INFORMATION, "Succès", "Créneau ajouté avec succès !");
 
+<<<<<<< HEAD
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/Dashboard.fxml"));
             Parent root = loader.load();
 
@@ -92,17 +108,25 @@ public class AjouterCreneau {
 
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             stage.setScene(new Scene(root));
+=======
+            annuler(event);
+>>>>>>> d47e962 (Events CRUD)
 
         } catch (Exception e) {
             showAlert(Alert.AlertType.ERROR, "Erreur", e.getMessage());
         }
     }
 
+<<<<<<< HEAD
+=======
+    // RESET
+>>>>>>> d47e962 (Events CRUD)
     @FXML
     void annuler(ActionEvent event) {
         addCreneauDate.setValue(null);
         addCreneauDebut.setValue(null);
         addCreneauFin.setValue(null);
+<<<<<<< HEAD
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/Dashboard.fxml"));
         Parent root = null;
         try {
@@ -117,6 +141,11 @@ public class AjouterCreneau {
         stage.setScene(new Scene(root));
     }
 
+=======
+    }
+
+    // ALERT
+>>>>>>> d47e962 (Events CRUD)
     private void showAlert(Alert.AlertType type, String title, String message) {
         Alert alert = new Alert(type);
         alert.setTitle(title);

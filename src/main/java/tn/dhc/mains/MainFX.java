@@ -10,7 +10,11 @@ public class MainFX extends Application {
     @Override
     public void start(Stage stage) {
         try {
+<<<<<<< HEAD
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/Login.fxml"));
+=======
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Dashboard.fxml"));
+>>>>>>> d47e962 (Events CRUD)
             Scene scene = new Scene(loader.load());
 
             stage.setTitle("Inscription 📝");

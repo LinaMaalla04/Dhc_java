@@ -4,6 +4,7 @@ import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+<<<<<<< HEAD
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -24,6 +25,18 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
+=======
+import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
+import javafx.scene.control.TextField;
+
+import tn.dhc.entities.User;
+import tn.dhc.services.UserService;
+import tn.dhc.entities.Creneau;
+import tn.dhc.services.CreneauService;
+import tn.dhc.entities.Event;
+import tn.dhc.services.EventService;
+>>>>>>> d47e962 (Events CRUD)
 
 public class Dashboard {
 
@@ -37,7 +50,11 @@ public class Dashboard {
     private ListView<Event> AffEvents;
 
     @FXML
+<<<<<<< HEAD
     private ComboBox<String> RechCreneau;
+=======
+    private TextField RechCreneauText;
+>>>>>>> d47e962 (Events CRUD)
 
     @FXML
     private TextField RechEventText;
@@ -51,8 +68,19 @@ public class Dashboard {
     @FXML
     private FlowPane pharmacyCardsFlow;
 
+    private final UserService userService = new UserService();
+    private final CreneauService creneauService = new CreneauService();
+    private final EventService eventService = new EventService();
+
     @FXML
+<<<<<<< HEAD
     private FlowPane medicamentCardsFlow;
+=======
+    public void initialize() {
+        loadUsers();
+        loadCreneaux();
+        loadEvents();
+>>>>>>> d47e962 (Events CRUD)
 
     @FXML
     private FlowPane ficheCardsFlow;
@@ -104,6 +132,9 @@ public class Dashboard {
 
     @FXML
     private ComboBox<String> triUser;
+
+
+    //__________
 
     @FXML private TextField annonceAdminSearch;
     @FXML private ComboBox<String> annonceAdminSort;
@@ -671,6 +702,7 @@ public class Dashboard {
         loadPharmacyCards();
     }
 
+<<<<<<< HEAD
     @FXML
     public void addPharmacie(ActionEvent event) {
         MedicalFormDialogs.showPharmacieDialog(window(), "Nouvelle pharmacie", null)
@@ -835,9 +867,52 @@ public class Dashboard {
     @FXML
     public void refreshFicheCards(ActionEvent event) {
         loadFicheCards();
+=======
+
+    private void loadUsers() {
+        AffUsers.getItems().clear();
+        AffUsers.getItems().addAll(userService.getAll());
+    }
+
+    private void loadCreneaux() {
+        AffCreneaux.getItems().clear();
+        AffCreneaux.getItems().addAll(creneauService.getAll());
+    }
+
+    private void loadEvents() {
+        AffEvents.getItems().clear();
+        AffEvents.getItems().addAll(eventService.getAll());
+    }
+    @FXML
+    void refreshUsers(ActionEvent event) {
+        loadUsers();
     }
 
     @FXML
+    void deleteUser(ActionEvent event) {
+
+        User selected = AffUsers.getSelectionModel().getSelectedItem();
+
+        if (selected != null) {
+            userService.supprimer(selected);
+            loadUsers();
+        } else {
+            System.out.println("Aucun user sélectionne");
+        }
+>>>>>>> d47e962 (Events CRUD)
+    }
+
+    @FXML void RechCreneau(ActionEvent event) {}
+    @FXML void RechEvent(ActionEvent event) {}
+    @FXML void RechUser(ActionEvent event) {}
+
+    @FXML void addCreneau(ActionEvent event) {}
+    @FXML void addEvent(ActionEvent event) {}
+
+    @FXML void deconnexion(ActionEvent event) {}
+
+    @FXML
+<<<<<<< HEAD
     public void addFiche(ActionEvent event) {
         List<User> patients = patientsForFicheForm(null);
         if (patients.isEmpty()) {
@@ -964,9 +1039,39 @@ public class Dashboard {
     @FXML
     public void refreshOrdonnanceCards(ActionEvent event) {
         loadOrdonnanceCards();
+=======
+    void deleteCreneau(ActionEvent event) {
+
+        Creneau selected = AffCreneaux.getSelectionModel().getSelectedItem();
+
+        if (selected != null) {
+            creneauService.delete(selected.getId());
+            loadCreneaux();
+        } else {
+            System.out.println("Aucun creneau sélectionne");
+        }
+>>>>>>> d47e962 (Events CRUD)
+    }
+    @FXML void deleteEvent(ActionEvent event) {
+        Event selected = AffEvents.getSelectionModel().getSelectedItem();
+
+        if (selected != null) {
+            eventService.supprimer(selected);
+            loadEvents();
+        } else {
+            System.out.println("Aucun evenement sélectionne");
+        }
     }
 
+    @FXML void editCreneau(ActionEvent event) {}
+    @FXML void editEvent(ActionEvent event) {}
+    @FXML void editUser(ActionEvent event) {}
+
+    @FXML void goToLieux(ActionEvent event) {}
+    @FXML void goToRdv(ActionEvent event) {}
+
     @FXML
+<<<<<<< HEAD
     public void addOrdonnance(ActionEvent event) {
         List<Fiche> fiches = ficheService.getAll();
         if (fiches.isEmpty()) {
@@ -1581,3 +1686,13 @@ public class Dashboard {
         a.showAndWait();
     }
 }
+=======
+    void refreshCreneaux(ActionEvent event) {
+        loadCreneaux();
+    }
+
+    @FXML void refreshEvent(ActionEvent event) {
+        loadEvents();
+    }
+}
+>>>>>>> d47e962 (Events CRUD)

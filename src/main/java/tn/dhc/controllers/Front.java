@@ -1,5 +1,6 @@
 package tn.dhc.controllers;
 
+<<<<<<< HEAD
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -614,4 +615,7 @@ public class Front {
         a.setContentText(msg);
         a.showAndWait();
     }
+=======
+public class Front {
+>>>>>>> d47e962 (Events CRUD)
 }

@@ -23,6 +23,10 @@ public class CreneauService {
             ps.setTime(2, Time.valueOf(c.getHdebut()));
             ps.setTime(3, Time.valueOf(c.getHfin()));
 
+<<<<<<< HEAD
+=======
+            // 🔥 statut par défaut
+>>>>>>> d47e962 (Events CRUD)
             ps.setString(4, "Dispo");
 
             ps.setInt(5, c.getUserId());

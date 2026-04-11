@@ -87,6 +87,11 @@ public class Creneau {
     public String toString() {
         return "📅 " + dateCreneau +
                 " | 🕐 " + hdebut + " - " + hfin +
+<<<<<<< HEAD
                 " | 📌 " + statut;
+=======
+                " | 📌 " + statut +
+                " | 👤 User ID: " + userId;
+>>>>>>> d47e962 (Events CRUD)
     }
 }

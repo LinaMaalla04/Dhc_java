@@ -48,9 +48,16 @@
                               <HBox alignment="CENTER_LEFT" spacing="15">
                                  <children>
                                     <Label prefHeight="30.0" prefWidth="152.0" style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill:#00b3a6;" text="👥 Utilisateurs" />
+<<<<<<< HEAD
                                     <TextField fx:id="RechUserText" prefHeight="38.0" prefWidth="413.0" promptText="Recherche..." />
                                     <Region HBox.hgrow="ALWAYS" />
                                     <ComboBox fx:id="triUser" prefHeight="47.0" prefWidth="150.0" promptText="Trier par..." />
+=======
+                                    <TextField fx:id="RechUserText" prefHeight="38.0" prefWidth="480.0" promptText="Recherche..." />
+                                    <Button mnemonicParsing="false" onAction="#RechUser" prefHeight="36.0" prefWidth="58.0" styleClass="btn-primary" text="🔍" />
+                                    <Region HBox.hgrow="ALWAYS" />
+                                    <Button mnemonicParsing="false" onAction="#refreshUsers" prefHeight="45" prefWidth="130" style="-fx-font-size:14px;" styleClass="btn-secondary" text="🔄 Actualiser" />
+>>>>>>> d47e962 (Events CRUD)
                                     <Button mnemonicParsing="false" onAction="#editUser" prefHeight="45" prefWidth="130" style="-fx-font-size:14px;" styleClass="btn-secondary" text="🖊 Modifier" />
                                     <Button mnemonicParsing="false" onAction="#deleteUser" prefHeight="45" prefWidth="130" style="-fx-font-size:14px;" styleClass="btn-secondary" text="❌ Supprimer" />
                                  </children>
@@ -67,11 +74,20 @@
                               <HBox alignment="CENTER_LEFT" spacing="15">
                                  <children>
                                     <Label prefHeight="30.0" prefWidth="155.0" style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill:#00b3a6;" text="👨‍⚕️ Creneaux" />
+<<<<<<< HEAD
                                     <Region HBox.hgrow="ALWAYS" />
                                     <ComboBox fx:id="RechCreneau" prefHeight="47.0" prefWidth="255.0" promptText="Filtrage par disponibilité" />
                                     <ComboBox fx:id="triCreneau" prefHeight="47.0" prefWidth="150.0" promptText="Trier par..." />
                                     <Button mnemonicParsing="false" onAction="#editCreneau" prefHeight="45" prefWidth="130" style="-fx-font-size:14px;" styleClass="btn-secondary" text="🖊 Modifier" />
                                     <Button mnemonicParsing="false" onAction="#addCreneau" prefHeight="45" prefWidth="130" style="-fx-font-size:14px; -fx-font-weight:bold;" styleClass="btn-primary" text="➕ Ajouter" />
+=======
+                                    <TextField fx:id="RechCreneauText" prefHeight="38.0" prefWidth="372.0" promptText="Recherche..." />
+                                    <Button mnemonicParsing="false" onAction="#RechCreneau" prefHeight="36.0" prefWidth="69.0" styleClass="btn-primary" text="🔍" />
+                                    <Region HBox.hgrow="ALWAYS" />
+                                    <Button mnemonicParsing="false" onAction="#refreshCreneaux" prefHeight="45" prefWidth="130" style="-fx-font-size:14px;" styleClass="btn-secondary" text="🔄 Actualiser" />
+                                    <Button mnemonicParsing="false" onAction="#addCreneau" prefHeight="45" prefWidth="130" style="-fx-font-size:14px; -fx-font-weight:bold;" styleClass="btn-primary" text="➕ Ajouter" />
+                                    <Button mnemonicParsing="false" onAction="#editCreneau" prefHeight="45" prefWidth="130" style="-fx-font-size:14px;" styleClass="btn-secondary" text="🖊 Modifier" />
+>>>>>>> d47e962 (Events CRUD)
                                     <Button mnemonicParsing="false" onAction="#deleteCreneau" prefHeight="45" prefWidth="130" style="-fx-font-size:14px;" styleClass="btn-secondary" text="❌ Supprimer" />
                                  </children>
                               </HBox>
@@ -85,6 +101,7 @@
                      <content>
                         <VBox spacing="0" style="-fx-background-color:#f0f4f3;" VBox.vgrow="ALWAYS">
                            <children>
+<<<<<<< HEAD
                               <TabPane styleClass="clinical-nested-tab-pane" tabClosingPolicy="UNAVAILABLE" VBox.vgrow="ALWAYS">
                                  <tabs>
                                     <Tab text="🏥 Pharmacies">
@@ -181,6 +198,21 @@
                                     </Tab>
                                  </tabs>
                               </TabPane>
+=======
+                              <HBox alignment="CENTER_LEFT" spacing="15">
+                                 <children>
+                                    <Label style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill:#00b3a6;" text="🏥  Fiches Medicales" />
+                                    <TextField prefHeight="38.0" prefWidth="266.0" promptText="Recherche..." />
+                                    <Button mnemonicParsing="false" prefHeight="36.0" prefWidth="58.0" styleClass="btn-primary" text="🔍" />
+                                    <Region HBox.hgrow="ALWAYS" />
+                                    <Button mnemonicParsing="false" prefHeight="45" prefWidth="130" style="-fx-font-size:14px;" styleClass="btn-secondary" text="🔄 Actualiser" />
+                                    <Button mnemonicParsing="false" prefHeight="45" prefWidth="130" style="-fx-font-size:14px; -fx-font-weight:bold;" styleClass="btn-primary" text="➕ Ajouter" />
+                                    <Button mnemonicParsing="false" prefHeight="45" prefWidth="130" style="-fx-font-size:14px;" styleClass="btn-secondary" text="🖊 Modifier" />
+                                    <Button mnemonicParsing="false" prefHeight="45" prefWidth="130" style="-fx-font-size:14px;" styleClass="btn-secondary" text="❌ Supprimer" />
+                                 </children>
+                              </HBox>
+                              <ListView prefHeight="200.0" prefWidth="200.0" />
+>>>>>>> d47e962 (Events CRUD)
                            </children>
                         </VBox>
                      </content>
@@ -193,8 +225,14 @@
                                  <children>
                                     <Label style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill:#00b3a6;" text="📅  Evenements" />
                                     <TextField fx:id="RechEventText" prefHeight="38.0" prefWidth="318.0" promptText="Recherche..." />
+<<<<<<< HEAD
                                     <Region HBox.hgrow="ALWAYS" />
                                     <ComboBox fx:id="triEvent" prefHeight="47.0" prefWidth="150.0" promptText="Trier par..." />
+=======
+                                    <Button mnemonicParsing="false" onAction="#RechEvent" prefHeight="36.0" prefWidth="58.0" styleClass="btn-primary" text="🔍" />
+                                    <Region HBox.hgrow="ALWAYS" />
+                                    <Button mnemonicParsing="false" onAction="#refreshEvent" prefHeight="45" prefWidth="130" style="-fx-font-size:14px;" styleClass="btn-secondary" text="🔄 Actualiser" />
+>>>>>>> d47e962 (Events CRUD)
                                     <Button mnemonicParsing="false" onAction="#addEvent" prefHeight="45" prefWidth="130" style="-fx-font-size:14px; -fx-font-weight:bold;" styleClass="btn-primary" text="➕ Ajouter" />
                                     <Button mnemonicParsing="false" onAction="#editEvent" prefHeight="45" prefWidth="130" style="-fx-font-size:14px;" styleClass="btn-secondary" text="🖊 Modifier" />
                                     <Button mnemonicParsing="false" onAction="#deleteEvent" prefHeight="45" prefWidth="130" style="-fx-font-size:14px;" styleClass="btn-secondary" text="❌ Supprimer" />

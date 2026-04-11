@@ -147,7 +147,12 @@ public class Event {
                 "📝 Description: " + description + " | " +
                 "📅 Date: " + dateEvent + " | " +
                 "⏰ Horaire: " + heureDebut + " - " + heureFin + " | " +
+<<<<<<< HEAD
                 "👥 Participants: " + nbParticipant  ;
 //                "+ " | " +📍 Lieu ID: " + (lieu != null ? lieu.getId() : eventLieuId);
+=======
+                "👥 Participants: " + nbParticipant + " | " +
+                "👤 Organisateur (ID): " + userId;
+>>>>>>> d47e962 (Events CRUD)
     }
 }
