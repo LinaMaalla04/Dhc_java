@@ -136,17 +136,12 @@ public class Event {
     // 🔹 toString
     @Override
     public String toString() {
-        return "Event{" +
-                "id=" + id +
-                ", titreEvent='" + titreEvent + '\'' +
-                ", themeSante='" + themeSante + '\'' +
-                ", description='" + description + '\'' +
-                ", dateEvent=" + dateEvent +
-                ", heureDebut=" + heureDebut +
-                ", heureFin=" + heureFin +
-                ", nbParticipant=" + nbParticipant +
-                ", userId=" + userId +
-                ", eventLieuId=" + eventLieuId +
-                '}';
+        return "📌 Titre: " + titreEvent + " | " +
+                "🧠 Thème: " + themeSante + " | " +
+                "📝 Description: " + description + " | " +
+                "📅 Date: " + dateEvent + " | " +
+                "⏰ Horaire: " + heureDebut + " - " + heureFin + " | " +
+                "👥 Participants: " + nbParticipant + " | " +
+                "👤 Organisateur (ID): " + userId;
     }
 }

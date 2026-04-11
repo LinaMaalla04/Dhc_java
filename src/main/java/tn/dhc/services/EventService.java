@@ -42,10 +42,7 @@ public class EventService implements IService<Event> {
             else
                 ps.setNull(6, Types.TIME);
 
-            if (e.getNbParticipant() != null)
-                ps.setInt(7, e.getNbParticipant());
-            else
-                ps.setNull(7, Types.INTEGER);
+            ps.setInt(7, e.getNbParticipant() != null ? e.getNbParticipant() : 0);
 
             ps.setInt(8, e.getUserId());
             ps.setInt(9, e.getEventLieuId());

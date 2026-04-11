@@ -90,13 +90,9 @@ public class Creneau {
     // 🔹 toString
     @Override
     public String toString() {
-        return "Creneau{" +
-                "id=" + id +
-                ", dateCreneau=" + dateCreneau +
-                ", hdebut=" + hdebut +
-                ", hfin=" + hfin +
-                ", statut='" + statut + '\'' +
-                ", userId=" + userId +
-                '}';
+        return "📅 " + dateCreneau +
+                " | 🕐 " + hdebut + " - " + hfin +
+                " | 📌 " + statut +
+                " | 👤 User ID: " + userId;
     }
 }

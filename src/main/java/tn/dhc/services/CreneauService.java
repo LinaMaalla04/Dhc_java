@@ -15,6 +15,7 @@ public class CreneauService {
 
     // 🔹 Ajouter
     public void add(Creneau c) {
+
         String sql = "INSERT INTO creneau (date_creneau, hdebut, hfin, statut, user_id) VALUES (?,?,?,?,?)";
 
         try (PreparedStatement ps = cnx.prepareStatement(sql)) {
@@ -22,7 +23,10 @@ public class CreneauService {
             ps.setDate(1, Date.valueOf(c.getDateCreneau()));
             ps.setTime(2, Time.valueOf(c.getHdebut()));
             ps.setTime(3, Time.valueOf(c.getHfin()));
-            ps.setString(4, c.getStatut());
+
+            // 🔥 statut par défaut
+            ps.setString(4, "Dispo");
+
             ps.setInt(5, c.getUserId());
 
             ps.executeUpdate();

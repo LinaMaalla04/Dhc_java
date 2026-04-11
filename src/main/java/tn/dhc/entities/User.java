@@ -81,16 +81,9 @@ public class User {
     // 🔹 toString
     @Override
     public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", nom='" + nom + '\'' +
-                ", prenom='" + prenom + '\'' +
-                ", mail='" + mail + '\'' +
-                ", tel=" + tel +
-                ", role='" + role + '\'' +
-                ", specialite='" + specialite + '\'' +
-                ", lastLoginAt=" + lastLoginAt +
-                ", loginCount=" + loginCount +
-                '}';
+        return "👤 " + nom + " " + prenom +
+                " | 📧 " + mail +
+                " | 📞 " + tel +
+                " | 🎭 " + role;
     }
 }
