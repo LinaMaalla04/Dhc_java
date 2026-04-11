@@ -312,17 +312,4 @@ public final class MedicalInputValidation {
     }
 
     /** Messages uniques pour une boîte de dialogue (ordre conservé). */
-    public static String formatIssueMessages(List<FieldIssue> issues) {
-        Set<String> seen = new LinkedHashSet<>();
-        StringBuilder sb = new StringBuilder();
-        for (FieldIssue i : issues) {
-            if (seen.add(i.message())) {
-                if (!sb.isEmpty()) {
-                    sb.append('\n');
-                }
-                sb.append("• ").append(i.message());
-            }
-        }
-        return sb.toString();
-    }
-}
+  

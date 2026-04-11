@@ -50,7 +50,166 @@ public final class MedicalFormDialogs {
         return (u.getPrenom() != null ? u.getPrenom().trim() : "") + " " + (u.getNom() != null ? u.getNom().trim() : "");
     }
 
-   
+    public static Optional<Pharmacie> showPharmacieDialog(Window owner, String title, Pharmacie existing) {
+        Dialog<Pharmacie> dialog = new Dialog<>();
+        dialog.initOwner(owner);
+        dialog.setTitle(title);
+        dialog.setHeaderText(null);
+        style(dialog);
+
+        TextField nom = new TextField();
+        TextField adresse = new TextField();
+        TextField telephone = new TextField();
+        TextField responsable = new TextField();
+        TextField hopital = new TextField();
+
+        if (existing != null) {
+            nom.setText(s(existing.getNom()));
+            adresse.setText(s(existing.getAdresse()));
+            telephone.setText(s(existing.getTelephone()));
+            responsable.setText(s(existing.getResponsable()));
+            hopital.setText(s(existing.getHopital()));
+        }
+
+        GridPane grid = formGrid(
+                new Row("Nom", nom),
+                new Row("Adresse", adresse),
+                new Row("Téléphone", telephone),
+                new Row("Responsable", responsable),
+                new Row("Hôpital (optionnel)", hopital)
+        );
+        dialog.getDialogPane().setContent(grid);
+        dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
+
+        MedicalFieldFeedback.wireTextClear(nom);
+        MedicalFieldFeedback.wireTextClear(adresse);
+        MedicalFieldFeedback.wireTextClear(telephone);
+        MedicalFieldFeedback.wireTextClear(responsable);
+        MedicalFieldFeedback.wireTextClear(hopital);
+
+        Map<String, Control> pharmacieControls = Map.of(
+                "nom", nom,
+                "adresse", adresse,
+                "telephone", telephone,
+                "responsable", responsable,
+                "hopital", hopital);
+
+        attachOkGuard(dialog, () -> {
+            List<MedicalInputValidation.FieldIssue> issues = MedicalInputValidation.collectPharmacieIssues(
+                    nom.getText(), adresse.getText(), telephone.getText(), responsable.getText(), hopital.getText());
+            if (issues.isEmpty()) {
+                return true;
+            }
+            applyFieldIssues(issues, pharmacieControls);
+            alertFormIssues(issues);
+            return false;
+        });
+
+        dialog.setResultConverter(btn -> {
+            if (btn != ButtonType.OK) {
+                return null;
+            }
+            Pharmacie p = existing != null ? existing : new Pharmacie();
+            if (existing != null) {
+                p.setId(existing.getId());
+            }
+            p.setNom(nom.getText().trim());
+            p.setAdresse(trimOrNull(adresse.getText()));
+            p.setTelephone(trimOrNull(telephone.getText()));
+            p.setResponsable(trimOrNull(responsable.getText()));
+            p.setHopital(trimOrNull(hopital.getText()));
+            return p;
+        });
+
+        return dialog.showAndWait();
+    }
+
+    public static Optional<Medicament> showMedicamentDialog(Window owner, String title, Medicament existing) {
+        Dialog<Medicament> dialog = new Dialog<>();
+        dialog.initOwner(owner);
+        dialog.setTitle(title);
+        style(dialog);
+
+        TextField nom = new TextField();
+        TextField categorie = new TextField();
+        TextField dosage = new TextField();
+        TextField forme = new TextField();
+        DatePicker exp = new DatePicker(LocalDate.now().plusMonths(6));
+        Spinner<Integer> stock = new Spinner<>(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 9_999_999, 0));
+
+        if (existing != null) {
+            nom.setText(s(existing.getNomMedicament()));
+            categorie.setText(s(existing.getCategorie()));
+            dosage.setText(s(existing.getDosage()));
+            forme.setText(s(existing.getForme()));
+            if (existing.getDateExpiration() != null) {
+                exp.setValue(existing.getDateExpiration().toLocalDate());
+            }
+            stock.getValueFactory().setValue(Math.max(0, existing.getStock()));
+        }
+
+        GridPane grid = formGrid(
+                new Row("Nom", nom),
+                new Row("Catégorie", categorie),
+                new Row("Dosage", dosage),
+                new Row("Forme", forme),
+                new Row("Expiration", exp),
+                new Row("Stock (unités)", stock)
+        );
+        dialog.getDialogPane().setContent(grid);
+        dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
+
+        MedicalFieldFeedback.wireTextClear(nom);
+        MedicalFieldFeedback.wireTextClear(categorie);
+        MedicalFieldFeedback.wireTextClear(dosage);
+        MedicalFieldFeedback.wireTextClear(forme);
+        MedicalFieldFeedback.wireDateClear(exp);
+        MedicalFieldFeedback.wireSpinnerClear(stock);
+
+        Map<String, Control> medicamentControls = Map.of(
+                "nom", nom,
+                "categorie", categorie,
+                "dosage", dosage,
+                "forme", forme,
+                "expiration", exp,
+                "stock", stock);
+
+        attachOkGuard(dialog, () -> {
+            List<MedicalInputValidation.FieldIssue> issues = MedicalInputValidation.collectMedicamentIssues(
+                    nom.getText(), categorie.getText(), dosage.getText(), forme.getText(),
+                    exp.getValue(), stock.getValue());
+            if (issues.isEmpty()) {
+                return true;
+            }
+            applyFieldIssues(issues, medicamentControls);
+            alertFormIssues(issues);
+            return false;
+        });
+
+        dialog.setResultConverter(btn -> {
+            if (btn != ButtonType.OK) {
+                return null;
+            }
+            Medicament m = existing != null ? existing : new Medicament();
+            if (existing != null) {
+                m.setId(existing.getId());
+            }
+            m.setNomMedicament(nom.getText().trim());
+            m.setCategorie(trimOrNull(categorie.getText()));
+            m.setDosage(trimOrNull(dosage.getText()));
+            m.setForme(trimOrNull(forme.getText()));
+            m.setDateExpiration(Date.valueOf(exp.getValue()));
+            m.setStock(stock.getValue() != null ? stock.getValue() : 0);
+            return m;
+        });
+
+        return dialog.showAndWait();
+    }
+
+    public static Optional<Fiche> showFicheDialog(Window owner, String title, Fiche existing, List<User> patientUsers) {
+        return showFicheDialog(owner, title, existing, patientUsers, null, null);
+    }
+
     /**
      * @param preselectPatient si non null et {@code existing == null}, pré-sélectionne ce patient dans la liste.
      * @param medecinUserId    si non null et nouvelle fiche, enregistre l’id du médecin créateur.
