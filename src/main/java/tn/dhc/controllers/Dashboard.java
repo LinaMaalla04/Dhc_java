@@ -2,10 +2,14 @@ package tn.dhc.controllers;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 
+import javafx.stage.Stage;
 import tn.dhc.entities.User;
 import tn.dhc.services.UserService;
 import tn.dhc.entities.Creneau;
@@ -118,7 +122,34 @@ public class Dashboard {
 
     @FXML void editCreneau(ActionEvent event) {}
     @FXML void editEvent(ActionEvent event) {}
-    @FXML void editUser(ActionEvent event) {}
+    @FXML
+    void editUser(ActionEvent event) {
+        System.out.println("CLICK MODIFIER USER");
+        try {
+            User selected = AffUsers.getSelectionModel().getSelectedItem();
+
+            if (selected == null) {
+                System.out.println("Aucun user sélectionné");
+                return;
+            }
+
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ModifierUser.fxml"));
+            Parent root = loader.load();
+
+            // 🔥 récupérer le controller
+            ModifierUser controller = loader.getController();
+
+            // 🔥 envoyer le user sélectionné
+            controller.setUser(selected);
+
+            // 🔁 changer de scène
+            Stage stage = (Stage) AffUsers.getScene().getWindow();
+            stage.setScene(new Scene(root));
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     @FXML void goToLieux(ActionEvent event) {}
     @FXML void goToRdv(ActionEvent event) {}
