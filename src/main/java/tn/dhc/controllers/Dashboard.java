@@ -359,7 +359,24 @@ public class Dashboard {
         }
     }
 
-    
+    private boolean passesMedicamentFilters(Medicament m, String q, String filter) {
+        if ("Stock < 10".equals(filter) && m.getStock() >= 10) {
+            return false;
+        }
+        if (!q.isEmpty() && !matchesMedicamentAllFields(m, q)) {
+            return false;
+        }
+        return true;
+    }
+
+    private static boolean matchesMedicamentAllFields(Medicament m, String q) {
+        return contains(String.valueOf(m.getId()), q)
+                || contains(m.getNomMedicament(), q) || contains(m.getCategorie(), q)
+                || contains(m.getDosage(), q) || contains(m.getForme(), q)
+                || contains(String.valueOf(m.getStock()), q)
+                || (m.getDateExpiration() != null && contains(m.getDateExpiration().toString(), q));
+    }
+
     private static Comparator<Medicament> medicamentComparator(String sort) {
         Comparator<Medicament> byNom = Comparator.comparing(
                 m -> safeLower(m.getNomMedicament()), Comparator.nullsLast(String::compareTo));
@@ -557,32 +574,7 @@ public class Dashboard {
     }
 
     private void loadOrdonnanceCards() {
-        if (ordonnanceCardsFlow == null) {
-            return;
-        }
-        ordonnanceCardsFlow.getChildren().clear();
-        String q = norm(searchOrdonnance.getText());
-        String filter = ordonnanceFilterCombo != null && ordonnanceFilterCombo.getValue() != null
-                ? ordonnanceFilterCombo.getValue() : "Toutes";
-        String sort = ordonnanceSortCombo != null && ordonnanceSortCombo.getValue() != null
-                ? ordonnanceSortCombo.getValue() : "Date (↑)";
-
-        List<Ordonnance> rows = new ArrayList<>();
-        for (Ordonnance o : ordonnanceService.getAll()) {
-            if (passesOrdonnanceFilters(o, q, filter)) {
-                rows.add(o);
-            }
-        }
-        rows.sort(ordonnanceComparator(sort));
-        for (Ordonnance o : rows) {
-            Fiche linked = ficheService.getOneById(o.getFicheId());
-            String ficheSummary = ordonnanceFicheSummary(linked);
-            String medSummary = ordonnanceService.getMedicamentsSummaryForOrdonnance(o.getId());
-            ordonnanceCardsFlow.getChildren().add(MedicalAdminCards.ordonnanceCard(o, ficheSummary, medSummary,
-                    () -> editOrdonnance(o),
-                    () -> deleteOrdonnance(o)));
-        }
-    }
+   
 
     private static String ordonnanceFicheSummary(Fiche linked) {
         if (linked == null) {
