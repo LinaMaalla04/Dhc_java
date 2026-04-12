@@ -692,37 +692,7 @@ public class Dashboard {
         }
     }
 
-    @FXML
-    void RechCreneau(ActionEvent event) {
-    }
-
-    @FXML
-    void RechEvent(ActionEvent event) {
-    }
-
-    @FXML
-    void RechUser(ActionEvent event) {
-    }
-
-    @FXML
-    void addCreneau(ActionEvent event) {
-    }
-
-    @FXML
-    void addEvent(ActionEvent event) {
-    }
-
-    @FXML
-    public void deconnexion(ActionEvent event) {
-        userService.logout();
-        try {
-            Parent root = FXMLLoader.load(getClass().getResource("/Login.fxml"));
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            stage.setScene(new Scene(root));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+    
 
     @FXML
     void deleteCreneau(ActionEvent event) {

@@ -170,7 +170,140 @@ public final class MedicalInputValidation {
         return !a.isEmpty() && a.equals(b);
     }
 
-    
+    public static List<FieldIssue> collectFicheIssues(String poids, String taille, String glycemie,
+                                                      String libelle, String gravite, String recommandation,
+                                                      String allergie, String maladieChronique, String tension,
+                                                      String grpSanguin, LocalDate dateFiche) {
+        List<FieldIssue> issues = new ArrayList<>();
+        if (libelle == null || libelle.isBlank()) {
+            issues.add(new FieldIssue("libelle", "Le libellé de la maladie est obligatoire."));
+        } else {
+            if (libelle.trim().length() < 2) {
+                issues.add(new FieldIssue("libelle", "Le libellé doit contenir au moins 2 caractères."));
+            }
+            if (libelle.length() > 200) {
+                issues.add(new FieldIssue("libelle", "Le libellé ne doit pas dépasser 200 caractères."));
+            }
+        }
+        if (!isValidGravite(gravite)) {
+            issues.add(new FieldIssue("gravite", "La gravité doit être Faible, Modérée ou Élevée."));
+        }
+        if (recommandation != null && recommandation.length() > 2000) {
+            issues.add(new FieldIssue("recommandation", "Les recommandations ne doivent pas dépasser 2000 caractères."));
+        }
+        if (allergie != null && allergie.length() > 500) {
+            issues.add(new FieldIssue("allergie", "Le champ allergies ne doit pas dépasser 500 caractères."));
+        }
+        if (maladieChronique != null && maladieChronique.length() > 500) {
+            issues.add(new FieldIssue("chronique", "La maladie chronique ne doit pas dépasser 500 caractères."));
+        }
+        if (tension != null && !tension.isBlank()) {
+            String t = tension.trim();
+            if (t.length() > 40) {
+                issues.add(new FieldIssue("tension", "La tension ne doit pas dépasser 40 caractères (ex. 120/80)."));
+            } else if (t.length() < 2) {
+                issues.add(new FieldIssue("tension", "La tension doit contenir au moins 2 caractères ou rester vide."));
+            }
+        }
+        if (grpSanguin != null && !grpSanguin.isBlank()) {
+            String g = grpSanguin.trim();
+            if (g.length() > 12) {
+                issues.add(new FieldIssue("grpSanguin", "Le groupe sanguin ne doit pas dépasser 12 caractères."));
+            }
+        }
+
+        Double po = parseOptionalDouble(poids, "poids", "Le poids est obligatoire.", "Poids : nombre invalide.", issues);
+        Double ta = parseOptionalDouble(taille, "taille", "La taille est obligatoire.", "Taille : nombre invalide.", issues);
+        Double gl = parseOptionalDouble(glycemie, "glycemie", "La glycémie est obligatoire.", "Glycémie : nombre invalide.", issues);
+
+        if (po != null && (po < 2 || po > 400)) {
+            issues.add(new FieldIssue("poids", "Le poids doit être compris entre 2 et 400 kg."));
+        }
+        if (ta != null && (ta < 40 || ta > 260)) {
+            issues.add(new FieldIssue("taille", "La taille doit être comprise entre 40 et 260 cm."));
+        }
+        if (gl != null && (gl < 0.2 || gl > 50)) {
+            issues.add(new FieldIssue("glycemie", "La glycémie doit être comprise entre 0,2 et 50 (valeur clinique usuelle)."));
+        }
+        if (dateFiche != null) {
+            LocalDate min = LocalDate.of(1920, 1, 1);
+            LocalDate max = LocalDate.now().plusYears(1);
+            if (dateFiche.isBefore(min)) {
+                issues.add(new FieldIssue("date", "La date de la fiche ne peut pas être antérieure à 1920."));
+            }
+            if (dateFiche.isAfter(max)) {
+                issues.add(new FieldIssue("date", "La date de la fiche ne peut pas dépasser un an dans le futur."));
+            }
+        }
+        return issues;
+    }
+
+    private static Double parseOptionalDouble(String raw, String fieldId, String blankMsg, String badMsg,
+                                              List<FieldIssue> issues) {
+        if (raw == null || raw.trim().isBlank()) {
+            issues.add(new FieldIssue(fieldId, blankMsg));
+            return null;
+        }
+        try {
+            return Double.parseDouble(raw.trim().replace(',', '.'));
+        } catch (NumberFormatException e) {
+            issues.add(new FieldIssue(fieldId, badMsg));
+            return null;
+        }
+    }
+
+    public static Optional<String> validateFiche(String poids, String taille, String glycemie,
+                                                 String libelle, String gravite, String recommandation,
+                                                 String allergie, String maladieChronique, String tension,
+                                                 String grpSanguin, LocalDate dateFiche) {
+        List<FieldIssue> list = collectFicheIssues(poids, taille, glycemie, libelle, gravite, recommandation,
+                allergie, maladieChronique, tension, grpSanguin, dateFiche);
+        return list.isEmpty() ? Optional.empty() : Optional.of(list.get(0).message());
+    }
+
+    public static List<FieldIssue> collectOrdonnanceIssues(String frequence, String dureeJours, String posologie,
+                                                           LocalDate dateOrdonnance) {
+        List<FieldIssue> issues = new ArrayList<>();
+        if (frequence != null && frequence.length() > 200) {
+            issues.add(new FieldIssue("frequence", "La fréquence ne doit pas dépasser 200 caractères."));
+        } else if (frequence != null && !frequence.isBlank() && frequence.trim().length() < 2) {
+            issues.add(new FieldIssue("frequence", "La fréquence doit contenir au moins 2 caractères ou rester vide."));
+        }
+        if (posologie == null || posologie.isBlank()) {
+            issues.add(new FieldIssue("posologie", "La posologie est obligatoire."));
+        } else {
+            String p = posologie.trim();
+            if (p.length() < 5) {
+                issues.add(new FieldIssue("posologie", "La posologie doit contenir au moins 5 caractères."));
+            }
+            if (p.length() > 4000) {
+                issues.add(new FieldIssue("posologie", "La posologie ne doit pas dépasser 4000 caractères."));
+            }
+        }
+        if (dureeJours == null || dureeJours.trim().isBlank()) {
+            issues.add(new FieldIssue("duree", "La durée (jours) est obligatoire."));
+        } else {
+            try {
+                int j = Integer.parseInt(dureeJours.trim());
+                if (j < 1 || j > 3650) {
+                    issues.add(new FieldIssue("duree", "La durée du traitement doit être entre 1 et 3650 jours."));
+                }
+            } catch (NumberFormatException e) {
+                issues.add(new FieldIssue("duree", "La durée doit être un nombre entier (jours)."));
+            }
+        }
+        if (dateOrdonnance != null) {
+            LocalDate min = LocalDate.of(1990, 1, 1);
+            LocalDate max = LocalDate.now().plusYears(5);
+            if (dateOrdonnance.isBefore(min)) {
+                issues.add(new FieldIssue("date", "La date de l'ordonnance ne peut pas être antérieure à 1990."));
+            }
+            if (dateOrdonnance.isAfter(max)) {
+                issues.add(new FieldIssue("date", "La date de l'ordonnance ne peut pas dépasser 5 ans dans le futur."));
+            }
+        }
+        return issues;
+    }
 
     public static Optional<String> validateOrdonnance(String frequence, String dureeJours, String posologie,
                                                       LocalDate dateOrdonnance) {
