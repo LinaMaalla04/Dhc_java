@@ -126,13 +126,7 @@ public class DoctorFront {
         return u.getPrenom() + " " + u.getNom();
     }
 
-    private static String formatFicheSummary(Fiche f) {
-        if (f == null) {
-            return "Fiche liée";
-        }
-        String d = f.getDate() != null ? f.getDate().toString() : "";
-        return (f.getLibelleMaladie() != null ? f.getLibelleMaladie() : "Fiche") + " · " + d;
-    }
+    
 
     @FXML
     public void deconnexion(ActionEvent event) {
