@@ -329,3 +329,93 @@
 .tab-pane .tab:hover .tab-label {
     -fx-text-fill: #00b3a6;
 }
+
+/* Admin clinical / pharmacy cards */
+.clinical-entity-card {
+    -fx-background-color: white;
+    -fx-background-radius: 14;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 14, 0, 0, 4);
+    -fx-border-color: #e8f4f3;
+    -fx-border-radius: 14;
+    -fx-border-width: 1;
+}
+
+.clinical-entity-card:hover {
+    -fx-effect: dropshadow(gaussian, rgba(0, 179, 166, 0.25), 18, 0, 0, 6);
+    -fx-border-color: #b8ebe4;
+}
+
+/* Cartes patient / médecin : plus lisibles */
+.clinical-entity-card-comfort {
+    -fx-background-radius: 16;
+    -fx-border-radius: 16;
+    -fx-border-width: 1.5;
+    -fx-border-color: #cfecea;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.12), 18, 0, 0, 5);
+}
+
+.clinical-nested-tab-pane .tab-header-area {
+    -fx-padding: 4 0 8 0;
+}
+
+.clinical-toolbar {
+    -fx-background-color: linear-gradient(to right, rgba(0, 179, 166, 0.08), rgba(0, 212, 200, 0.06));
+    -fx-background-radius: 10;
+    -fx-padding: 12 16;
+    -fx-border-color: #e0f2f0;
+    -fx-border-radius: 10;
+    -fx-border-width: 1;
+}
+
+.clinical-scroll {
+    -fx-background-color: transparent;
+    -fx-background: #fafcfc;
+}
+
+.clinical-scroll > .viewport {
+    -fx-background-color: #fafcfc;
+}
+
+/* Onglet fiches / ordonnances : défilement vertical de toute la page */
+.clinical-tab-outer-scroll {
+    -fx-background-color: transparent;
+    -fx-background: #f5f5f5;
+}
+
+.clinical-tab-outer-scroll > .viewport {
+    -fx-background-color: #f5f5f5;
+}
+
+/* Formulaires médicaux : champs invalides / obligatoires non remplis */
+.text-field.medical-input-error,
+.text-area.medical-input-error {
+    -fx-border-color: #e74c3c;
+    -fx-border-width: 2px;
+    -fx-border-radius: 4px;
+    -fx-background-radius: 4px;
+}
+
+.combo-box-base.medical-input-error {
+    -fx-border-color: #e74c3c;
+    -fx-border-width: 2px;
+    -fx-border-radius: 4px;
+    -fx-background-radius: 4px;
+}
+
+.date-picker.medical-input-error {
+    -fx-border-color: #e74c3c;
+    -fx-border-width: 2px;
+    -fx-border-radius: 4px;
+}
+
+.spinner.medical-input-error {
+    -fx-border-color: #e74c3c;
+    -fx-border-width: 2px;
+    -fx-border-radius: 4px;
+}
+
+.list-view.medical-input-error {
+    -fx-border-color: #e74c3c;
+    -fx-border-width: 2px;
+    -fx-border-radius: 4px;
+}

@@ -29,7 +29,7 @@ public class UserService implements IService<User> {
             ps.setString(2, u.getPrenom());
             ps.setString(3, u.getMail());
             ps.setInt(4, u.getTel());
-            ps.setString(5, u.getMdp());
+            ps.setString(5, BCrypt.hashpw(u.getMdp(), BCrypt.gensalt()));
             ps.setString(6, u.getRole());
 
             ps.executeUpdate();
@@ -121,10 +121,9 @@ public class UserService implements IService<User> {
 
             if (rs.next()) {
                 User u = mapResultSetToUser(rs);
-
-
-                String hashed = BCrypt.hashpw(u.getMdp(), BCrypt.gensalt());
-                if (BCrypt.checkpw(mdp, u.getMdp())) {
+                String stored = u.getMdp();
+                boolean ok = passwordMatchesPlainOrBcrypt(mdp, stored);
+                if (ok) {
                     currentUser = u;
 
                     String update = "UPDATE user SET last_login_at=?, login_count = login_count + 1 WHERE id=?";
@@ -148,6 +147,20 @@ public class UserService implements IService<User> {
 
     public void logout() {
         currentUser = null;
+    }
+
+    private static boolean passwordMatchesPlainOrBcrypt(String plain, String stored) {
+        if (plain == null || stored == null) {
+            return false;
+        }
+        if (stored.startsWith("$2a$") || stored.startsWith("$2b$") || stored.startsWith("$2y$")) {
+            try {
+                return BCrypt.checkpw(plain, stored);
+            } catch (IllegalArgumentException e) {
+                return false;
+            }
+        }
+        return plain.equals(stored);
     }
 
     // 🔁 mapping
