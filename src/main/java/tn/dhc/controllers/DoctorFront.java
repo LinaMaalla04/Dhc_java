@@ -90,29 +90,7 @@ public class DoctorFront {
         listener.changed(sp.widthProperty(), sp.getWidth(), sp.getWidth());
     }
 
-    private List<User> patientsOnly() {
-        return userService.getAll().stream().filter(MedicalFormDialogs::isPatientUser).toList();
-    }
-
-    private static void wirePatientCombo(ComboBox<User> combo) {
-        combo.setPrefWidth(360);
-        combo.setPromptText("Choisir un patient…");
-        combo.setCellFactory(lv -> new ListCell<>() {
-            @Override
-            protected void updateItem(User u, boolean empty) {
-                super.updateItem(u, empty);
-                setText(empty || u == null ? null : formatUser(u));
-            }
-        });
-        combo.setButtonCell(new ListCell<>() {
-            @Override
-            protected void updateItem(User u, boolean empty) {
-                super.updateItem(u, empty);
-                setText(empty || u == null ? null : formatUser(u));
-            }
-        });
-    }
-
+   
     private static String formatUser(User u) {
         return (u.getPrenom() != null ? u.getPrenom().trim() : "") + " " + (u.getNom() != null ? u.getNom().trim() : "")
                 + (u.getMail() != null ? "  ·  " + u.getMail() : "");
@@ -126,7 +104,13 @@ public class DoctorFront {
         return u.getPrenom() + " " + u.getNom();
     }
 
-    
+    private static String formatFicheSummary(Fiche f) {
+        if (f == null) {
+            return "Fiche liée";
+        }
+        String d = f.getDate() != null ? f.getDate().toString() : "";
+        return (f.getLibelleMaladie() != null ? f.getLibelleMaladie() : "Fiche") + " · " + d;
+    }
 
     @FXML
     public void deconnexion(ActionEvent event) {
