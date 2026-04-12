@@ -619,41 +619,7 @@ public class Dashboard {
         return true;
     }
 
-    private boolean matchesOrdonnanceAllFields(Ordonnance o, String q) {
-        if (contains(o.getPosologie(), q) || contains(o.getFrequence(), q)) {
-            return true;
-        }
-        if (contains(String.valueOf(o.getDureeTraitement()), q)) {
-            return true;
-        }
-        if (o.getDate() != null && contains(o.getDate().toString(), q)) {
-            return true;
-        }
-        if (contains(String.valueOf(o.getId()), q) || contains(String.valueOf(o.getFicheId()), q)) {
-            return true;
-        }
-        Fiche f = ficheService.getOneById(o.getFicheId());
-        if (f != null && matchesFicheAllFields(f, q)) {
-            return true;
-        }
-        String ficheSummary = ordonnanceFicheSummary(f);
-        if (contains(ficheSummary, q)) {
-            return true;
-        }
-        String medSummary = ordonnanceService.getMedicamentsSummaryForOrdonnance(o.getId());
-        return contains(medSummary, q);
-    }
 
-    private static Comparator<Ordonnance> ordonnanceComparator(String sort) {
-        Comparator<Ordonnance> byDate = Comparator.comparing(Ordonnance::getDate, Comparator.nullsLast(Comparator.naturalOrder()));
-        Comparator<Ordonnance> byDuree = Comparator.comparingInt(Ordonnance::getDureeTraitement);
-        return switch (sort) {
-            case "Date (↓)" -> byDate.reversed();
-            case "Durée (↑)" -> byDuree;
-            case "Durée (↓)" -> byDuree.reversed();
-            default -> byDate;
-        };
-    }
 
     private static String safeLower(String s) {
         return s == null ? "" : s.toLowerCase(Locale.ROOT);
@@ -692,7 +658,37 @@ public class Dashboard {
         }
     }
 
-    
+    @FXML
+    void RechCreneau(ActionEvent event) {
+    }
+
+    @FXML
+    void RechEvent(ActionEvent event) {
+    }
+
+    @FXML
+    void RechUser(ActionEvent event) {
+    }
+
+    @FXML
+    void addCreneau(ActionEvent event) {
+    }
+
+    @FXML
+    void addEvent(ActionEvent event) {
+    }
+
+    @FXML
+    public void deconnexion(ActionEvent event) {
+        userService.logout();
+        try {
+            Parent root = FXMLLoader.load(getClass().getResource("/Login.fxml"));
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.setScene(new Scene(root));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     @FXML
     void deleteCreneau(ActionEvent event) {
