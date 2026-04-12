@@ -70,17 +70,7 @@ public class DoctorFront {
         doctorRefreshMyCare(null);
     }
 
-    private static void bindFlowWrap(FlowPane flow) {
-        if (flow == null) {
-            return;
-        }
-        javafx.scene.control.ScrollPane sp = null;
-        for (javafx.scene.Parent walk = flow.getParent(); walk != null; walk = walk.getParent()) {
-            if (walk instanceof javafx.scene.control.ScrollPane scroll) {
-                sp = scroll;
-                break;
-            }
-        }
+    
         if (sp == null) {
             return;
         }
@@ -90,7 +80,29 @@ public class DoctorFront {
         listener.changed(sp.widthProperty(), sp.getWidth(), sp.getWidth());
     }
 
-   
+    private List<User> patientsOnly() {
+        return userService.getAll().stream().filter(MedicalFormDialogs::isPatientUser).toList();
+    }
+
+    private static void wirePatientCombo(ComboBox<User> combo) {
+        combo.setPrefWidth(360);
+        combo.setPromptText("Choisir un patient…");
+        combo.setCellFactory(lv -> new ListCell<>() {
+            @Override
+            protected void updateItem(User u, boolean empty) {
+                super.updateItem(u, empty);
+                setText(empty || u == null ? null : formatUser(u));
+            }
+        });
+        combo.setButtonCell(new ListCell<>() {
+            @Override
+            protected void updateItem(User u, boolean empty) {
+                super.updateItem(u, empty);
+                setText(empty || u == null ? null : formatUser(u));
+            }
+        });
+    }
+
     private static String formatUser(User u) {
         return (u.getPrenom() != null ? u.getPrenom().trim() : "") + " " + (u.getNom() != null ? u.getNom().trim() : "")
                 + (u.getMail() != null ? "  ·  " + u.getMail() : "");
