@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.chart.BarChart?>
+<?import javafx.scene.chart.CategoryAxis?>
+<?import javafx.scene.chart.LineChart?>
+<?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.chart.PieChart?>
+<?import javafx.scene.chart.ScatterChart?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="tn.dhc.controllers.UserEngagementStatsController"
+      prefHeight="850.0" prefWidth="1250.0" spacing="0"
+      style="-fx-background-color:#f5f5f5;"
+      stylesheets="@theme.css">
+   <padding>
+      <Insets bottom="20" left="20" right="20" top="20" />
+   </padding>
+   <children>
+      <HBox alignment="CENTER_LEFT" spacing="12" style="-fx-padding:0 0 16 0;">
+         <children>
+            <VBox spacing="4">
+               <children>
+                  <Label style="-fx-font-size:22px; -fx-font-weight:bold; -fx-text-fill:#00b3a6;" text="Statistiques engagement — utilisateurs" />
+                  <Label style="-fx-text-fill:#64748b; -fx-font-size:12px;" text="Basé sur login_count et last_login_at (même logique que l'analyse Grok)." wrapText="true" />
+               </children>
+            </VBox>
+            <Region HBox.hgrow="ALWAYS" />
+            <Button mnemonicParsing="false" onAction="#backToDashboard" prefHeight="38" styleClass="btn-secondary" text="← Retour au dashboard" />
+            <Button mnemonicParsing="false" onAction="#runGrokUserEngagementAnalysis" prefHeight="38" styleClass="btn-primary" text="🤖 Engagement (Grok)" />
+         </children>
+      </HBox>
+      <ScrollPane fitToWidth="true" hbarPolicy="NEVER" style="-fx-background:transparent; -fx-background-color:transparent;" VBox.vgrow="ALWAYS">
+         <content>
+            <VBox spacing="16" style="-fx-background-color:white; -fx-background-radius:12; -fx-padding:20; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 10, 0, 0, 2);">
+               <children>
+                  <Label style="-fx-font-size:16px; -fx-font-weight:bold; -fx-text-fill:#00b3a6;" text="Vue d’ensemble connexions &amp; segments estimés" />
+                  <Separator />
+                  <HBox alignment="TOP_LEFT" spacing="14">
+                     <children>
+                        <VBox prefWidth="340" spacing="8">
+                           <children>
+                              <Label style="-fx-font-weight:bold; -fx-text-fill:#334155;" text="Répartition par segment" />
+                              <PieChart fx:id="userEngagementPie" prefHeight="260" />
+                           </children>
+                        </VBox>
+                        <VBox HBox.hgrow="ALWAYS" spacing="8">
+                           <children>
+                              <Label style="-fx-font-weight:bold; -fx-text-fill:#334155;" text="Dernière connexion (tranches en jours)" />
+                              <BarChart fx:id="userRecencyBarChart" legendVisible="false" prefHeight="260">
+                                 <xAxis>
+                                    <CategoryAxis label="Tranche" />
+                                 </xAxis>
+                                 <yAxis>
+                                    <NumberAxis label="Utilisateurs" />
+                                 </yAxis>
+                              </BarChart>
+                           </children>
+                        </VBox>
+                     </children>
+                  </HBox>
+                  <HBox alignment="TOP_LEFT" spacing="14">
+                     <children>
+                        <VBox HBox.hgrow="ALWAYS" spacing="8">
+                           <children>
+                              <Label style="-fx-font-weight:bold; -fx-text-fill:#334155;" text="Connexions moyennes par rôle" />
+                              <LineChart fx:id="userAvgLoginsLineChart" legendVisible="false" prefHeight="280">
+                                 <xAxis>
+                                    <CategoryAxis label="Rôle" />
+                                 </xAxis>
+                                 <yAxis>
+                                    <NumberAxis label="Moyenne login_count" />
+                                 </yAxis>
+                              </LineChart>
+                           </children>
+                        </VBox>
+                        <VBox HBox.hgrow="ALWAYS" spacing="8">
+                           <children>
+                              <Label style="-fx-font-weight:bold; -fx-text-fill:#334155;" text="Jours depuis login vs nb connexions" />
+                              <ScatterChart fx:id="userLoginScatterChart" legendVisible="false" prefHeight="280">
+                                 <xAxis>
+                                    <NumberAxis autoRanging="true" label="Jours depuis dernière connexion" />
+                                 </xAxis>
+                                 <yAxis>
+                                    <NumberAxis autoRanging="true" label="login_count" />
+                                 </yAxis>
+                              </ScatterChart>
+                           </children>
+                        </VBox>
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+         </content>
+      </ScrollPane>
+   </children>
+</VBox>

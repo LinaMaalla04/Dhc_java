@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.chart.BarChart?>
+<?import javafx.scene.chart.CategoryAxis?>
+<?import javafx.scene.chart.LineChart?>
+<?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.chart.PieChart?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+
+<VBox alignment="TOP_CENTER" minHeight="0.0" prefWidth="950" spacing="0" style="-fx-background-color: #f5f5f5;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tn.dhc.controllers.DoctorFront">
+    <children>
+      <HBox alignment="CENTER_LEFT" spacing="12.0" style="-fx-background-color: linear-gradient(to right, #00b3a6, #00d4c8); -fx-padding: 10;" stylesheets="@theme.css">
+         <children>
+            <ImageView fitHeight="104.0" fitWidth="137.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@Logo.png" />
+               </image>
+            </ImageView>
+            <Label style="-fx-text-fill: #ffffff;" text="DHC - Espace Médecin" textFill="WHITE">
+               <font>
+                  <Font name="Arial Unicode MS" size="36.0" />
+               </font>
+            </Label>
+            <Region prefHeight="104.0" prefWidth="99.0" stylesheets="@theme.css" HBox.hgrow="ALWAYS" />
+            <Button mnemonicParsing="false" onAction="#deconnexion" styleClass="btn-logout" text="🚪 Déconnexion" />
+         </children>
+      </HBox>
+      <TabPane minHeight="0.0" prefWidth="1250.0" style="-fx-font-size:14px; -fx-background-color:#f5f5f5;" stylesheets="@theme.css" tabClosingPolicy="UNAVAILABLE" VBox.vgrow="ALWAYS">
+         <padding>
+            <Insets bottom="20" left="20" right="20" top="20" />
+         </padding>
+         <tabs>
+            <Tab text="🏠 Accueil">
+               <content>
+                  <VBox spacing="15" style="-fx-background-color:white; -fx-background-radius:12; -fx-padding:20; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 10, 0, 0, 2);" VBox.vgrow="ALWAYS">
+                     <children>
+                        <Label style="-fx-font-size:22px; -fx-font-weight:bold; -fx-text-fill:#00b3a6;" text="Tableau de bord médecin" />
+                        <HBox spacing="16" VBox.vgrow="ALWAYS">
+                           <children>
+                              <VBox spacing="10" HBox.hgrow="ALWAYS">
+                                 <children>
+                                    <Label style="-fx-font-weight:bold;" text="RDV par statut" />
+                                    <PieChart fx:id="doctorRdvStatusPie" prefHeight="260" prefWidth="360" />
+                                 </children>
+                              </VBox>
+                              <VBox spacing="10" HBox.hgrow="ALWAYS">
+                                 <children>
+                                    <Label style="-fx-font-weight:bold;" text="Évolution RDV (30 jours)" />
+                                    <LineChart fx:id="doctorRdvLineChart" prefHeight="260" prefWidth="520" title="">
+                                       <xAxis>
+                                          <CategoryAxis label="Date" />
+                                       </xAxis>
+                                       <yAxis>
+                                          <NumberAxis label="RDV" />
+                                       </yAxis>
+                                    </LineChart>
+                                 </children>
+                              </VBox>
+                           </children>
+                        </HBox>
+                        <VBox spacing="10" VBox.vgrow="ALWAYS">
+                           <children>
+                              <Label style="-fx-font-weight:bold;" text="Fiches créées par gravité" />
+                              <BarChart fx:id="doctorGraviteBarChart" prefHeight="280" title="">
+                                 <xAxis>
+                                    <CategoryAxis label="Gravité" />
+                                 </xAxis>
+                                 <yAxis>
+                                    <NumberAxis label="Nombre de fiches" />
+                                 </yAxis>
+                              </BarChart>
+                           </children>
+                        </VBox>
+                     </children>
+                  </VBox>
+               </content>
+            </Tab>
+            <Tab text="🕒 Rendez-vous / créneaux">
+               <content>
+                  <VBox spacing="15" style="-fx-background-color:white; -fx-background-radius:12; -fx-padding:20; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 10, 0, 0, 2);">
+                     <children>
+                        <Label style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: linear-gradient(to right, #00b3a6, #00d4c8);" text="Planning et rendez-vous" />
+                        <Label style="-fx-font-size: 14px; -fx-text-fill: #555;" text="Confirmez ici les rendez-vous pris par vos patients." wrapText="true" />
+                        <HBox alignment="CENTER_LEFT" spacing="12">
+                           <children>
+                              <Button mnemonicParsing="false" onAction="#doctorRefreshRendezVous" styleClass="btn-secondary" text="🔄 Rafraîchir RDV" />
+                           </children>
+                        </HBox>
+                        <ScrollPane fitToWidth="true" hbarPolicy="NEVER" pannable="true" VBox.vgrow="ALWAYS">
+                           <content>
+                              <FlowPane fx:id="doctorPendingRdvsFlow" alignment="TOP_LEFT" hgap="18" style="-fx-padding:8 4 16 4;" vgap="18" />
+                           </content>
+                        </ScrollPane>
+                     </children>
+                  </VBox>
+               </content>
+            </Tab>
+            <Tab text="🏥 Fiches &amp; ordonnances">
+               <content>
+                  <BorderPane minHeight="0.0" style="-fx-background-color: #f5f5f5;">
+                     <center>
+                        <ScrollPane fitToWidth="true" hbarPolicy="NEVER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minViewportHeight="120.0" pannable="true" styleClass="clinical-tab-outer-scroll" BorderPane.alignment="CENTER">
+                           <content>
+                              <VBox maxWidth="1.7976931348623157E308" spacing="14" style="-fx-background-color:white; -fx-background-radius:12; -fx-padding:20; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 10, 0, 0, 2);">
+                                 <children>
+                                    <Label fx:id="doctorWelcomeLabel" style="-fx-font-size: 15px; -fx-text-fill: #333;" wrapText="true" />
+                                    <Label style="-fx-font-size: 13px; -fx-text-fill: #555;" text="1) Choisissez le patient.  2) Créez une fiche si besoin.  3) Créez l'ordonnance liée à une de ses fiches (médicaments en base)." wrapText="true" />
+                                    <HBox alignment="CENTER_LEFT" spacing="12">
+                                       <children>
+                                          <Label style="-fx-font-weight:600;" text="Patient" />
+                                          <ComboBox fx:id="doctorPatientCombo" prefHeight="38" prefWidth="420" />
+                                          <Button mnemonicParsing="false" onAction="#doctorRefreshPatients" styleClass="btn-secondary" text="🔄 Patients" />
+                                       </children>
+                                    </HBox>
+                                    <HBox alignment="CENTER_LEFT" spacing="12">
+                                       <children>
+                                          <Button mnemonicParsing="false" onAction="#doctorCreateFiche" styleClass="btn-primary" text="➕ Nouvelle fiche" />
+                                          <Button mnemonicParsing="false" onAction="#doctorCreateOrdonnance" styleClass="btn-primary" text="➕ Nouvelle ordonnance" />
+                                          <Button mnemonicParsing="false" onAction="#doctorRefreshMyCare" styleClass="btn-secondary" text="🔄 Mes fiches / ordonnances" />
+                                       </children>
+                                    </HBox>
+                                    <Label style="-fx-font-weight:bold; -fx-font-size:14px;" text="Fiches que j'ai créées" />
+                                    <FlowPane fx:id="doctorMyFichesFlow" alignment="TOP_LEFT" hgap="18" vgap="18" style="-fx-padding:8 4 16 4;" />
+                                    <Label style="-fx-font-weight:bold; -fx-font-size:14px; -fx-padding: 12 0 0 0;" text="Ordonnances que j'ai prescrites" />
+                                    <FlowPane fx:id="doctorMyOrdonnancesFlow" alignment="TOP_LEFT" hgap="18" vgap="18" style="-fx-padding:8 4 16 4;" />
+                                 </children>
+                              </VBox>
+                           </content>
+                        </ScrollPane>
+                     </center>
+                  </BorderPane>
+               </content>
+            </Tab>
+         </tabs>
+      </TabPane>
+    </children>
+</VBox>
