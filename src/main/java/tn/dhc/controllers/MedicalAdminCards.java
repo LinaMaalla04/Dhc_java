@@ -98,30 +98,40 @@ public final class MedicalAdminCards {
         return card;
     }
 
+    /** Carte fiche sans actions (patient / médecin consultation). */
+    public static VBox ficheCardViewOnly(Fiche f, String patientLabel) {
+        Label allergy = wrapMetaComfort("Allergies / chroniques : "
+                + shorten(nullSafe(f.getAllergie()) + " · " + nullSafe(f.getMaladieChronique()), 220));
+        VBox card = wrapCardComfort(titleComfort("📋 " + nullSafe(f.getLibelleMaladie())),
+                metaComfort("👤 Patient : " + nullSafe(patientLabel)),
+                metaComfort(String.format("⚖ %.1f kg · %.0f cm · glycémie %.1f", f.getPoids(), f.getTaille(), f.getGlycemie())),
+                metaComfort("🩸 " + nullSafe(f.getGrpSanguin()) + " · tension " + nullSafe(f.getTension())),
+                metaComfort("📅 " + (f.getDate() != null ? f.getDate().toString() : "—")),
+                metaComfort("⚠ Gravité : " + nullSafe(f.getGravite())),
+                allergy);
+        card.setUserData(f);
+        return card;
+    }
 
-
-    /** Carte ordonnance lecture seule (médecin). */
-    public static VBox ordonnanceCardViewOnly(Ordonnance o, String ficheSummary, String medicamentsSummary) {
+    /** Carte ordonnance avec bouton export PDF (patient). */
+    public static VBox ordonnanceCardWithPdfExport(Ordonnance o, String ficheSummary, String medicamentsSummary,
+                                                   Runnable onExportPdf) {
         String d = o.getDate() != null ? o.getDate().toString() : "—";
+        HBox actions = actionRowSingle(comfortButton("Exporter en PDF", "btn-primary", onExportPdf));
         VBox card = wrapCardComfort(
                 titleComfort("📜 Ordonnance"),
                 metaComfort("📎 Fiche : " + nullSafe(ficheSummary)),
                 wrapMetaComfort("💊 Médicaments : " + shorten(nullSafe(medicamentsSummary), 200)),
                 wrapMetaComfort("Posologie : " + shorten(nullSafe(o.getPosologie()), 320)),
                 metaComfort("⏱ " + nullSafe(o.getFrequence()) + " · durée " + o.getDureeTraitement() + " jour(s)"),
-                metaComfort("📅 " + d));
+                metaComfort("📅 " + d),
+                new Separator(),
+                actions);
         card.setUserData(o);
         return card;
     }
 
-    private static HBox actionRowSingle(Button primary) {
-        HBox h = new HBox(10, primary);
-        h.setAlignment(Pos.CENTER_LEFT);
-        h.setPadding(new Insets(8, 0, 0, 0));
-        Region spacer = new Region();
-        HBox.setHgrow(spacer, Priority.ALWAYS);
-        return new HBox(10, h, spacer);
-    }
+    
 
     /** Cartes larges pour espaces patient / médecin. */
     private static VBox wrapCardComfort(javafx.scene.Node... nodes) {
