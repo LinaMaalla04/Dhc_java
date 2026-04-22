@@ -58,27 +58,7 @@ public final class MedicalAdminCards {
         return card;
     }
 
-    public static VBox ficheCard(Fiche f, String patientLabel, Runnable onEdit, Runnable onDelete) {
-        Label title = titled("📋 " + nullSafe(f.getLibelleMaladie()));
-        Label patient = meta("👤 Patient : " + nullSafe(patientLabel));
-        Label vitals = meta(String.format("⚖ %.1f kg · %.0f cm · glycémie %.1f", f.getPoids(), f.getTaille(), f.getGlycemie()));
-        Label sang = meta("🩸 " + nullSafe(f.getGrpSanguin()) + " · tension " + nullSafe(f.getTension()));
-        String d = f.getDate() != null ? f.getDate().toString() : "—";
-        Label dateL = meta("📅 " + d);
-        Label grav = meta("⚠ Gravité : " + nullSafe(f.getGravite()));
-        Label allergy = wrapMeta("Allergies / chroniques : "
-                + shorten(nullSafe(f.getAllergie()) + " · " + nullSafe(f.getMaladieChronique()), 120));
-
-        HBox actions = actionRow(
-                smallButton("Modifier", "btn-secondary", onEdit),
-                smallButton("Supprimer", "btn-danger", onDelete)
-        );
-
-        VBox card = wrapCard(title, patient, vitals, sang, dateL, grav, allergy, new Separator(), actions);
-        card.setUserData(f);
-        return card;
-    }
-
+    
     public static VBox ordonnanceCard(Ordonnance o, String ficheSummary, String medicamentsSummary, Runnable onEdit, Runnable onDelete) {
         Label title = titled("📜 Ordonnance");
         Label fiche = meta("📎 Fiche : " + nullSafe(ficheSummary));
