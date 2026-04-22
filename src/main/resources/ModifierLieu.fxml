@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tn.dhc.controllers.ModifierLieu">
+   <children>
+      <VBox layoutX="10.0" layoutY="10.0" spacing="15" style="-fx-background-color:white; -fx-background-radius:12; -fx-padding:20; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 10, 0, 0, 2);">
+         <children>
+            <HBox alignment="CENTER" spacing="10" style="-fx-background-color: linear-gradient(to right, #00b3a6, #00d4c8); -fx-background-radius: 12; -fx-padding: 15;" stylesheets="@theme.css">
+               <children>
+                  <VBox alignment="CENTER_LEFT" spacing="5" HBox.hgrow="ALWAYS">
+                     <children>
+                        <Label style="-fx-font-size: 20px; -fx-font-weight: bold;" stylesheets="@theme.css" text="📍 Modifier un Lieu" textFill="WHITE" />
+                     </children>
+                  </VBox>
+               </children>
+            </HBox>
+            <HBox prefHeight="78.0" prefWidth="860.0" spacing="15">
+               <children>
+                  <VBox maxWidth="Infinity" spacing="15" HBox.hgrow="ALWAYS">
+                     <children>
+                        <VBox spacing="10" style="-fx-background-radius: 12; -fx-padding: 15; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 8, 0, 0, 2);" VBox.vgrow="ALWAYS">
+                           <children>
+                              <VBox prefHeight="104.0" prefWidth="518.0" spacing="10" style="-fx-background-color: white; -fx-background-radius: 12; -fx-padding: 15; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 8, 0, 0, 2);">
+                                 <children>
+                                    <HBox prefHeight="34.0" prefWidth="415.0">
+                                       <children>
+                                          <VBox spacing="5">
+                                             <children>
+                                                <Label style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #00b3a6;" text="Nom" />
+                                                <TextField fx:id="modLieuNom" prefHeight="42.0" prefWidth="405.0" promptText="Nom..." styleClass="input-field" stylesheets="@theme.css" />
+                                             </children>
+                                          </VBox>
+                                          <Region prefHeight="84.0" prefWidth="28.0" />
+                                          <VBox spacing="5" stylesheets="@theme.css">
+                                             <children>
+                                                <Label style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #00b3a6;" text="Ville" />
+                                                <TextField fx:id="modLieuVille" prefHeight="42.0" prefWidth="395.0" promptText="Ville..." styleClass="input-field" stylesheets="@theme.css" />
+                                             </children>
+                                          </VBox>
+                                          <Separator />
+                                          <VBox spacing="5" stylesheets="@theme.css">
+                                             <children>
+                                                <Label style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #00b3a6;" text="Capacité Max" />
+                                                <TextField fx:id="modLieuCapacite" prefHeight="42.0" prefWidth="276.0" promptText="Saisissez une capacité maximale" styleClass="input-field" stylesheets="@theme.css" />
+                                             </children>
+                                          </VBox>
+                                       </children>
+                                    </HBox>
+                                 </children>
+                              </VBox>
+                              <VBox prefHeight="127.0" prefWidth="518.0" spacing="10" style="-fx-background-color: white; -fx-background-radius: 12; -fx-padding: 15; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 8, 0, 0, 2);">
+                                 <children>
+                                    <Label style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #00b3a6;" text="Adresse" />
+                                    <TextField fx:id="modLieuAdresse" prefHeight="78.0" prefWidth="488.0" promptText="Saisissez l'adresse exacte..." styleClass="input-field" stylesheets="@theme.css" />
+                                 </children>
+                              </VBox>
+                           </children>
+                        </VBox>
+                     </children>
+                  </VBox>
+               </children>
+            </HBox>
+            <HBox alignment="CENTER" spacing="20" style="-fx-padding: 5 0 0 0;">
+               <children>
+                  <Button onAction="#ModifierLieu" prefHeight="40" prefWidth="180" style="-fx-background-color: linear-gradient(#00b3a6, #009988); -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14px; -fx-background-radius: 10; -fx-cursor: hand;" text="✓ Modifier le lieu" />
+                  <Button onAction="#annuler" prefHeight="40" prefWidth="120" style="-fx-background-color: #e0e0e0; -fx-text-fill: #333; -fx-font-weight: bold; -fx-font-size: 14px; -fx-background-radius: 10; -fx-cursor: hand;" text="✗ Annuler" />
+               </children>
+            </HBox>
+         </children>
+      </VBox>
+   </children>
+</AnchorPane>

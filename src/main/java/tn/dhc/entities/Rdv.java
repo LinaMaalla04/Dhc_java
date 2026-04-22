@@ -11,12 +11,12 @@ public class Rdv {
     private LocalDate dateRdv;
     private int creneauId;
     private int userId;
+    private Creneau creneau;
 
-    // 🔹 Constructeur vide
+
     public Rdv() {
     }
 
-    // 🔹 Constructeur sans id
     public Rdv(String motif, String priorite, String statut,
                LocalDate dateRdv, int creneauId, int userId) {
         this.motif = motif;
@@ -27,7 +27,6 @@ public class Rdv {
         this.userId = userId;
     }
 
-    // 🔹 Constructeur avec id
     public Rdv(int id, String motif, String priorite, String statut,
                LocalDate dateRdv, int creneauId, int userId) {
         this.id = id;
@@ -39,7 +38,6 @@ public class Rdv {
         this.userId = userId;
     }
 
-    // 🔹 Getters & Setters
 
     public int getId() {
         return id;
@@ -96,18 +94,21 @@ public class Rdv {
     public void setUserId(int userId) {
         this.userId = userId;
     }
+    public Creneau getCreneau() {
+        return creneau;
+    }
 
-    // 🔹 toString
+    public void setCreneau(Creneau creneau) {
+        this.creneau = creneau;
+    }
+
     @Override
     public String toString() {
-        return "Rdv{" +
-                "id=" + id +
-                ", motif='" + motif + '\'' +
-                ", priorite='" + priorite + '\'' +
-                ", statut='" + statut + '\'' +
-                ", dateRdv=" + dateRdv +
-                ", creneauId=" + creneauId +
-                ", userId=" + userId +
-                '}';
+        return "📌 Motif: " + motif + " | " +
+                "⚡ Priorité: " + priorite + " | " +
+                "📊 Statut: " + statut + " | " +
+                "📅 Date: " + dateRdv ;
+//                "  + | 🕐 " + (creneau != null ?
+//                creneau.getHdebut() + "-" + creneau.getHfin() : creneauId) ;
     }
 }

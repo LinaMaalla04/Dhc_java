@@ -12,11 +12,9 @@ public class Creneau {
     private String statut;
     private int userId;
 
-    // 🔹 Constructeur vide
     public Creneau() {
     }
 
-    // 🔹 Constructeur sans id
     public Creneau(LocalDate dateCreneau, LocalTime hdebut, LocalTime hfin,
                    String statut, int userId) {
         this.dateCreneau = dateCreneau;
@@ -26,7 +24,6 @@ public class Creneau {
         this.userId = userId;
     }
 
-    // 🔹 Constructeur avec id
     public Creneau(int id, LocalDate dateCreneau, LocalTime hdebut, LocalTime hfin,
                    String statut, int userId) {
         this.id = id;
@@ -37,7 +34,6 @@ public class Creneau {
         this.userId = userId;
     }
 
-    // 🔹 Getters & Setters
 
     public int getId() {
         return id;
@@ -87,12 +83,10 @@ public class Creneau {
         this.userId = userId;
     }
 
-    // 🔹 toString
     @Override
     public String toString() {
         return "📅 " + dateCreneau +
                 " | 🕐 " + hdebut + " - " + hfin +
-                " | 📌 " + statut +
-                " | 👤 User ID: " + userId;
+                " | 📌 " + statut;
     }
 }

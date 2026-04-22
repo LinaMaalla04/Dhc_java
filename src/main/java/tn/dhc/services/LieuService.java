@@ -15,7 +15,6 @@ public class LieuService implements IService<Lieu> {
         cnx = MyConnection.getInstance().getConnection();
     }
 
-    // ✅ CREATE
     @Override
     public void ajouter(Lieu l) {
         try {
@@ -41,7 +40,6 @@ public class LieuService implements IService<Lieu> {
         }
     }
 
-    // ✅ DELETE
     @Override
     public void supprimer(Lieu l) {
         try {
@@ -55,7 +53,6 @@ public class LieuService implements IService<Lieu> {
         }
     }
 
-    // ✅ UPDATE
     @Override
     public void modifier(Lieu l) {
         try {
@@ -82,7 +79,6 @@ public class LieuService implements IService<Lieu> {
         }
     }
 
-    // ✅ GET ALL
     @Override
     public List<Lieu> getAll() {
         List<Lieu> lieux = new ArrayList<>();
@@ -103,7 +99,6 @@ public class LieuService implements IService<Lieu> {
         return lieux;
     }
 
-    // ✅ GET ONE
     @Override
     public Lieu getOneById(int id) {
         try {
@@ -124,7 +119,6 @@ public class LieuService implements IService<Lieu> {
         return null;
     }
 
-    // 🔁 MAPPING
     private Lieu mapResultSetToLieu(ResultSet rs) throws SQLException {
         return new Lieu(
                 rs.getInt("id"),

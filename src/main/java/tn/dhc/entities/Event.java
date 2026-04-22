@@ -15,12 +15,13 @@ public class Event {
     private Integer nbParticipant;
     private int userId;
     private int eventLieuId;
+    private Lieu lieu;
 
-    // 🔹 Constructeur vide
+
+
     public Event() {
     }
 
-    // 🔹 Constructeur sans id
     public Event(String titreEvent, String themeSante, String description,
                  LocalDate dateEvent, LocalTime heureDebut, LocalTime heureFin,
                  Integer nbParticipant, int userId, int eventLieuId) {
@@ -35,7 +36,6 @@ public class Event {
         this.eventLieuId = eventLieuId;
     }
 
-    // 🔹 Constructeur avec id
     public Event(int id, String titreEvent, String themeSante, String description,
                  LocalDate dateEvent, LocalTime heureDebut, LocalTime heureFin,
                  Integer nbParticipant, int userId, int eventLieuId) {
@@ -51,7 +51,6 @@ public class Event {
         this.eventLieuId = eventLieuId;
     }
 
-    // 🔹 Getters & Setters
 
     public int getId() {
         return id;
@@ -133,7 +132,14 @@ public class Event {
         this.eventLieuId = eventLieuId;
     }
 
-    // 🔹 toString
+    public Lieu getLieu() {
+        return lieu;
+    }
+
+    public void setLieu(Lieu lieu) {
+        this.lieu = lieu;
+    }
+
     @Override
     public String toString() {
         return "📌 Titre: " + titreEvent + " | " +
@@ -141,7 +147,7 @@ public class Event {
                 "📝 Description: " + description + " | " +
                 "📅 Date: " + dateEvent + " | " +
                 "⏰ Horaire: " + heureDebut + " - " + heureFin + " | " +
-                "👥 Participants: " + nbParticipant + " | " +
-                "👤 Organisateur (ID): " + userId;
+                "👥 Participants: " + nbParticipant  ;
+//                "+ " | " +📍 Lieu ID: " + (lieu != null ? lieu.getId() : eventLieuId);
     }
 }

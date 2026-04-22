@@ -16,6 +16,8 @@ public class Fiche {
     private String gravite;
     private String recommandation;
     private int userId;
+    /** Médecin ayant créé la fiche (espace médecin) ; null si créée par l’admin. */
+    private Integer medecinUserId;
 
     public Fiche() {
     }
@@ -159,6 +161,14 @@ public class Fiche {
         this.userId = userId;
     }
 
+    public Integer getMedecinUserId() {
+        return medecinUserId;
+    }
+
+    public void setMedecinUserId(Integer medecinUserId) {
+        this.medecinUserId = medecinUserId;
+    }
+
     @Override
     public String toString() {
         return "Fiche{" +
@@ -175,6 +185,7 @@ public class Fiche {
                 ", gravite='" + gravite + '\'' +
                 ", recommandation='" + recommandation + '\'' +
                 ", userId=" + userId +
+                ", medecinUserId=" + medecinUserId +
                 '}';
     }
 }
