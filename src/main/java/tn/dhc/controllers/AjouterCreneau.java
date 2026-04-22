@@ -3,10 +3,14 @@ package tn.dhc.controllers;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> dfeb78e (mdp oublié)
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+<<<<<<< HEAD
 import javafx.scene.control.*;
 import javafx.stage.Stage;
 import tn.dhc.entities.Creneau;
@@ -14,11 +18,18 @@ import tn.dhc.services.CreneauService;
 
 import java.io.IOException;
 =======
+=======
+>>>>>>> dfeb78e (mdp oublié)
 import javafx.scene.control.*;
+import javafx.stage.Stage;
 import tn.dhc.entities.Creneau;
 import tn.dhc.services.CreneauService;
 
+<<<<<<< HEAD
 >>>>>>> d47e962 (Events CRUD)
+=======
+import java.io.IOException;
+>>>>>>> dfeb78e (mdp oublié)
 import java.time.LocalDate;
 import java.time.LocalTime;
 
@@ -42,9 +53,12 @@ public class AjouterCreneau {
     private final CreneauService creneauService = new CreneauService();
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
     // INIT COMBOBOX
 >>>>>>> d47e962 (Events CRUD)
+=======
+>>>>>>> dfeb78e (mdp oublié)
     @FXML
     public void initialize() {
 
@@ -61,10 +75,14 @@ public class AjouterCreneau {
     }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 =======
     // AJOUT BDD
 >>>>>>> d47e962 (Events CRUD)
+=======
+
+>>>>>>> dfeb78e (mdp oublié)
     @FXML
     void ajouterCreneau(ActionEvent event) {
 
@@ -101,6 +119,9 @@ public class AjouterCreneau {
             showAlert(Alert.AlertType.INFORMATION, "Succès", "Créneau ajouté avec succès !");
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> dfeb78e (mdp oublié)
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/Dashboard.fxml"));
             Parent root = loader.load();
 
@@ -108,9 +129,12 @@ public class AjouterCreneau {
 
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             stage.setScene(new Scene(root));
+<<<<<<< HEAD
 =======
             annuler(event);
 >>>>>>> d47e962 (Events CRUD)
+=======
+>>>>>>> dfeb78e (mdp oublié)
 
         } catch (Exception e) {
             showAlert(Alert.AlertType.ERROR, "Erreur", e.getMessage());
@@ -118,15 +142,21 @@ public class AjouterCreneau {
     }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
     // RESET
 >>>>>>> d47e962 (Events CRUD)
+=======
+>>>>>>> dfeb78e (mdp oublié)
     @FXML
     void annuler(ActionEvent event) {
         addCreneauDate.setValue(null);
         addCreneauDebut.setValue(null);
         addCreneauFin.setValue(null);
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> dfeb78e (mdp oublié)
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/Dashboard.fxml"));
         Parent root = null;
         try {
@@ -139,6 +169,7 @@ public class AjouterCreneau {
 
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         stage.setScene(new Scene(root));
+<<<<<<< HEAD
     }
 
 =======
@@ -146,6 +177,10 @@ public class AjouterCreneau {
 
     // ALERT
 >>>>>>> d47e962 (Events CRUD)
+=======
+    }
+
+>>>>>>> dfeb78e (mdp oublié)
     private void showAlert(Alert.AlertType type, String title, String message) {
         Alert alert = new Alert(type);
         alert.setTitle(title);

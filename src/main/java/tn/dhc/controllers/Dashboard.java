@@ -5,6 +5,9 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> dfeb78e (mdp oublié)
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -18,6 +21,7 @@ import javafx.stage.Stage;
 import javafx.stage.Window;
 import tn.dhc.entities.*;
 import tn.dhc.services.*;
+<<<<<<< HEAD
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -37,6 +41,15 @@ import tn.dhc.services.CreneauService;
 import tn.dhc.entities.Event;
 import tn.dhc.services.EventService;
 >>>>>>> d47e962 (Events CRUD)
+=======
+
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Locale;
+import java.util.stream.Collectors;
+>>>>>>> dfeb78e (mdp oublié)
 
 public class Dashboard {
 
@@ -51,10 +64,14 @@ public class Dashboard {
 
     @FXML
 <<<<<<< HEAD
+<<<<<<< HEAD
     private ComboBox<String> RechCreneau;
 =======
     private TextField RechCreneauText;
 >>>>>>> d47e962 (Events CRUD)
+=======
+    private ComboBox<String> RechCreneau;
+>>>>>>> dfeb78e (mdp oublié)
 
     @FXML
     private TextField RechEventText;
@@ -67,10 +84,78 @@ public class Dashboard {
 
     @FXML
     private FlowPane pharmacyCardsFlow;
+<<<<<<< HEAD
+=======
+
+    @FXML
+    private FlowPane medicamentCardsFlow;
+
+    @FXML
+    private FlowPane ficheCardsFlow;
+
+    @FXML
+    private FlowPane ordonnanceCardsFlow;
+
+    @FXML
+    private TextField searchPharmacy;
+
+    @FXML
+    private TextField searchMedicament;
+
+    @FXML
+    private TextField searchFiche;
+
+    @FXML
+    private TextField searchOrdonnance;
+
+    @FXML
+    private ComboBox<String> pharmacyFilterCombo;
+
+    @FXML
+    private ComboBox<String> pharmacySortCombo;
+
+    @FXML
+    private ComboBox<String> medicamentFilterCombo;
+
+    @FXML
+    private ComboBox<String> medicamentSortCombo;
+
+    @FXML
+    private ComboBox<String> ficheFilterCombo;
+
+    @FXML
+    private ComboBox<String> ficheSortCombo;
+
+    @FXML
+    private ComboBox<String> ordonnanceFilterCombo;
+
+    @FXML
+    private ComboBox<String> ordonnanceSortCombo;
+
+    @FXML
+    private ComboBox<String> triCreneau;
+
+    @FXML
+    private ComboBox<String> triEvent;
+
+    @FXML
+    private ComboBox<String> triUser;
+
+    @FXML private TextField annonceAdminSearch;
+    @FXML private ComboBox<String> annonceAdminSort;
+    @FXML private VBox annonceAdminContainer;
+>>>>>>> dfeb78e (mdp oublié)
 
     private final UserService userService = new UserService();
     private final CreneauService creneauService = new CreneauService();
     private final EventService eventService = new EventService();
+    private final ServicePharmacie pharmacieService = new ServicePharmacie();
+    private final ServiceMedicament medicamentService = new ServiceMedicament();
+    private final ServiceFiche ficheService = new ServiceFiche();
+    private final ServiceOrdonnance ordonnanceService = new ServiceOrdonnance();
+    private final ServiceAnnonce serviceAnnonce = new ServiceAnnonce();
+
+    private Window primaryWindow;
 
     @FXML
 <<<<<<< HEAD
@@ -80,6 +165,7 @@ public class Dashboard {
         loadUsers();
         loadCreneaux();
         loadEvents();
+<<<<<<< HEAD
 >>>>>>> d47e962 (Events CRUD)
 
     @FXML
@@ -158,6 +244,10 @@ public class Dashboard {
         loadEvents();
         initAnnoncesAdmin();
 
+=======
+        initAnnoncesAdmin();
+
+>>>>>>> dfeb78e (mdp oublié)
         User cur = UserService.getCurrentUser();
         if (cur != null && adminNameLabel != null) {
             adminNameLabel.setText(cur.getPrenom() + " " + cur.getNom() + "  ·  " + cur.getRole());
@@ -703,6 +793,9 @@ public class Dashboard {
     }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> dfeb78e (mdp oublié)
     @FXML
     public void addPharmacie(ActionEvent event) {
         MedicalFormDialogs.showPharmacieDialog(window(), "Nouvelle pharmacie", null)
@@ -867,32 +960,284 @@ public class Dashboard {
     @FXML
     public void refreshFicheCards(ActionEvent event) {
         loadFicheCards();
+<<<<<<< HEAD
 =======
+=======
+    }
+
+    @FXML
+    public void addFiche(ActionEvent event) {
+        List<User> patients = patientsForFicheForm(null);
+        if (patients.isEmpty()) {
+            alert(Alert.AlertType.INFORMATION, "Aucun compte patient. Créez des utilisateurs avec le rôle « patient » avant d'ajouter une fiche.");
+            return;
+        }
+        MedicalFormDialogs.showFicheDialog(window(), "Nouvelle fiche médicale", null, patients)
+                .ifPresent(f -> {
+                    ficheService.ajouter(f);
+                    loadFicheCards();
+                    loadOrdonnanceCards();
+                });
+    }
+
+    private void editFiche(Fiche f) {
+        List<User> patients = patientsForFicheForm(f);
+        MedicalFormDialogs.showFicheDialog(window(), "Modifier la fiche", f, patients)
+                .ifPresent(x -> {
+                    ficheService.modifier(x);
+                    loadFicheCards();
+                    loadOrdonnanceCards();
+                });
+    }
+
+    private List<User> patientsForFicheForm(Fiche existing) {
+        List<User> patients = new ArrayList<>(userService.getAll().stream()
+                .filter(MedicalFormDialogs::isPatientUser)
+                .toList());
+        if (existing != null) {
+            User linked = userService.getOneById(existing.getUserId());
+            if (linked != null && patients.stream().noneMatch(u -> u.getId() == linked.getId())) {
+                patients.add(linked);
+            }
+        }
+        return patients;
+    }
+
+    private void deleteFiche(Fiche f) {
+        if (!confirm("Supprimer", "Supprimer cette fiche médicale ? Les ordonnances liées peuvent être affectées.")) {
+            return;
+        }
+        ficheService.supprimer(f);
+        loadFicheCards();
+        loadOrdonnanceCards();
+    }
+
+    private void loadFicheCards() {
+        if (ficheCardsFlow == null) {
+            return;
+        }
+        ficheCardsFlow.getChildren().clear();
+        String q = norm(searchFiche.getText());
+        String filter = ficheFilterCombo != null && ficheFilterCombo.getValue() != null
+                ? ficheFilterCombo.getValue() : "Toutes gravités";
+        String sort = ficheSortCombo != null && ficheSortCombo.getValue() != null
+                ? ficheSortCombo.getValue() : "Date (↑ ancien)";
+
+        List<Fiche> rows = new ArrayList<>();
+        for (Fiche f : ficheService.getAll()) {
+            if (passesFicheFilters(f, q, filter)) {
+                rows.add(f);
+            }
+        }
+        rows.sort(ficheComparator(sort));
+        for (Fiche f : rows) {
+            String patient = patientLabel(f.getUserId());
+            ficheCardsFlow.getChildren().add(MedicalAdminCards.ficheCard(f, patient,
+                    () -> editFiche(f),
+                    () -> deleteFiche(f)));
+        }
+    }
+
+    private String patientLabel(int userId) {
+        User u = userService.getOneById(userId);
+        if (u == null) {
+            return "—";
+        }
+        return u.getPrenom() + " " + u.getNom();
+    }
+
+    private boolean passesFicheFilters(Fiche f, String q, String graviteFilter) {
+        if (!MedicalInputValidation.graviteFilterMatches(f.getGravite(), graviteFilter)) {
+            return false;
+        }
+        if (!q.isEmpty() && !matchesFicheAllFields(f, q)) {
+            return false;
+        }
+        return true;
+    }
+
+    private boolean matchesFicheAllFields(Fiche f, String q) {
+        if (contains(patientLabel(f.getUserId()), q)) {
+            return true;
+        }
+        if (contains(f.getLibelleMaladie(), q) || contains(f.getAllergie(), q)
+                || contains(f.getMaladieChronique(), q) || contains(f.getGravite(), q)
+                || contains(f.getRecommandation(), q) || contains(f.getGrpSanguin(), q)
+                || contains(f.getTension(), q)) {
+            return true;
+        }
+        if (contains(String.valueOf(f.getPoids()), q) || contains(String.valueOf(f.getTaille()), q)
+                || contains(String.valueOf(f.getGlycemie()), q)) {
+            return true;
+        }
+        return (f.getDate() != null && contains(f.getDate().toString(), q))
+                || contains(String.valueOf(f.getId()), q);
+    }
+
+    private Comparator<Fiche> ficheComparator(String sort) {
+        Comparator<Fiche> byDate = Comparator.comparing(Fiche::getDate, Comparator.nullsLast(Comparator.naturalOrder()));
+        Comparator<Fiche> byPatient = Comparator.comparing(
+                f -> safeLower(patientLabel(f.getUserId())), Comparator.nullsLast(String::compareTo));
+        if ("Date (↓ récent)".equals(sort)) {
+            return byDate.reversed();
+        }
+        if ("Patient (A → Z)".equals(sort)) {
+            return byPatient;
+        }
+        return byDate;
+    }
+
+    /* ---------- Ordonnances ---------- */
+
+    @FXML
+    public void refreshOrdonnanceCards(ActionEvent event) {
+        loadOrdonnanceCards();
+    }
+
+    @FXML
+    public void addOrdonnance(ActionEvent event) {
+        List<Fiche> fiches = ficheService.getAll();
+        if (fiches.isEmpty()) {
+            alert(Alert.AlertType.INFORMATION, "Créez au moins une fiche médicale avant d'ajouter une ordonnance.");
+            return;
+        }
+        List<Medicament> meds = medicamentService.getAll();
+        if (meds.isEmpty()) {
+            alert(Alert.AlertType.INFORMATION, "Ajoutez au moins un médicament avant de créer une ordonnance.");
+            return;
+        }
+        MedicalFormDialogs.showOrdonnanceDialog(window(), "Nouvelle ordonnance", null, fiches, meds, List.of())
+                .ifPresent(r -> {
+                    ordonnanceService.ajouterAvecMedicaments(r.ordonnance(), r.medicamentIds());
+                    loadOrdonnanceCards();
+                });
+    }
+
+    private void editOrdonnance(Ordonnance o) {
+        List<Fiche> fiches = ficheService.getAll();
+        List<Medicament> meds = medicamentService.getAll();
+        if (meds.isEmpty()) {
+            alert(Alert.AlertType.INFORMATION, "Aucun médicament en base.");
+            return;
+        }
+        List<Integer> initial = ordonnanceService.findMedicamentIdsByOrdonnance(o.getId());
+        MedicalFormDialogs.showOrdonnanceDialog(window(), "Modifier l'ordonnance", o, fiches, meds, initial)
+                .ifPresent(r -> {
+                    Ordonnance x = r.ordonnance();
+                    x.setId(o.getId());
+                    ordonnanceService.modifierAvecMedicaments(x, r.medicamentIds());
+                    loadOrdonnanceCards();
+                });
+    }
+
+    private void deleteOrdonnance(Ordonnance o) {
+        if (!confirm("Supprimer", "Supprimer cette ordonnance ?")) {
+            return;
+        }
+        ordonnanceService.supprimer(o);
+        loadOrdonnanceCards();
+    }
+
+    private void loadOrdonnanceCards() {
+        if (ordonnanceCardsFlow == null) {
+            return;
+        }
+        ordonnanceCardsFlow.getChildren().clear();
+        String q = norm(searchOrdonnance.getText());
+        String filter = ordonnanceFilterCombo != null && ordonnanceFilterCombo.getValue() != null
+                ? ordonnanceFilterCombo.getValue() : "Toutes";
+        String sort = ordonnanceSortCombo != null && ordonnanceSortCombo.getValue() != null
+                ? ordonnanceSortCombo.getValue() : "Date (↑)";
+
+        List<Ordonnance> rows = new ArrayList<>();
+        for (Ordonnance o : ordonnanceService.getAll()) {
+            if (passesOrdonnanceFilters(o, q, filter)) {
+                rows.add(o);
+            }
+        }
+        rows.sort(ordonnanceComparator(sort));
+        for (Ordonnance o : rows) {
+            Fiche linked = ficheService.getOneById(o.getFicheId());
+            String ficheSummary = ordonnanceFicheSummary(linked);
+            String medSummary = ordonnanceService.getMedicamentsSummaryForOrdonnance(o.getId());
+            ordonnanceCardsFlow.getChildren().add(MedicalAdminCards.ordonnanceCard(o, ficheSummary, medSummary,
+                    () -> editOrdonnance(o),
+                    () -> deleteOrdonnance(o)));
+        }
+    }
+
+    private static String ordonnanceFicheSummary(Fiche linked) {
+        if (linked == null) {
+            return "Fiche liée";
+        }
+        return (linked.getLibelleMaladie() != null ? linked.getLibelleMaladie() : "Fiche")
+                + (linked.getDate() != null ? " · " + linked.getDate() : "");
+    }
+
+    private boolean passesOrdonnanceFilters(Ordonnance o, String q, String filter) {
+        if ("Durée ≥ 30 jours".equals(filter) && o.getDureeTraitement() < 30) {
+            return false;
+        }
+        if (!q.isEmpty() && !matchesOrdonnanceAllFields(o, q)) {
+            return false;
+        }
+        return true;
+    }
+
+    private boolean matchesOrdonnanceAllFields(Ordonnance o, String q) {
+        if (contains(o.getPosologie(), q) || contains(o.getFrequence(), q)) {
+            return true;
+        }
+        if (contains(String.valueOf(o.getDureeTraitement()), q)) {
+            return true;
+        }
+        if (o.getDate() != null && contains(o.getDate().toString(), q)) {
+            return true;
+        }
+        if (contains(String.valueOf(o.getId()), q) || contains(String.valueOf(o.getFicheId()), q)) {
+            return true;
+        }
+        Fiche f = ficheService.getOneById(o.getFicheId());
+        if (f != null && matchesFicheAllFields(f, q)) {
+            return true;
+        }
+        String ficheSummary = ordonnanceFicheSummary(f);
+        if (contains(ficheSummary, q)) {
+            return true;
+        }
+        String medSummary = ordonnanceService.getMedicamentsSummaryForOrdonnance(o.getId());
+        return contains(medSummary, q);
+    }
+
+    private static Comparator<Ordonnance> ordonnanceComparator(String sort) {
+        Comparator<Ordonnance> byDate = Comparator.comparing(Ordonnance::getDate, Comparator.nullsLast(Comparator.naturalOrder()));
+        Comparator<Ordonnance> byDuree = Comparator.comparingInt(Ordonnance::getDureeTraitement);
+        return switch (sort) {
+            case "Date (↓)" -> byDate.reversed();
+            case "Durée (↑)" -> byDuree;
+            case "Durée (↓)" -> byDuree.reversed();
+            default -> byDate;
+        };
+    }
+
+    private static String safeLower(String s) {
+        return s == null ? "" : s.toLowerCase(Locale.ROOT);
+    }
+
+    //_________________________________________________________________________________________________________________
+    //_________________________________________________________________________________________________________________
+    //_________________________USERS LINA_________________________________________________________
+>>>>>>> dfeb78e (mdp oublié)
 
     private void loadUsers() {
         AffUsers.getItems().clear();
         AffUsers.getItems().addAll(userService.getAll());
     }
 
-    private void loadCreneaux() {
-        AffCreneaux.getItems().clear();
-        AffCreneaux.getItems().addAll(creneauService.getAll());
-    }
-
-    private void loadEvents() {
-        AffEvents.getItems().clear();
-        AffEvents.getItems().addAll(eventService.getAll());
-    }
-    @FXML
-    void refreshUsers(ActionEvent event) {
-        loadUsers();
-    }
 
     @FXML
     void deleteUser(ActionEvent event) {
-
         User selected = AffUsers.getSelectionModel().getSelectedItem();
-
         if (selected != null) {
             userService.supprimer(selected);
             loadUsers();
@@ -901,15 +1246,166 @@ public class Dashboard {
         }
 >>>>>>> d47e962 (Events CRUD)
     }
+    @FXML
+    void editUser(ActionEvent event) {
+        System.out.println("CLICK MODIFIER USER");
+        try {
+            User selected = AffUsers.getSelectionModel().getSelectedItem();
 
-    @FXML void RechCreneau(ActionEvent event) {}
-    @FXML void RechEvent(ActionEvent event) {}
-    @FXML void RechUser(ActionEvent event) {}
+            if (selected == null) {
+                System.out.println("Aucun user sélectionné");
+                return;
+            }
 
-    @FXML void addCreneau(ActionEvent event) {}
-    @FXML void addEvent(ActionEvent event) {}
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ModifierUser.fxml"));
+            Parent root = loader.load();
 
-    @FXML void deconnexion(ActionEvent event) {}
+            ModifierUser controller = loader.getController();
+
+            controller.setUser(selected);
+
+            Stage stage = (Stage) AffUsers.getScene().getWindow();
+            stage.setScene(new Scene(root));
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    public void deconnexion(ActionEvent event) {
+        userService.logout();
+        try {
+            Parent root = FXMLLoader.load(getClass().getResource("/Login.fxml"));
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.setScene(new Scene(root));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    //Tri et Recherche
+    private void trierUsers() {
+
+        String choix = triUser.getValue();
+
+        if (choix == null) return;
+
+        List<User> list = new ArrayList<>(userService.getAll());
+
+        switch (choix) {
+
+            case "Nom A→Z":
+                list.sort(Comparator.comparing(User::getNom, String.CASE_INSENSITIVE_ORDER));
+                break;
+
+            case "Nom Z→A":
+                list.sort(Comparator.comparing(User::getNom, String.CASE_INSENSITIVE_ORDER).reversed());
+                break;
+
+            case "Prenom A→Z":
+                list.sort(Comparator.comparing(User::getPrenom, String.CASE_INSENSITIVE_ORDER));
+                break;
+
+            case "Prenom Z→A":
+                list.sort(Comparator.comparing(User::getPrenom, String.CASE_INSENSITIVE_ORDER).reversed());
+                break;
+
+            case "Email A→Z":
+                list.sort(Comparator.comparing(User::getMail));
+                break;
+
+            case "Email Z→A":
+                list.sort(Comparator.comparing(User::getMail).reversed());
+                break;
+
+            case "Tel A→Z":
+                list.sort(Comparator.comparing(User::getTel));
+                break;
+
+            case "Tel Z→A":
+                list.sort(Comparator.comparing(User::getTel).reversed());
+                break;
+
+            case "Role A→Z":
+                list.sort(Comparator.comparing(User::getRole));
+                break;
+
+            case "Role Z→A":
+                list.sort(Comparator.comparing(User::getRole).reversed());
+                break;
+
+            case "Specialite A→Z":
+                list.sort(Comparator.comparing(User::getSpecialite));
+                break;
+
+            case "Specialite Z→A":
+                list.sort(Comparator.comparing(User::getSpecialite).reversed());
+                break;
+        }
+
+        AffUsers.setItems(FXCollections.observableArrayList(list));
+    }
+    @FXML
+    void RechUser(ActionEvent event) {
+
+        String search = RechUserText.getText().toLowerCase();
+
+        ObservableList<User> filtered = FXCollections.observableArrayList(
+                userService.getAll().stream()
+                        .filter(u ->
+                                u.getNom().toLowerCase().contains(search) ||
+                                        u.getPrenom().toLowerCase().contains(search) ||
+                                        u.getMail().toLowerCase().contains(search)
+                        )
+                        .collect(Collectors.toList())
+        );
+
+        AffUsers.setItems(filtered);
+    }
+    //_________________________________________________________________________________________________________________
+    //_________________________________________________________________________________________________________________
+    //_________________________CRENEAUX FERDAWS_________________________________________________________
+
+    private void loadCreneaux() {
+        AffCreneaux.getItems().clear();
+        AffCreneaux.getItems().addAll(creneauService.getAll());
+    }
+
+    @FXML
+    void addCreneau(ActionEvent event) {
+        try {
+            Parent root = FXMLLoader.load(getClass().getResource("/AjouterCreneau.fxml"));
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.setScene(new Scene(root));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    void editCreneau(ActionEvent event) {
+
+        try {
+            Creneau selected = AffCreneaux.getSelectionModel().getSelectedItem();
+
+            if (selected == null) {
+                System.out.println("Aucun créneau sélectionné");
+                return;
+            }
+
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ModifierCreneau.fxml"));
+            Parent root = loader.load();
+
+            ModifierCreneau controller = loader.getController();
+            controller.setCreneau(selected);
+
+            Stage stage = (Stage) AffCreneaux.getScene().getWindow();
+            stage.setScene(new Scene(root));
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     @FXML
 <<<<<<< HEAD
@@ -1041,9 +1537,7 @@ public class Dashboard {
         loadOrdonnanceCards();
 =======
     void deleteCreneau(ActionEvent event) {
-
         Creneau selected = AffCreneaux.getSelectionModel().getSelectedItem();
-
         if (selected != null) {
             creneauService.delete(selected.getId());
             loadCreneaux();
@@ -1052,9 +1546,135 @@ public class Dashboard {
         }
 >>>>>>> d47e962 (Events CRUD)
     }
-    @FXML void deleteEvent(ActionEvent event) {
-        Event selected = AffEvents.getSelectionModel().getSelectedItem();
 
+    //Tri et Recherche
+    private void trierCreneaux() {
+
+        String choix = triCreneau.getValue();
+
+        if (choix == null) return;
+
+        List<Creneau> list = new ArrayList<>(creneauService.getAll());
+
+        switch (choix) {
+
+            case "Date ↑":
+                list.sort(Comparator.comparing(Creneau::getDateCreneau));
+                break;
+
+            case "Date ↓":
+                list.sort(Comparator.comparing(Creneau::getDateCreneau).reversed());
+                break;
+
+            case "Heure debut ↑":
+                list.sort(Comparator.comparing(Creneau::getHdebut));
+                break;
+
+            case "Heure debut ↓":
+                list.sort(Comparator.comparing(Creneau::getHdebut).reversed());
+                break;
+
+            case "Heure fin ↑":
+                list.sort(Comparator.comparing(Creneau::getHfin));
+                break;
+
+            case "Heure fin ↓":
+                list.sort(Comparator.comparing(Creneau::getHfin).reversed());
+                break;
+
+            case "Statut A→Z":
+                list.sort(Comparator.comparing(Creneau::getStatut));
+                break;
+
+            case "Statut Z→A":
+                list.sort(Comparator.comparing(Creneau::getStatut).reversed());
+                break;
+        }
+
+        AffCreneaux.setItems(FXCollections.observableArrayList(list));
+    }
+    @FXML
+    void RechCreneau(ActionEvent event) {
+
+        String statut = RechCreneau.getValue();
+
+        if (statut == null || statut.isEmpty()) {
+            loadCreneaux();
+            return;
+        }
+
+        AffCreneaux.setItems(
+                FXCollections.observableArrayList(
+                        creneauService.getAll().stream()
+                                .filter(c -> c.getStatut().equalsIgnoreCase(statut))
+                                .collect(Collectors.toList())
+                )
+        );
+    }
+    //Rdvs
+    @FXML
+    void goToRdv(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Rdvs.fxml"));
+            Parent root = loader.load();
+
+            Stage stage = (Stage) AffUsers.getScene().getWindow();
+            stage.setScene(new Scene(root));
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    //_________________________________________________________________________________________________________________
+    //_________________________________________________________________________________________________________________
+    //_________________________EVENEMENTS HAIFA_________________________________________________________
+    private void loadEvents() {
+        AffEvents.getItems().clear();
+        AffEvents.getItems().addAll(eventService.getAll());
+    }
+
+    @FXML
+    void addEvent(ActionEvent event) {
+        try {
+            Parent root = FXMLLoader.load(getClass().getResource("/AjouterEvent.fxml"));
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.setScene(new Scene(root));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    @FXML
+    void editEvent(ActionEvent actionEvent) {
+
+        System.out.println("CLICK MODIFIER EVENT");
+
+        try {
+            Event selected = AffEvents.getSelectionModel().getSelectedItem();
+
+            if (selected == null) {
+                System.out.println("Aucun evenement sélectionné");
+                return;
+            }
+
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ModifierEvent.fxml"));
+            Parent root = loader.load();
+
+            ModifierEvent controller = loader.getController();
+
+            controller.setEvent(selected);
+
+            Stage stage = (Stage) AffEvents.getScene().getWindow();
+            stage.setScene(new Scene(root));
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    void deleteEvent(ActionEvent event) {
+        Event selected = AffEvents.getSelectionModel().getSelectedItem();
         if (selected != null) {
             eventService.supprimer(selected);
             loadEvents();
@@ -1062,15 +1682,70 @@ public class Dashboard {
             System.out.println("Aucun evenement sélectionne");
         }
     }
+    //Tri et Recherche
+    private void trierEvents() {
 
-    @FXML void editCreneau(ActionEvent event) {}
-    @FXML void editEvent(ActionEvent event) {}
-    @FXML void editUser(ActionEvent event) {}
+        String choix = triEvent.getValue();
 
-    @FXML void goToLieux(ActionEvent event) {}
-    @FXML void goToRdv(ActionEvent event) {}
+        if (choix == null) return;
 
+        List<Event> list = new ArrayList<>(eventService.getAll());
+
+        switch (choix) {
+
+            case "Titre A→Z":
+                list.sort(Comparator.comparing(Event::getTitreEvent));
+                break;
+
+            case "Titre Z→A":
+                list.sort(Comparator.comparing(Event::getTitreEvent).reversed());
+                break;
+
+            case "Theme A→Z":
+                list.sort(Comparator.comparing(Event::getThemeSante));
+                break;
+
+            case "Theme Z→A":
+                list.sort(Comparator.comparing(Event::getThemeSante).reversed());
+                break;
+
+            case "Date ↑":
+                list.sort(Comparator.comparing(Event::getDateEvent));
+                break;
+
+            case "Date ↓":
+                list.sort(Comparator.comparing(Event::getDateEvent).reversed());
+                break;
+
+            case "Heure debut ↑":
+                list.sort(Comparator.comparing(Event::getHeureDebut));
+                break;
+
+            case "Heure debut ↓":
+                list.sort(Comparator.comparing(Event::getHeureDebut).reversed());
+                break;
+
+            case "Heure fin ↑":
+                list.sort(Comparator.comparing(Event::getHeureFin));
+                break;
+
+            case "Heure fin ↓":
+                list.sort(Comparator.comparing(Event::getHeureFin).reversed());
+                break;
+
+            case "Participants ↑":
+                list.sort(Comparator.comparing(Event::getNbParticipant));
+                break;
+
+            case "Participants ↓":
+                list.sort(Comparator.comparing(Event::getNbParticipant).reversed());
+                break;
+        }
+
+        AffEvents.setItems(FXCollections.observableArrayList(list));
+    }
     @FXML
+<<<<<<< HEAD
 <<<<<<< HEAD
     public void addOrdonnance(ActionEvent event) {
         List<Fiche> fiches = ficheService.getAll();
@@ -1591,6 +2266,8 @@ public class Dashboard {
         AffEvents.setItems(FXCollections.observableArrayList(list));
     }
     @FXML
+=======
+>>>>>>> dfeb78e (mdp oublié)
     void RechEvent(ActionEvent event) {
 
         String search = RechEventText.getText().toLowerCase();
@@ -1626,6 +2303,7 @@ public class Dashboard {
         } catch (Exception e) {
             e.printStackTrace();
         }
+<<<<<<< HEAD
     }
 
 
@@ -1689,10 +2367,70 @@ public class Dashboard {
 =======
     void refreshCreneaux(ActionEvent event) {
         loadCreneaux();
+=======
+>>>>>>> dfeb78e (mdp oublié)
     }
 
-    @FXML void refreshEvent(ActionEvent event) {
-        loadEvents();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    /* ---------- helpers ---------- */
+
+    private static String norm(String t) {
+        return t == null ? "" : t.trim().toLowerCase(Locale.ROOT);
     }
+<<<<<<< HEAD
 }
 >>>>>>> d47e962 (Events CRUD)
+=======
+
+    private static boolean contains(String field, String q) {
+        return field != null && field.toLowerCase(Locale.ROOT).contains(q);
+    }
+
+    private boolean confirm(String title, String msg) {
+        Alert a = new Alert(Alert.AlertType.CONFIRMATION);
+        a.setTitle(title);
+        a.setHeaderText(null);
+        a.setContentText(msg);
+        return a.showAndWait().orElse(ButtonType.CANCEL) == ButtonType.OK;
+    }
+
+    private void alert(Alert.AlertType type, String msg) {
+        Alert a = new Alert(type);
+        a.setHeaderText(null);
+        a.setContentText(msg);
+        a.showAndWait();
+    }
+}
+>>>>>>> dfeb78e (mdp oublié)

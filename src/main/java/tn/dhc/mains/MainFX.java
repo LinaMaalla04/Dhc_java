@@ -11,10 +11,14 @@ public class MainFX extends Application {
     public void start(Stage stage) {
         try {
 <<<<<<< HEAD
+<<<<<<< HEAD
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/Login.fxml"));
 =======
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/Dashboard.fxml"));
 >>>>>>> d47e962 (Events CRUD)
+=======
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Login.fxml"));
+>>>>>>> dfeb78e (mdp oublié)
             Scene scene = new Scene(loader.load());
 
             stage.setTitle("Inscription 📝");

@@ -148,11 +148,16 @@ public class Event {
                 "📅 Date: " + dateEvent + " | " +
                 "⏰ Horaire: " + heureDebut + " - " + heureFin + " | " +
 <<<<<<< HEAD
+<<<<<<< HEAD
                 "👥 Participants: " + nbParticipant  ;
 //                "+ " | " +📍 Lieu ID: " + (lieu != null ? lieu.getId() : eventLieuId);
 =======
                 "👥 Participants: " + nbParticipant + " | " +
                 "👤 Organisateur (ID): " + userId;
 >>>>>>> d47e962 (Events CRUD)
+=======
+                "👥 Participants: " + nbParticipant  ;
+//                "+ " | " +📍 Lieu ID: " + (lieu != null ? lieu.getId() : eventLieuId);
+>>>>>>> dfeb78e (mdp oublié)
     }
 }

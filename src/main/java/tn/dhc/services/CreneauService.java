@@ -24,9 +24,12 @@ public class CreneauService {
             ps.setTime(3, Time.valueOf(c.getHfin()));
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
             // 🔥 statut par défaut
 >>>>>>> d47e962 (Events CRUD)
+=======
+>>>>>>> dfeb78e (mdp oublié)
             ps.setString(4, "Dispo");
 
             ps.setInt(5, c.getUserId());

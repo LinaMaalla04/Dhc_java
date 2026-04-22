@@ -88,10 +88,14 @@ public class Creneau {
         return "📅 " + dateCreneau +
                 " | 🕐 " + hdebut + " - " + hfin +
 <<<<<<< HEAD
+<<<<<<< HEAD
                 " | 📌 " + statut;
 =======
                 " | 📌 " + statut +
                 " | 👤 User ID: " + userId;
 >>>>>>> d47e962 (Events CRUD)
+=======
+                " | 📌 " + statut;
+>>>>>>> dfeb78e (mdp oublié)
     }
 }

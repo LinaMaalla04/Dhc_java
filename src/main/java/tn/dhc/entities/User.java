@@ -1,7 +1,13 @@
 package tn.dhc.entities;
 
+import jakarta.persistence.*;
+
 import java.time.LocalDateTime;
+@Entity
+@Table(name = "user")
 public class User {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String nom;
     private String prenom;

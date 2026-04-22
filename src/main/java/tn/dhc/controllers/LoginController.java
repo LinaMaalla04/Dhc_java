@@ -46,11 +46,21 @@ public class LoginController {
 
     @FXML
     public void handleForgotPassword(ActionEvent event) {
+<<<<<<< HEAD
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Mot de passe oublié");
         alert.setHeaderText(null);
         alert.setContentText("Contactez l'administrateur pour réinitialiser votre mot de passe.");
         alert.showAndWait();
+=======
+        try {
+            Parent root = FXMLLoader.load(getClass().getResource("/ForgotPassword.fxml"));
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.setScene(new Scene(root));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+>>>>>>> dfeb78e (mdp oublié)
     }
 
     @FXML

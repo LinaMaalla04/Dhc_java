@@ -1,6 +1,9 @@
 package tn.dhc.controllers;
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> dfeb78e (mdp oublié)
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -615,7 +618,10 @@ public class Front {
         a.setContentText(msg);
         a.showAndWait();
     }
+<<<<<<< HEAD
 =======
 public class Front {
 >>>>>>> d47e962 (Events CRUD)
+=======
+>>>>>>> dfeb78e (mdp oublié)
 }
