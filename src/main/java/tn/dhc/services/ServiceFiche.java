@@ -4,8 +4,8 @@ import tn.dhc.entities.Fiche;
 import tn.dhc.utils.MyConnection;
 
 import java.sql.*;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
 public class ServiceFiche implements IService<Fiche> {
 
@@ -13,7 +13,7 @@ public class ServiceFiche implements IService<Fiche> {
 
     @Override
     public void ajouter(Fiche f) {
-        String req = "INSERT INTO `fiche` (`poids`, `taille`, `grp_sanguin`, `allergie`, `maladie_chronique`, `tension`, `glycemie`, `date`, `libelle_maladie`, `gravite`, `recommandation`, `user_id`) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
+        String req = "INSERT INTO `fiche` (`poids`, `taille`, `grp_sanguin`, `allergie`, `maladie_chronique`, `tension`, `glycemie`, `date`, `libelle_maladie`, `gravite`, `recommandation`, `user_id`, `medecin_user_id`) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)";
         try (PreparedStatement ps = connection.prepareStatement(req)) {
             ps.setDouble(1, f.getPoids());
             ps.setDouble(2, f.getTaille());
@@ -27,6 +27,11 @@ public class ServiceFiche implements IService<Fiche> {
             ps.setString(10, f.getGravite());
             ps.setString(11, f.getRecommandation());
             ps.setInt(12, f.getUserId());
+            if (f.getMedecinUserId() != null) {
+                ps.setInt(13, f.getMedecinUserId());
+            } else {
+                ps.setNull(13, Types.INTEGER);
+            }
             ps.executeUpdate();
             System.out.println("Fiche ajoutée.");
         } catch (SQLException e) {
@@ -48,7 +53,7 @@ public class ServiceFiche implements IService<Fiche> {
 
     @Override
     public void modifier(Fiche f) {
-        String req = "UPDATE `fiche` SET `poids`=?, `taille`=?, `grp_sanguin`=?, `allergie`=?, `maladie_chronique`=?, `tension`=?, `glycemie`=?, `date`=?, `libelle_maladie`=?, `gravite`=?, `recommandation`=?, `user_id`=? WHERE `id`=?";
+        String req = "UPDATE `fiche` SET `poids`=?, `taille`=?, `grp_sanguin`=?, `allergie`=?, `maladie_chronique`=?, `tension`=?, `glycemie`=?, `date`=?, `libelle_maladie`=?, `gravite`=?, `recommandation`=?, `user_id`=?, `medecin_user_id`=? WHERE `id`=?";
         try (PreparedStatement ps = connection.prepareStatement(req)) {
             ps.setDouble(1, f.getPoids());
             ps.setDouble(2, f.getTaille());
@@ -62,7 +67,12 @@ public class ServiceFiche implements IService<Fiche> {
             ps.setString(10, f.getGravite());
             ps.setString(11, f.getRecommandation());
             ps.setInt(12, f.getUserId());
-            ps.setInt(13, f.getId());
+            if (f.getMedecinUserId() != null) {
+                ps.setInt(13, f.getMedecinUserId());
+            } else {
+                ps.setNull(13, Types.INTEGER);
+            }
+            ps.setInt(14, f.getId());
             int n = ps.executeUpdate();
             System.out.println(n > 0 ? "Fiche modifiée." : "Aucune fiche avec cet id.");
         } catch (SQLException e) {
@@ -74,39 +84,65 @@ public class ServiceFiche implements IService<Fiche> {
     public List<Fiche> getAll() {
         List<Fiche> list = new ArrayList<>();
         String req = "SELECT * FROM `fiche`";
-
         try (Statement st = connection.createStatement();
              ResultSet rs = st.executeQuery(req)) {
-
             while (rs.next()) {
                 list.add(mapRow(rs));
             }
-
         } catch (SQLException e) {
             System.err.println(e.getMessage());
         }
-
         return list;
     }
 
     @Override
     public Fiche getOneById(int id) {
         String req = "SELECT * FROM `fiche` WHERE `id` = ?";
-
         try (PreparedStatement ps = connection.prepareStatement(req)) {
             ps.setInt(1, id);
-
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
                     return mapRow(rs);
                 }
             }
-
         } catch (SQLException e) {
             System.err.println(e.getMessage());
         }
-
         return null;
+    }
+
+    /** Fiches d'un patient (ordonnances rattachées via {@code fiche_id}). */
+    public List<Fiche> findByPatientUserId(int userId) {
+        List<Fiche> list = new ArrayList<>();
+        String req = "SELECT * FROM `fiche` WHERE `user_id` = ? ORDER BY `date` DESC, `id` DESC";
+        try (PreparedStatement ps = connection.prepareStatement(req)) {
+            ps.setInt(1, userId);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    list.add(mapRow(rs));
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+        return list;
+    }
+
+    public List<Fiche> findByMedecinUserId(int medecinUserId) {
+        List<Fiche> list = new ArrayList<>();
+        String req = "SELECT * FROM `fiche` WHERE `medecin_user_id` = ? ORDER BY `date` DESC, `id` DESC";
+        try (PreparedStatement ps = connection.prepareStatement(req)) {
+            ps.setInt(1, medecinUserId);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    list.add(mapRow(rs));
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("findByMedecinUserId: " + e.getMessage());
+            return new ArrayList<>();
+        }
+        return list;
     }
 
     private static Fiche mapRow(ResultSet rs) throws SQLException {
@@ -124,6 +160,12 @@ public class ServiceFiche implements IService<Fiche> {
         f.setGravite(rs.getString("gravite"));
         f.setRecommandation(rs.getString("recommandation"));
         f.setUserId(rs.getInt("user_id"));
+        try {
+            int mid = rs.getInt("medecin_user_id");
+            f.setMedecinUserId(rs.wasNull() ? null : mid);
+        } catch (SQLException ignored) {
+            f.setMedecinUserId(null);
+        }
         return f;
     }
 }

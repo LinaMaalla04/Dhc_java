@@ -17,7 +17,6 @@ public class EventService implements IService<Event> {
         cnx = MyConnection.getInstance().getConnection();
     }
 
-    // ✅ CREATE
     @Override
     public void ajouter(Event e) {
         try {
@@ -54,7 +53,6 @@ public class EventService implements IService<Event> {
         }
     }
 
-    // ✅ DELETE
     @Override
     public void supprimer(Event e) {
         try {
@@ -69,7 +67,6 @@ public class EventService implements IService<Event> {
         }
     }
 
-    // ✅ UPDATE
     @Override
     public void modifier(Event e) {
         try {
@@ -109,7 +106,6 @@ public class EventService implements IService<Event> {
         }
     }
 
-    // ✅ GET ALL
     @Override
     public List<Event> getAll() {
         List<Event> events = new ArrayList<>();
@@ -130,7 +126,6 @@ public class EventService implements IService<Event> {
         return events;
     }
 
-    // ✅ GET ONE
     @Override
     public Event getOneById(int id) {
         try {
@@ -151,7 +146,6 @@ public class EventService implements IService<Event> {
         return null;
     }
 
-    // 🔁 MAPPING
     private Event mapResultSetToEvent(ResultSet rs) throws SQLException {
         return new Event(
                 rs.getInt("id"),

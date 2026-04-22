@@ -2,10 +2,16 @@ package tn.dhc.controllers;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.stage.Stage;
 import tn.dhc.entities.Creneau;
 import tn.dhc.services.CreneauService;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
@@ -28,7 +34,6 @@ public class AjouterCreneau {
 
     private final CreneauService creneauService = new CreneauService();
 
-    // INIT COMBOBOX
     @FXML
     public void initialize() {
 
@@ -44,7 +49,7 @@ public class AjouterCreneau {
         addCreneauFin.setValue("08:30");
     }
 
-    // AJOUT BDD
+
     @FXML
     void ajouterCreneau(ActionEvent event) {
 
@@ -80,22 +85,38 @@ public class AjouterCreneau {
 
             showAlert(Alert.AlertType.INFORMATION, "Succès", "Créneau ajouté avec succès !");
 
-            annuler(event);
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Dashboard.fxml"));
+            Parent root = loader.load();
+
+            Dashboard controller = loader.getController();
+
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.setScene(new Scene(root));
 
         } catch (Exception e) {
             showAlert(Alert.AlertType.ERROR, "Erreur", e.getMessage());
         }
     }
 
-    // RESET
     @FXML
     void annuler(ActionEvent event) {
         addCreneauDate.setValue(null);
         addCreneauDebut.setValue(null);
         addCreneauFin.setValue(null);
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Dashboard.fxml"));
+        Parent root = null;
+        try {
+            root = loader.load();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        Dashboard controller = loader.getController();
+
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        stage.setScene(new Scene(root));
     }
 
-    // ALERT
     private void showAlert(Alert.AlertType type, String title, String message) {
         Alert alert = new Alert(type);
         alert.setTitle(title);

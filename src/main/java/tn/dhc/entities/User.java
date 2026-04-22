@@ -1,7 +1,13 @@
 package tn.dhc.entities;
 
+import jakarta.persistence.*;
+
 import java.time.LocalDateTime;
+@Entity
+@Table(name = "user")
 public class User {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String nom;
     private String prenom;
@@ -13,11 +19,9 @@ public class User {
     private LocalDateTime lastLoginAt;
     private int loginCount;
 
-    // 🔹 Constructeur vide
     public User() {
     }
 
-    // 🔹 Constructeur sans id
     public User(String nom, String prenom, String mail, int tel, String mdp,
                 String role, String specialite, LocalDateTime lastLoginAt, int loginCount) {
         this.nom = nom;
@@ -31,7 +35,6 @@ public class User {
         this.loginCount = loginCount;
     }
 
-    // 🔹 Constructeur avec id
     public User(int id, String nom, String prenom, String mail, int tel, String mdp,
                 String role, String specialite, LocalDateTime lastLoginAt, int loginCount) {
         this.id = id;
@@ -46,7 +49,6 @@ public class User {
         this.loginCount = loginCount;
     }
 
-    // 🔹 Getters & Setters
 
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
@@ -78,7 +80,6 @@ public class User {
     public int getLoginCount() { return loginCount; }
     public void setLoginCount(int loginCount) { this.loginCount = loginCount; }
 
-    // 🔹 toString
     @Override
     public String toString() {
         return "👤 " + nom + " " + prenom +

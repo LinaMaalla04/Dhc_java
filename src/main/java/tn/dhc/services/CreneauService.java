@@ -13,7 +13,6 @@ public class CreneauService {
 
     private Connection cnx = MyConnection.getInstance().getConnection();
 
-    // 🔹 Ajouter
     public void add(Creneau c) {
 
         String sql = "INSERT INTO creneau (date_creneau, hdebut, hfin, statut, user_id) VALUES (?,?,?,?,?)";
@@ -24,7 +23,6 @@ public class CreneauService {
             ps.setTime(2, Time.valueOf(c.getHdebut()));
             ps.setTime(3, Time.valueOf(c.getHfin()));
 
-            // 🔥 statut par défaut
             ps.setString(4, "Dispo");
 
             ps.setInt(5, c.getUserId());
@@ -36,7 +34,6 @@ public class CreneauService {
         }
     }
 
-    // 🔹 Afficher tout
     public List<Creneau> getAll() {
         List<Creneau> list = new ArrayList<>();
         String sql = "SELECT * FROM creneau";
@@ -63,7 +60,6 @@ public class CreneauService {
         return list;
     }
 
-    // 🔹 Delete
     public void delete(int id) {
         String sql = "DELETE FROM creneau WHERE id=?";
 
@@ -71,6 +67,51 @@ public class CreneauService {
             ps.setInt(1, id);
             ps.executeUpdate();
             System.out.println("Créneau supprimé !");
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    public Creneau getOneById(int id) {
+        try {
+            String sql = "SELECT * FROM creneau WHERE id=?";
+            PreparedStatement ps = cnx.prepareStatement(sql);
+            ps.setInt(1, id);
+
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                Creneau c = new Creneau();
+                c.setId(rs.getInt("id"));
+                c.setDateCreneau(rs.getDate("date_creneau").toLocalDate());
+                c.setHdebut(rs.getTime("hdebut").toLocalTime());
+                c.setHfin(rs.getTime("hfin").toLocalTime());
+                c.setStatut(rs.getString("statut"));
+                return c;
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public void modifier(Creneau c) {
+
+        String sql = "UPDATE creneau SET date_creneau=?, hdebut=?, hfin=?, statut=?, user_id=? WHERE id=?";
+
+        try (PreparedStatement ps = cnx.prepareStatement(sql)) {
+
+            ps.setDate(1, Date.valueOf(c.getDateCreneau()));
+            ps.setTime(2, Time.valueOf(c.getHdebut()));
+            ps.setTime(3, Time.valueOf(c.getHfin()));
+            ps.setString(4, c.getStatut());
+            ps.setInt(5, c.getUserId());
+            ps.setInt(6, c.getId());
+
+            ps.executeUpdate();
+            System.out.println("Créneau modifié !");
+
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }

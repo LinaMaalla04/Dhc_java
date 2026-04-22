@@ -9,6 +9,7 @@ public class Ordonnance {
     private int dureeTraitement;
     private Date date;
     private int ficheId;
+    private Integer medecinUserId;
 
     public Ordonnance() {
     }
@@ -78,6 +79,14 @@ public class Ordonnance {
         this.ficheId = ficheId;
     }
 
+    public Integer getMedecinUserId() {
+        return medecinUserId;
+    }
+
+    public void setMedecinUserId(Integer medecinUserId) {
+        this.medecinUserId = medecinUserId;
+    }
+
     @Override
     public String toString() {
         return "Ordonnance{" +
@@ -87,6 +96,7 @@ public class Ordonnance {
                 ", dureeTraitement=" + dureeTraitement +
                 ", date=" + date +
                 ", ficheId=" + ficheId +
+                ", medecinUserId=" + medecinUserId +
                 '}';
     }
 }

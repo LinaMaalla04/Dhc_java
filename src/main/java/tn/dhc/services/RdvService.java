@@ -12,7 +12,6 @@ public class RdvService {
 
     private Connection cnx = MyConnection.getInstance().getConnection();
 
-    // 🔹 Ajouter
     public void add(Rdv r) {
         String sql = "INSERT INTO rdv (motif, priorite, statut, date_rdv, creneau_id, user_id) VALUES (?,?,?,?,?,?)";
 
@@ -32,7 +31,6 @@ public class RdvService {
         }
     }
 
-    // 🔹 Afficher tout
     public List<Rdv> getAll() {
         List<Rdv> list = new ArrayList<>();
         String sql = "SELECT * FROM rdv";
@@ -60,7 +58,6 @@ public class RdvService {
         return list;
     }
 
-    // 🔹 Delete
     public void delete(int id) {
         String sql = "DELETE FROM rdv WHERE id=?";
 
@@ -68,6 +65,27 @@ public class RdvService {
             ps.setInt(1, id);
             ps.executeUpdate();
             System.out.println("RDV supprimé !");
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+    public void modifier(Rdv r) {
+
+        String sql = "UPDATE rdv SET motif=?, priorite=?, statut=?, date_rdv=?, creneau_id=?, user_id=? WHERE id=?";
+
+        try (PreparedStatement ps = cnx.prepareStatement(sql)) {
+
+            ps.setString(1, r.getMotif());
+            ps.setString(2, r.getPriorite());
+            ps.setString(3, r.getStatut());
+            ps.setDate(4, Date.valueOf(r.getDateRdv()));
+            ps.setInt(5, r.getCreneauId());
+            ps.setInt(6, r.getUserId());
+            ps.setInt(7, r.getId());
+
+            ps.executeUpdate();
+            System.out.println("RDV modifié !");
+
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }

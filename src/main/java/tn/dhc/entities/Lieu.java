@@ -9,11 +9,9 @@ public class Lieu {
     private Integer capaciteMax; // nullable
     private boolean disponible;
 
-    // 🔹 Constructeur vide
     public Lieu() {
     }
 
-    // 🔹 Constructeur sans id
     public Lieu(String nomLieu, String adresse, String ville,
                 Integer capaciteMax, boolean disponible) {
         this.nomLieu = nomLieu;
@@ -23,7 +21,6 @@ public class Lieu {
         this.disponible = disponible;
     }
 
-    // 🔹 Constructeur avec id
     public Lieu(int id, String nomLieu, String adresse, String ville,
                 Integer capaciteMax, boolean disponible) {
         this.id = id;
@@ -34,7 +31,6 @@ public class Lieu {
         this.disponible = disponible;
     }
 
-    // 🔹 Getters & Setters
 
     public int getId() {
         return id;
@@ -84,16 +80,12 @@ public class Lieu {
         this.disponible = disponible;
     }
 
-    // 🔹 toString
     @Override
     public String toString() {
-        return "Lieu{" +
-                "id=" + id +
-                ", nomLieu='" + nomLieu + '\'' +
-                ", adresse='" + adresse + '\'' +
-                ", ville='" + ville + '\'' +
-                ", capaciteMax=" + capaciteMax +
-                ", disponible=" + disponible +
-                '}';
+        return "📍 Nom: " + nomLieu + " | " +
+                "🏠 Adresse: " + adresse + " | " +
+                "🌆 Ville: " + ville + " | " +
+                "👥 Capacité: " + (capaciteMax != null ? capaciteMax : "Non définie") + " | " +
+                "✅ Disponible: " + (disponible ? "Oui" : "Non");
     }
 }

@@ -5,18 +5,26 @@
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.SplitMenuButton?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
 
-<VBox alignment="TOP_CENTER" prefHeight="720" prefWidth="950" spacing="0" style="-fx-background-color: #f5f5f5;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tn.dhc.controllers.Front">
+<VBox alignment="TOP_CENTER" minHeight="0.0" prefWidth="950" spacing="0" style="-fx-background-color: #f5f5f5;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tn.dhc.controllers.Front">
     <children>
       <HBox alignment="CENTER_LEFT" spacing="12.0" style="-fx-background-color: linear-gradient(to right, #00b3a6, #00d4c8); -fx-padding: 10;" stylesheets="@theme.css">
          <children>
@@ -25,16 +33,16 @@
                   <Image url="@Logo.png" />
                </image>
             </ImageView>
-            <Label style="-fx-text-fill: #ffffff;" text="DHC - Digital Health Care" textFill="WHITE">
+            <Label style="-fx-text-fill: #ffffff;" text="DHC - Espace Patient" textFill="WHITE">
                <font>
-                  <Font name="Arial Unicode MS" size="44.0" />
+                  <Font name="Arial Unicode MS" size="40.0" />
                </font>
             </Label>
             <Region prefHeight="104.0" prefWidth="99.0" stylesheets="@theme.css" HBox.hgrow="ALWAYS" />
             <Button mnemonicParsing="false" onAction="#deconnexion" styleClass="btn-logout" text="🚪 Deconnexion" />
          </children>
       </HBox>
-      <TabPane prefHeight="720.0" prefWidth="1250.0" style="-fx-font-size:14px; -fx-background-color:#f5f5f5;" stylesheets="@theme.css" tabClosingPolicy="UNAVAILABLE">
+      <TabPane minHeight="0.0" prefWidth="1250.0" style="-fx-font-size:14px; -fx-background-color:#f5f5f5;" stylesheets="@theme.css" tabClosingPolicy="UNAVAILABLE" VBox.vgrow="ALWAYS">
          <padding>
             <Insets bottom="20" left="20" right="20" top="20" />
          </padding>
@@ -52,10 +60,13 @@
                <content>
                   <VBox spacing="15" style="-fx-background-color:white; -fx-background-radius:12; -fx-padding:20; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 10, 0, 0, 2);">
                      <children>
-                        <HBox alignment="CENTER_LEFT" spacing="15" />
+                        <HBox prefHeight="51.0" prefWidth="821.0">
+                           <children>
+                                    <Label style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: linear-gradient(to right, #00b3a6, #00d4c8);" text="🕒 Prendre un rendez-vous" />
+                           </children>
+                        </HBox>
                             <VBox spacing="20" style="-fx-padding:25;">
                                 <children>
-                                    <Label style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: linear-gradient(to right, #00b3a6, #00d4c8);" text="🕒 Prendre un rendez-vous" />
                                     <!-- Filter Section -->
                                     <VBox spacing="15" style="-fx-background-color:white; -fx-background-radius:12; -fx-padding:20; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 10, 0, 0, 2);">
                                         <children>
@@ -83,7 +94,10 @@
                                             </HBox>
                                         </children>
                                     </VBox>
-                              <Pane prefHeight="200.0" prefWidth="515.0" />
+                              <Pane prefHeight="200.0" prefWidth="515.0" stylesheets="@theme.css">
+                                 <children>
+                                     <FlowPane fx:id="creneauFlow" hgap="15" layoutX="14.0" prefHeight="600.0" prefWidth="900.0" stylesheets="@theme.css" vgap="15" />
+                                 </children></Pane>
                                 </children>
                             </VBox>
                      </children>
@@ -92,7 +106,29 @@
             </Tab>
             <Tab text="🏥  Fiches Medicales">
                <content>
-                  <VBox spacing="15" style="-fx-background-color:white; -fx-background-radius:12; -fx-padding:20; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 10, 0, 0, 2);" />
+                  <BorderPane minHeight="0.0" style="-fx-background-color: #f5f5f5;">
+                     <center>
+                        <ScrollPane fitToWidth="true" hbarPolicy="NEVER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minViewportHeight="120.0" pannable="true" styleClass="clinical-tab-outer-scroll" BorderPane.alignment="CENTER">
+                           <content>
+                              <VBox maxWidth="1.7976931348623157E308" spacing="14" style="-fx-background-color:white; -fx-background-radius:12; -fx-padding:20; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 10, 0, 0, 2);">
+                                 <children>
+                                    <Label style="-fx-font-size:22px; -fx-font-weight:bold; -fx-text-fill:#00b3a6;" text="Mes fiches &amp; ordonnances" />
+                                    <Label style="-fx-text-fill:#555;" text="Documents créés par votre médecin. Chaque ordonnance peut être exportée en PDF depuis sa carte." wrapText="true" />
+                                    <HBox spacing="10">
+                                       <children>
+                                          <Button mnemonicParsing="false" onAction="#refreshPatientMedical" styleClass="btn-secondary" text="🔄 Actualiser" />
+                                       </children>
+                                    </HBox>
+                                    <Label style="-fx-font-weight:bold;" text="Fiches médicales" />
+                                    <FlowPane fx:id="patientFichesFlow" alignment="TOP_LEFT" hgap="18" style="-fx-padding:8 4 16 4;" vgap="18" />
+                                    <Label style="-fx-font-weight:bold; -fx-padding: 12 0 0 0;" text="Ordonnances" />
+                                    <FlowPane fx:id="patientOrdonnancesFlow" alignment="TOP_LEFT" hgap="18" style="-fx-padding:8 4 16 4;" vgap="18" />
+                                 </children>
+                              </VBox>
+                           </content>
+                        </ScrollPane>
+                     </center>
+                  </BorderPane>
                </content>
             </Tab>
             <Tab text="📅  Evenements">
@@ -135,27 +171,142 @@
                                     </HBox>
                                  </children>
                               </VBox>
-                              <Pane prefHeight="200.0" prefWidth="515.0" />
+                              <Pane prefHeight="200.0" prefWidth="515.0">
+                                 <children>
+                                     <FlowPane fx:id="evenementFlow" hgap="15" prefHeight="600" prefWidth="800" vgap="15" />                                 </children></Pane>
                            </children>
                         </VBox>
                      </children>
                   </VBox>
                </content>
             </Tab>
-            <Tab text="📊 Statistiques">
+            <Tab text="👤 Profil">
                <content>
-                  <VBox spacing="15" style="-fx-background-color:white; -fx-background-radius:12; -fx-padding:20; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 10, 0, 0, 2);">
+                  <HBox prefHeight="100.0" prefWidth="200.0">
                      <children>
-                        <Label style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill:#00b3a6;" text="📊 Statistiques" />
-                        <Label fx:id="reportLabel" style="-fx-font-size: 14px; -fx-padding: 20;" text="" wrapText="true" />
+                        <Region prefHeight="597.0" prefWidth="241.0" />
+                        <VBox alignment="CENTER" prefHeight="598.0" prefWidth="463.0" spacing="25" styleClass="card" stylesheets="@theme.css">
+                           <children>
+                              <Text fill="#00babd" strokeType="OUTSIDE" strokeWidth="0.0" text="Modifier mon profil" textAlignment="CENTER" wrappingWidth="415.0">
+                                 <font>
+                                    <Font name="Consolas" size="32.0" />
+                                 </font>
+                              </Text>
+                              <HBox prefHeight="34.0" prefWidth="415.0">
+                                 <children>
+                                    <VBox spacing="5">
+                                       <children>
+                                          <Label styleClass="label" text="Nom" />
+                                          <TextField fx:id="modNomUser" prefHeight="46.0" prefWidth="199.0" promptText="Entrez votre nom" styleClass="input-field" stylesheets="@theme.css" />
+                                       </children>
+                                    </VBox>
+                                    <Region prefHeight="34.0" prefWidth="28.0" />
+                                    <VBox spacing="5" stylesheets="@theme.css">
+                                       <children>
+                                          <Label styleClass="label" text="Prenom" />
+                                          <TextField fx:id="modPrenomUser" prefHeight="46.0" prefWidth="200.0" promptText="Entrez votre prenom" styleClass="input-field" stylesheets="@theme.css" />
+                                       </children>
+                                    </VBox>
+                                 </children>
+                              </HBox>
+                              <HBox prefHeight="78.0" prefWidth="415.0">
+                                 <children>
+                                    <VBox spacing="5">
+                                       <children>
+                                          <Label styleClass="label" text="Email" />
+                                          <TextField fx:id="modEmailUser" prefHeight="46.0" prefWidth="199.0" promptText="Entrez votre email" styleClass="input-field" stylesheets="@theme.css" />
+                                       </children>
+                                    </VBox>
+                                    <Region prefHeight="34.0" prefWidth="28.0" />
+                                    <VBox spacing="5" stylesheets="@theme.css">
+                                       <children>
+                                          <Label styleClass="label" text="Telephone" />
+                                          <TextField fx:id="modTelUser" prefHeight="46.0" prefWidth="200.0" promptText="Entrez votre N° Telephone" styleClass="input-field" stylesheets="@theme.css" />
+                                       </children>
+                                    </VBox>
+                                 </children>
+                              </HBox>
+                              <HBox prefHeight="48.0" prefWidth="415.0">
+                                 <children>
+                                    <VBox spacing="5">
+                                       <children>
+                                          <Label styleClass="label" text="Role" />
+                                          <SplitMenuButton fx:id="modRoleUser" mnemonicParsing="false" prefHeight="28.0" prefWidth="194.0" text="Choisissez un role" textAlignment="CENTER">
+                                             <items>
+                                                <MenuItem mnemonicParsing="false" text="Medecin" />
+                                                <MenuItem mnemonicParsing="false" text="Patient" />
+                                                <MenuItem mnemonicParsing="false" text="Admin" />
+                                             </items>
+                                          </SplitMenuButton>
+                                       </children>
+                                    </VBox>
+                                    <Region prefHeight="64.0" prefWidth="34.0" />
+                                    <VBox prefHeight="64.0" prefWidth="201.0" spacing="5" stylesheets="@theme.css">
+                                       <children>
+                                          <Label styleClass="label" text="Specialité" />
+                                          <TextField fx:id="modSpecialiteUser" prefHeight="42.0" prefWidth="123.0" promptText="Entrez votre Specialité" styleClass="input-field" stylesheets="@theme.css" />
+                                       </children>
+                                    </VBox>
+                                 </children>
+                              </HBox>
+                              <VBox prefHeight="77.0" prefWidth="415.0" spacing="5">
+                                 <children>
+                                    <Label styleClass="label" text="Mot de passe" />
+                                    <StackPane>
+                                       <children>
+                                          <PasswordField fx:id="modMdpUser" prefHeight="45.0" promptText="Choisissez mot de passe" styleClass="input-field" stylesheets="@theme.css" />
+                                          <Button style="-fx-background-color: transparent; -fx-cursor: hand; -fx-text-fill: #95a5a6; -fx-font-size: 16px;" text="👁" StackPane.alignment="CENTER_RIGHT">
+                                             <padding>
+                                                <Insets right="10" />
+                                             </padding>
+                                          </Button>
+                                       </children>
+                                    </StackPane>
+                                    <StackPane>
+                                       <children>
+                                          <PasswordField fx:id="modMdpCUser" prefHeight="45.0" promptText="Confirmez le mot de passe" styleClass="input-field" stylesheets="@theme.css" />
+                                          <Button fx:id="togglePasswordButton1" style="-fx-background-color: transparent; -fx-cursor: hand; -fx-text-fill: #95a5a6; -fx-font-size: 16px;" text="👁" StackPane.alignment="CENTER_RIGHT">
+                                             <padding>
+                                                <Insets right="10" />
+                                             </padding>
+                                          </Button>
+                                       </children>
+                                    </StackPane>
+                                 </children>
+                              </VBox>
+                              <HBox alignment="CENTER" spacing="20" />
+                              <Button maxWidth="1.7976931348623157E308" onAction="#modifier" prefHeight="55.0" styleClass="login-button" text="👤 Modifier les informations" textFill="#00babd">
+                                 <font>
+                                    <Font size="16.0" />
+                                 </font>
+                              </Button>
+                           </children>
+                        </VBox>
+                     </children>
+                  </HBox>
+               </content>
+            </Tab>
+            <Tab text="📢 Annonces">
+               <content>
+                  <VBox spacing="15" style="-fx-background-color:white; -fx-background-radius:12; -fx-padding:20; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 10, 0, 0, 2);" VBox.vgrow="ALWAYS">
+                     <children>
+                        <HBox alignment="CENTER_LEFT" spacing="12" style="-fx-background-color: linear-gradient(to right, rgba(0,179,166,0.08), rgba(0,212,200,0.06)); -fx-background-radius:10; -fx-padding:12 16; -fx-border-color:#e0f2f0; -fx-border-radius:10; -fx-border-width:1;">
+                           <children>
+                              <Label style="-fx-font-size:20px; -fx-font-weight:bold; -fx-text-fill:#00b3a6;" text="📢 Annonces" />
+                              <TextField fx:id="annoncePatientSearch" prefHeight="38" prefWidth="280" promptText="🔍 Rechercher une annonce..." style="-fx-background-radius:20; -fx-border-radius:20; -fx-padding:8 14;" />
+                              <ComboBox fx:id="annoncePatientSort" prefHeight="38" prefWidth="200" promptText="🔀 Trier par..." />
+                           </children>
+                        </HBox>
+                        <ScrollPane fitToWidth="true" hbarPolicy="NEVER" style="-fx-background-color:transparent; -fx-background:transparent;" VBox.vgrow="ALWAYS">
+                           <content>
+                              <VBox fx:id="annoncePatientContainer" spacing="10" style="-fx-padding:8;" />
+                           </content>
+                        </ScrollPane>
                      </children>
                   </VBox>
                </content>
             </Tab>
          </tabs>
       </TabPane>
-        
-        <!-- Main Content -->
-        <ScrollPane fitToWidth="true" style="-fx-background-color: transparent; -fx-background: transparent;" stylesheets="@theme.css" VBox.vgrow="ALWAYS" />
     </children>
 </VBox>

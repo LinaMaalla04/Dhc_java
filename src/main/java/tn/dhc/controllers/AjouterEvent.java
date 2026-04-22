@@ -2,10 +2,16 @@ package tn.dhc.controllers;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.stage.Stage;
 import tn.dhc.entities.Event;
 import tn.dhc.services.EventService;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
@@ -75,25 +81,30 @@ public class AjouterEvent {
                 return;
             }
 
-            // ⚠️ IMPORTANT : adapter selon ton constructeur Event
+
             Event e = new Event(
-                    0,                 // id auto
+                    0,
                     titre,
                     theme,
                     descr,
                     date,
                     debut,
                     fin,
-                    null,              // nbParticipant (ou 0 si obligatoire)
-                    1,                 // user_id (à remplacer par user connecté)
-                    1                  // lieu_id (à remplacer)
+                    null,
+                    1,
+                    1
             );
 
-            eventService.ajouter(e); // ✅ FIX ICI
+            eventService.ajouter(e); 
 
             showAlert(Alert.AlertType.INFORMATION, "Succès", "Event ajouté avec succès !");
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Dashboard.fxml"));
+            Parent root = loader.load();
 
-            annuler(null);
+            Dashboard controller = loader.getController();
+
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.setScene(new Scene(root));
 
         } catch (Exception ex) {
             showAlert(Alert.AlertType.ERROR, "Erreur", ex.getMessage());
@@ -101,7 +112,7 @@ public class AjouterEvent {
     }
 
     @FXML
-    public void annuler(ActionEvent event) {
+    public void annuler(ActionEvent event) throws IOException {
         addEventDate.setValue(null);
         addEventDebut.setValue("08:00");
         addEventFin.setValue("08:30");
@@ -109,6 +120,18 @@ public class AjouterEvent {
         addEventTitre.clear();
         addEventTheme.clear();
         addEventDescr.clear();
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Dashboard.fxml"));
+        Parent root = null;
+        try {
+            root = loader.load();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        Dashboard controller = loader.getController();
+
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        stage.setScene(new Scene(root));
     }
 
     private void showAlert(Alert.AlertType type, String title, String message) {

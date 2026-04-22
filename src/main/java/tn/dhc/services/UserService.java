@@ -18,7 +18,6 @@ public class UserService implements IService<User> {
         cnx = MyConnection.getInstance().getConnection();
     }
 
-    // ✅ CREATE
     @Override
     public void ajouter(User u) {
         try {
@@ -29,7 +28,7 @@ public class UserService implements IService<User> {
             ps.setString(2, u.getPrenom());
             ps.setString(3, u.getMail());
             ps.setInt(4, u.getTel());
-            ps.setString(5, u.getMdp());
+            ps.setString(5, BCrypt.hashpw(u.getMdp(), BCrypt.gensalt()));
             ps.setString(6, u.getRole());
 
             ps.executeUpdate();
@@ -38,7 +37,6 @@ public class UserService implements IService<User> {
         }
     }
 
-    // ✅ DELETE
     @Override
     public void supprimer(User u) {
         try {
@@ -51,7 +49,6 @@ public class UserService implements IService<User> {
         }
     }
 
-    // ✅ UPDATE
     @Override
     public void modifier(User u) {
         try {
@@ -71,7 +68,6 @@ public class UserService implements IService<User> {
         }
     }
 
-    // ✅ GET ALL
     @Override
     public List<User> getAll() {
         List<User> users = new ArrayList<>();
@@ -91,7 +87,6 @@ public class UserService implements IService<User> {
         return users;
     }
 
-    // ✅ GET ONE
     @Override
     public User getOneById(int id) {
         try {
@@ -110,7 +105,6 @@ public class UserService implements IService<User> {
         return null;
     }
 
-    // 🔐 LOGIN (hors interface)
     public boolean login(String email, String mdp) {
         try {
             String sql = "SELECT * FROM user WHERE mail=?";
@@ -121,10 +115,9 @@ public class UserService implements IService<User> {
 
             if (rs.next()) {
                 User u = mapResultSetToUser(rs);
-
-
-                String hashed = BCrypt.hashpw(u.getMdp(), BCrypt.gensalt());
-                if (BCrypt.checkpw(mdp, u.getMdp())) {
+                String stored = u.getMdp();
+                boolean ok = passwordMatchesPlainOrBcrypt(mdp, stored);
+                if (ok) {
                     currentUser = u;
 
                     String update = "UPDATE user SET last_login_at=?, login_count = login_count + 1 WHERE id=?";
@@ -150,7 +143,20 @@ public class UserService implements IService<User> {
         currentUser = null;
     }
 
-    // 🔁 mapping
+    private static boolean passwordMatchesPlainOrBcrypt(String plain, String stored) {
+        if (plain == null || stored == null) {
+            return false;
+        }
+        if (stored.startsWith("$2a$") || stored.startsWith("$2b$") || stored.startsWith("$2y$")) {
+            try {
+                return BCrypt.checkpw(plain, stored);
+            } catch (IllegalArgumentException e) {
+                return false;
+            }
+        }
+        return plain.equals(stored);
+    }
+
     private User mapResultSetToUser(ResultSet rs) throws SQLException {
         return new User(
                 rs.getInt("id"),
@@ -166,5 +172,8 @@ public class UserService implements IService<User> {
                         : null,
                 rs.getInt("login_count")
         );
+    }
+    public static void setCurrentUser(User u) {
+        currentUser = u;
     }
 }

@@ -2,12 +2,15 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
@@ -45,10 +48,9 @@
                               <HBox alignment="CENTER_LEFT" spacing="15">
                                  <children>
                                     <Label prefHeight="30.0" prefWidth="152.0" style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill:#00b3a6;" text="👥 Utilisateurs" />
-                                    <TextField fx:id="RechUserText" prefHeight="38.0" prefWidth="480.0" promptText="Recherche..." />
-                                    <Button mnemonicParsing="false" onAction="#RechUser" prefHeight="36.0" prefWidth="58.0" styleClass="btn-primary" text="🔍" />
+                                    <TextField fx:id="RechUserText" prefHeight="38.0" prefWidth="413.0" promptText="Recherche..." />
                                     <Region HBox.hgrow="ALWAYS" />
-                                    <Button mnemonicParsing="false" onAction="#refreshUsers" prefHeight="45" prefWidth="130" style="-fx-font-size:14px;" styleClass="btn-secondary" text="🔄 Actualiser" />
+                                    <ComboBox fx:id="triUser" prefHeight="47.0" prefWidth="150.0" promptText="Trier par..." />
                                     <Button mnemonicParsing="false" onAction="#editUser" prefHeight="45" prefWidth="130" style="-fx-font-size:14px;" styleClass="btn-secondary" text="🖊 Modifier" />
                                     <Button mnemonicParsing="false" onAction="#deleteUser" prefHeight="45" prefWidth="130" style="-fx-font-size:14px;" styleClass="btn-secondary" text="❌ Supprimer" />
                                  </children>
@@ -65,12 +67,11 @@
                               <HBox alignment="CENTER_LEFT" spacing="15">
                                  <children>
                                     <Label prefHeight="30.0" prefWidth="155.0" style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill:#00b3a6;" text="👨‍⚕️ Creneaux" />
-                                    <TextField fx:id="RechCreneauText" prefHeight="38.0" prefWidth="372.0" promptText="Recherche..." />
-                                    <Button mnemonicParsing="false" onAction="#RechCreneau" prefHeight="36.0" prefWidth="69.0" styleClass="btn-primary" text="🔍" />
                                     <Region HBox.hgrow="ALWAYS" />
-                                    <Button mnemonicParsing="false" onAction="#refreshCreneaux" prefHeight="45" prefWidth="130" style="-fx-font-size:14px;" styleClass="btn-secondary" text="🔄 Actualiser" />
-                                    <Button mnemonicParsing="false" onAction="#addCreneau" prefHeight="45" prefWidth="130" style="-fx-font-size:14px; -fx-font-weight:bold;" styleClass="btn-primary" text="➕ Ajouter" />
+                                    <ComboBox fx:id="RechCreneau" prefHeight="47.0" prefWidth="255.0" promptText="Filtrage par disponibilité" />
+                                    <ComboBox fx:id="triCreneau" prefHeight="47.0" prefWidth="150.0" promptText="Trier par..." />
                                     <Button mnemonicParsing="false" onAction="#editCreneau" prefHeight="45" prefWidth="130" style="-fx-font-size:14px;" styleClass="btn-secondary" text="🖊 Modifier" />
+                                    <Button mnemonicParsing="false" onAction="#addCreneau" prefHeight="45" prefWidth="130" style="-fx-font-size:14px; -fx-font-weight:bold;" styleClass="btn-primary" text="➕ Ajouter" />
                                     <Button mnemonicParsing="false" onAction="#deleteCreneau" prefHeight="45" prefWidth="130" style="-fx-font-size:14px;" styleClass="btn-secondary" text="❌ Supprimer" />
                                  </children>
                               </HBox>
@@ -80,23 +81,106 @@
                         </VBox>
                      </content>
                   </Tab>
-                  <Tab text="🏥  Fiches Medicales">
+                  <Tab text="💊 Pharmacie &amp; dossiers">
                      <content>
-                        <VBox spacing="15" style="-fx-background-color:white; -fx-background-radius:12; -fx-padding:20; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 10, 0, 0, 2);">
+                        <VBox spacing="0" style="-fx-background-color:#f0f4f3;" VBox.vgrow="ALWAYS">
                            <children>
-                              <HBox alignment="CENTER_LEFT" spacing="15">
-                                 <children>
-                                    <Label style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill:#00b3a6;" text="🏥  Fiches Medicales" />
-                                    <TextField prefHeight="38.0" prefWidth="266.0" promptText="Recherche..." />
-                                    <Button mnemonicParsing="false" prefHeight="36.0" prefWidth="58.0" styleClass="btn-primary" text="🔍" />
-                                    <Region HBox.hgrow="ALWAYS" />
-                                    <Button mnemonicParsing="false" prefHeight="45" prefWidth="130" style="-fx-font-size:14px;" styleClass="btn-secondary" text="🔄 Actualiser" />
-                                    <Button mnemonicParsing="false" prefHeight="45" prefWidth="130" style="-fx-font-size:14px; -fx-font-weight:bold;" styleClass="btn-primary" text="➕ Ajouter" />
-                                    <Button mnemonicParsing="false" prefHeight="45" prefWidth="130" style="-fx-font-size:14px;" styleClass="btn-secondary" text="🖊 Modifier" />
-                                    <Button mnemonicParsing="false" prefHeight="45" prefWidth="130" style="-fx-font-size:14px;" styleClass="btn-secondary" text="❌ Supprimer" />
-                                 </children>
-                              </HBox>
-                              <ListView prefHeight="200.0" prefWidth="200.0" />
+                              <TabPane styleClass="clinical-nested-tab-pane" tabClosingPolicy="UNAVAILABLE" VBox.vgrow="ALWAYS">
+                                 <tabs>
+                                    <Tab text="🏥 Pharmacies">
+                                       <content>
+                                          <VBox spacing="14" style="-fx-padding:14;">
+                                             <HBox alignment="CENTER_LEFT" spacing="10" styleClass="clinical-toolbar">
+                                                <Label styleClass="sub-header-label" text="Pharmacies" />
+                                                <Region HBox.hgrow="ALWAYS" />
+                                                <Label style="-fx-font-size:12px; -fx-text-fill:#555;" text="Recherche" />
+                                                <TextField fx:id="searchPharmacy" prefHeight="36" prefWidth="200" promptText="Tous les champs…" />
+                                                <Label style="-fx-font-size:12px; -fx-text-fill:#555;" text="Filtre" />
+                                                <ComboBox fx:id="pharmacyFilterCombo" prefHeight="36" prefWidth="170" />
+                                                <Label style="-fx-font-size:12px; -fx-text-fill:#555;" text="Tri" />
+                                                <ComboBox fx:id="pharmacySortCombo" prefHeight="36" prefWidth="130" />
+                                                <Button mnemonicParsing="false" onAction="#refreshPharmacyCards" prefHeight="40" styleClass="btn-secondary" text="🔄 Actualiser" />
+                                                <Button mnemonicParsing="false" onAction="#addPharmacie" prefHeight="40" styleClass="btn-primary" text="➕ Ajouter" />
+                                             </HBox>
+                                             <ScrollPane fitToWidth="true" hbarPolicy="NEVER" pannable="true" styleClass="clinical-scroll" VBox.vgrow="ALWAYS">
+                                                <content>
+                                                   <FlowPane fx:id="pharmacyCardsFlow" alignment="TOP_LEFT" hgap="18" style="-fx-padding:8 4 32 4;" vgap="18" />
+                                                </content>
+                                             </ScrollPane>
+                                          </VBox>
+                                       </content>
+                                    </Tab>
+                                    <Tab text="💊 Médicaments">
+                                       <content>
+                                          <VBox spacing="14" style="-fx-padding:14;">
+                                             <HBox alignment="CENTER_LEFT" spacing="10" styleClass="clinical-toolbar">
+                                                <Label styleClass="sub-header-label" text="Médicaments" />
+                                                <Region HBox.hgrow="ALWAYS" />
+                                                <Label style="-fx-font-size:12px; -fx-text-fill:#555;" text="Recherche" />
+                                                <TextField fx:id="searchMedicament" prefHeight="36" prefWidth="200" promptText="Tous les champs…" />
+                                                <Label style="-fx-font-size:12px; -fx-text-fill:#555;" text="Filtre" />
+                                                <ComboBox fx:id="medicamentFilterCombo" prefHeight="36" prefWidth="190" />
+                                                <Label style="-fx-font-size:12px; -fx-text-fill:#555;" text="Tri" />
+                                                <ComboBox fx:id="medicamentSortCombo" prefHeight="36" prefWidth="150" />
+                                                <Button mnemonicParsing="false" onAction="#refreshMedicamentCards" prefHeight="40" styleClass="btn-secondary" text="🔄 Actualiser" />
+                                                <Button mnemonicParsing="false" onAction="#addMedicament" prefHeight="40" styleClass="btn-primary" text="➕ Ajouter" />
+                                             </HBox>
+                                             <ScrollPane fitToWidth="true" hbarPolicy="NEVER" pannable="true" styleClass="clinical-scroll" VBox.vgrow="ALWAYS">
+                                                <content>
+                                                   <FlowPane fx:id="medicamentCardsFlow" alignment="TOP_LEFT" hgap="18" style="-fx-padding:8 4 32 4;" vgap="18" />
+                                                </content>
+                                             </ScrollPane>
+                                          </VBox>
+                                       </content>
+                                    </Tab>
+                                    <Tab text="📋 Fiches">
+                                       <content>
+                                          <VBox spacing="14" style="-fx-padding:14;">
+                                             <HBox alignment="CENTER_LEFT" spacing="10" styleClass="clinical-toolbar">
+                                                <Label styleClass="sub-header-label" text="Fiches médicales" />
+                                                <Region HBox.hgrow="ALWAYS" />
+                                                <Label style="-fx-font-size:12px; -fx-text-fill:#555;" text="Recherche" />
+                                                <TextField fx:id="searchFiche" prefHeight="36" prefWidth="200" promptText="Tous les champs…" />
+                                                <Label style="-fx-font-size:12px; -fx-text-fill:#555;" text="Gravité" />
+                                                <ComboBox fx:id="ficheFilterCombo" prefHeight="36" prefWidth="150" />
+                                                <Label style="-fx-font-size:12px; -fx-text-fill:#555;" text="Tri" />
+                                                <ComboBox fx:id="ficheSortCombo" prefHeight="36" prefWidth="150" />
+                                                <Button mnemonicParsing="false" onAction="#refreshFicheCards" prefHeight="40" styleClass="btn-secondary" text="🔄 Actualiser" />
+                                                <Button mnemonicParsing="false" onAction="#addFiche" prefHeight="40" styleClass="btn-primary" text="➕ Ajouter" />
+                                             </HBox>
+                                             <ScrollPane fitToWidth="true" hbarPolicy="NEVER" pannable="true" styleClass="clinical-scroll" VBox.vgrow="ALWAYS">
+                                                <content>
+                                                   <FlowPane fx:id="ficheCardsFlow" alignment="TOP_LEFT" hgap="18" style="-fx-padding:8 4 32 4;" vgap="18" />
+                                                </content>
+                                             </ScrollPane>
+                                          </VBox>
+                                       </content>
+                                    </Tab>
+                                    <Tab text="📜 Ordonnances">
+                                       <content>
+                                          <VBox spacing="14" style="-fx-padding:14;">
+                                             <HBox alignment="CENTER_LEFT" spacing="10" styleClass="clinical-toolbar">
+                                                <Label styleClass="sub-header-label" text="Ordonnances" />
+                                                <Region HBox.hgrow="ALWAYS" />
+                                                <Label style="-fx-font-size:12px; -fx-text-fill:#555;" text="Recherche" />
+                                                <TextField fx:id="searchOrdonnance" prefHeight="36" prefWidth="200" promptText="Tous les champs…" />
+                                                <Label style="-fx-font-size:12px; -fx-text-fill:#555;" text="Filtre" />
+                                                <ComboBox fx:id="ordonnanceFilterCombo" prefHeight="36" prefWidth="160" />
+                                                <Label style="-fx-font-size:12px; -fx-text-fill:#555;" text="Tri" />
+                                                <ComboBox fx:id="ordonnanceSortCombo" prefHeight="36" prefWidth="150" />
+                                                <Button mnemonicParsing="false" onAction="#refreshOrdonnanceCards" prefHeight="40" styleClass="btn-secondary" text="🔄 Actualiser" />
+                                                <Button mnemonicParsing="false" onAction="#addOrdonnance" prefHeight="40" styleClass="btn-primary" text="➕ Ajouter" />
+                                             </HBox>
+                                             <ScrollPane fitToWidth="true" hbarPolicy="NEVER" pannable="true" styleClass="clinical-scroll" VBox.vgrow="ALWAYS">
+                                                <content>
+                                                   <FlowPane fx:id="ordonnanceCardsFlow" alignment="TOP_LEFT" hgap="18" style="-fx-padding:8 4 32 4;" vgap="18" />
+                                                </content>
+                                             </ScrollPane>
+                                          </VBox>
+                                       </content>
+                                    </Tab>
+                                 </tabs>
+                              </TabPane>
                            </children>
                         </VBox>
                      </content>
@@ -109,9 +193,8 @@
                                  <children>
                                     <Label style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill:#00b3a6;" text="📅  Evenements" />
                                     <TextField fx:id="RechEventText" prefHeight="38.0" prefWidth="318.0" promptText="Recherche..." />
-                                    <Button mnemonicParsing="false" onAction="#RechEvent" prefHeight="36.0" prefWidth="58.0" styleClass="btn-primary" text="🔍" />
                                     <Region HBox.hgrow="ALWAYS" />
-                                    <Button mnemonicParsing="false" onAction="#refreshEvent" prefHeight="45" prefWidth="130" style="-fx-font-size:14px;" styleClass="btn-secondary" text="🔄 Actualiser" />
+                                    <ComboBox fx:id="triEvent" prefHeight="47.0" prefWidth="150.0" promptText="Trier par..." />
                                     <Button mnemonicParsing="false" onAction="#addEvent" prefHeight="45" prefWidth="130" style="-fx-font-size:14px; -fx-font-weight:bold;" styleClass="btn-primary" text="➕ Ajouter" />
                                     <Button mnemonicParsing="false" onAction="#editEvent" prefHeight="45" prefWidth="130" style="-fx-font-size:14px;" styleClass="btn-secondary" text="🖊 Modifier" />
                                     <Button mnemonicParsing="false" onAction="#deleteEvent" prefHeight="45" prefWidth="130" style="-fx-font-size:14px;" styleClass="btn-secondary" text="❌ Supprimer" />
@@ -129,6 +212,28 @@
                            <children>
                               <Label style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill:#00b3a6;" text="📊 Statistiques" />
                               <Label fx:id="reportLabel" style="-fx-font-size: 14px; -fx-padding: 20;" text="" wrapText="true" />
+                           </children>
+                        </VBox>
+                     </content>
+                  </Tab>
+                  <Tab text="📢 Annonces">
+                     <content>
+                        <VBox spacing="15" style="-fx-background-color:white; -fx-background-radius:12; -fx-padding:20; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 10, 0, 0, 2);" VBox.vgrow="ALWAYS">
+                           <children>
+                              <HBox alignment="CENTER_LEFT" spacing="12" styleClass="clinical-toolbar">
+                                 <children>
+                                    <Label style="-fx-font-size:20px; -fx-font-weight:bold; -fx-text-fill:#00b3a6;" text="📢 Annonces" />
+                                    <TextField fx:id="annonceAdminSearch" prefHeight="38" prefWidth="260" promptText="🔍 Rechercher une annonce..." style="-fx-background-radius:20; -fx-border-radius:20; -fx-padding:8 14;" />
+                                    <ComboBox fx:id="annonceAdminSort" prefHeight="38" prefWidth="200" promptText="🔀 Trier par..." />
+                                    <Region HBox.hgrow="ALWAYS" />
+                                    <Button mnemonicParsing="false" onAction="#addAnnonce" prefHeight="38" style="-fx-font-weight:bold;" styleClass="btn-primary" text="➕ Ajouter Annonce" />
+                                 </children>
+                              </HBox>
+                              <ScrollPane fitToWidth="true" hbarPolicy="NEVER" style="-fx-background-color:transparent; -fx-background:transparent;" VBox.vgrow="ALWAYS">
+                                 <content>
+                                    <VBox fx:id="annonceAdminContainer" spacing="10" style="-fx-padding:8;" />
+                                 </content>
+                              </ScrollPane>
                            </children>
                         </VBox>
                      </content>
