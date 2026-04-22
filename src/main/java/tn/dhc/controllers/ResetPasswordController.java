@@ -10,24 +10,10 @@ import javafx.scene.control.*;
 import javafx.stage.Stage;
 import tn.dhc.services.PasswordResetService;
 
-/**
- * Écran 2 — "Réinitialiser le mot de passe"
- * L'utilisateur colle le lien reçu (ou les paramètres s= et t=),
- * puis saisit son nouveau mot de passe.
- *
- * Lié à : ResetPassword.fxml
- *
- * NOTE : Dans une app desktop pure JavaFX, il n'y a pas de deep link automatique.
- * Deux stratégies possibles :
- *  A) L'utilisateur copie-colle le lien complet dans un TextField → on parse s= et t=
- *  B) Un mini serveur HTTP local (ex: com.sun.net.httpserver) écoute sur localhost:8080
- *     et ouvre cet écran en passant les paramètres. (Recommandé en production)
- *
- * Ici on implémente la stratégie A (simple, suffisant pour un projet académique).
- */
 public class ResetPasswordController {
 
-    @FXML private TextField     linkField;         // Champ pour coller le lien reçu
+    @FXML private Label         emailDisplayLabel;    // Affiche "Code envoyé à : xxx@xxx.com"
+    @FXML private TextField     codeField;            // FIX : champ code OTP (plus de linkField)
     @FXML private PasswordField newPasswordField;
     @FXML private PasswordField confirmPasswordField;
     @FXML private TextField     newPasswordVisible;
@@ -36,24 +22,31 @@ public class ResetPasswordController {
     @FXML private Label         statusLabel;
 
     private boolean passwordVisible = false;
+    private String  email;                            // injecté depuis ForgotPasswordController
+
     private final PasswordResetService resetService = new PasswordResetService();
+
+    // ── Injection de l'email depuis l'écran précédent ──────────────────────
+    public void setEmail(String email) {
+        this.email = email;
+        if (emailDisplayLabel != null) {
+            emailDisplayLabel.setText("Code envoyé à : " + email);
+        }
+    }
 
     // ── Actions ────────────────────────────────────────────────────────────
 
     @FXML
     public void handleReset(ActionEvent event) {
-        // 1. Parser le lien collé
-        String link = linkField.getText().trim();
-        if (link.isBlank()) {
-            showStatus("Veuillez coller le lien reçu par email.", true);
+
+        // 1. Récupérer le code OTP saisi
+        String code = codeField.getText().trim();
+        if (code.isBlank()) {
+            showStatus("Veuillez saisir le code reçu par email.", true);
             return;
         }
-
-        String selector = extractParam(link, "s");
-        String token    = extractParam(link, "t");
-
-        if (selector == null || token == null) {
-            showStatus("Lien invalide. Vérifiez que vous avez collé le lien complet.", true);
+        if (!code.matches("\\d{6}")) {
+            showStatus("Le code doit contenir 6 chiffres.", true);
             return;
         }
 
@@ -74,10 +67,11 @@ public class ResetPasswordController {
             return;
         }
 
-        // 3. Réinitialiser
+        // 3. Réinitialiser via le service
         resetButton.setDisable(true);
         try {
-            resetService.resetPassword(selector, token, newPwd);
+            // FIX : API correcte → resetPassword(email, code, newPassword)
+            resetService.resetPassword(email, code, newPwd);
             showStatus("Mot de passe modifié avec succès !", false);
 
             // Retour automatique au login après 2 secondes
@@ -122,23 +116,6 @@ public class ResetPasswordController {
     }
 
     // ── Utilitaires ────────────────────────────────────────────────────────
-
-    /**
-     * Extrait un paramètre d'une URL.
-     * Ex: extractParam("http://...?s=abc&t=xyz", "s") → "abc"
-     */
-    private String extractParam(String url, String param) {
-        try {
-            String search = param + "=";
-            int start = url.indexOf(search);
-            if (start == -1) return null;
-            start += search.length();
-            int end = url.indexOf("&", start);
-            return end == -1 ? url.substring(start) : url.substring(start, end);
-        } catch (Exception e) {
-            return null;
-        }
-    }
 
     private void showStatus(String message, boolean isError) {
         statusLabel.setText(message);

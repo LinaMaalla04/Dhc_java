@@ -11,12 +11,6 @@ import javafx.scene.control.*;
 import javafx.stage.Stage;
 import tn.dhc.services.PasswordResetService;
 
-/**
- * Écran 1 — "Mot de passe oublié"
- * L'utilisateur saisit son email → reçoit un lien par mail.
- *
- * Lié à : ForgotPassword.fxml
- */
 public class ForgotPasswordController {
 
     @FXML private TextField emailField;
@@ -25,15 +19,10 @@ public class ForgotPasswordController {
 
     private final PasswordResetService resetService = new PasswordResetService();
 
-    /**
-     * Déclenché par le bouton "Envoyer le lien".
-     * L'envoi se fait dans un thread séparé pour ne pas bloquer l'UI JavaFX.
-     */
     @FXML
     public void handleSendLink(ActionEvent event) {
         String email = emailField.getText();
 
-        // Validation basique côté client
         if (email == null || email.isBlank()) {
             showStatus("Veuillez saisir votre adresse email.", true);
             return;
@@ -43,24 +32,26 @@ public class ForgotPasswordController {
             return;
         }
 
-        // Désactiver le bouton pendant l'envoi
         sendButton.setDisable(true);
         showStatus("Envoi en cours…", false);
 
-        // Envoi asynchrone (JavaMail est bloquant)
+        String trimmedEmail = email.trim();
+
         Thread worker = new Thread(() -> {
             try {
-                resetService.initiate(email.trim());
+                resetService.initiate(trimmedEmail);
+
                 Platform.runLater(() -> {
-                    showStatus("Email envoyé ! Vérifiez votre boîte mail.", false);
+                    showStatus("Code envoyé ! Vérifiez votre boîte mail.", false);
                     sendButton.setDisable(false);
-                    // Ouvrir l'écran de saisie du nouveau mot de passe après 2s
-                    openResetScreen(event);
+                    // FIX : on passe l'email à l'écran suivant
+                    openResetScreen(event, trimmedEmail);
                 });
+
             } catch (IllegalArgumentException e) {
-                // Email inconnu → message générique pour ne pas révéler les comptes
+                // Message générique pour ne pas révéler si l'email existe
                 Platform.runLater(() -> {
-                    showStatus("Si cet email existe, un lien vous a été envoyé.", false);
+                    showStatus("Si cet email existe, un code vous a été envoyé.", false);
                     sendButton.setDisable(false);
                 });
             } catch (Exception e) {
@@ -75,7 +66,6 @@ public class ForgotPasswordController {
         worker.start();
     }
 
-    /** Retour à l'écran de login. */
     @FXML
     public void handleBackToLogin(ActionEvent event) {
         loadScene("/Login.fxml", event);
@@ -83,17 +73,31 @@ public class ForgotPasswordController {
 
     // ── Privé ──────────────────────────────────────────────────────────────
 
-    private void openResetScreen(ActionEvent event) {
-        // On ouvre l'écran ResetPassword où l'utilisateur colle/saisit son token.
-        // Dans un vrai projet avec deep link, ce serait géré automatiquement.
-        loadScene("/ResetPassword.fxml", event);
+    /**
+     * Ouvre ResetPassword.fxml en passant l'email via le controller.
+     * L'email est nécessaire pour la validation du code OTP.
+     */
+    private void openResetScreen(ActionEvent event, String email) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ResetPassword.fxml"));
+            Parent root = loader.load();
+
+            // FIX : injecter l'email dans le controller de l'écran suivant
+            ResetPasswordController nextController = loader.getController();
+            nextController.setEmail(email);
+
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.setScene(new Scene(root));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void showStatus(String message, boolean isError) {
         statusLabel.setText(message);
         statusLabel.setStyle(isError
-                ? "-fx-text-fill: #e53935;"   // rouge
-                : "-fx-text-fill: #43a047;"); // vert
+                ? "-fx-text-fill: #e53935;"
+                : "-fx-text-fill: #43a047;");
         statusLabel.setVisible(true);
     }
 

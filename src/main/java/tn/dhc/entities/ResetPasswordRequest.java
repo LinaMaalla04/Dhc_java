@@ -2,6 +2,7 @@ package tn.dhc.entities;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
+
 @Entity
 @Table(name = "reset_password_request")
 public class ResetPasswordRequest {
@@ -10,7 +11,7 @@ public class ResetPasswordRequest {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    // Code OTP (ex: 483921)
+    // Code OTP à 6 chiffres (ex: 483921)
     @Column(name = "code", nullable = false, length = 10)
     private String code;
 
@@ -25,29 +26,31 @@ public class ResetPasswordRequest {
 
     public ResetPasswordRequest() {}
 
+    // Constructeur utilisé dans PasswordResetService.initiate()
     public ResetPasswordRequest(String code,
                                 LocalDateTime requestedAt,
                                 LocalDateTime expiresAt,
                                 int userId) {
-        this.code = code;
+        this.code        = code;
         this.requestedAt = requestedAt;
-        this.expiresAt = expiresAt;
-        this.userId = userId;
+        this.expiresAt   = expiresAt;
+        this.userId      = userId;
     }
 
-    // getters & setters
+    // Getters & Setters
 
-    public int getId() { return id; }
+    public int getId()                              { return id; }
+    public void setId(int id)                       { this.id = id; }
 
-    public String getCode() { return code; }
-    public void setCode(String code) { this.code = code; }
+    public String getCode()                         { return code; }
+    public void setCode(String code)                { this.code = code; }
 
-    public LocalDateTime getRequestedAt() { return requestedAt; }
-    public void setRequestedAt(LocalDateTime requestedAt) { this.requestedAt = requestedAt; }
+    public LocalDateTime getRequestedAt()           { return requestedAt; }
+    public void setRequestedAt(LocalDateTime v)     { this.requestedAt = v; }
 
-    public LocalDateTime getExpiresAt() { return expiresAt; }
-    public void setExpiresAt(LocalDateTime expiresAt) { this.expiresAt = expiresAt; }
+    public LocalDateTime getExpiresAt()             { return expiresAt; }
+    public void setExpiresAt(LocalDateTime v)       { this.expiresAt = v; }
 
-    public int getUserId() { return userId; }
-    public void setUserId(int userId) { this.userId = userId; }
+    public int getUserId()                          { return userId; }
+    public void setUserId(int userId)               { this.userId = userId; }
 }
