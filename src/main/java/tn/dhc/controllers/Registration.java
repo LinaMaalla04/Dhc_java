@@ -1,6 +1,12 @@
 package tn.dhc.controllers;
 
+import com.sun.net.httpserver.HttpServer;
+import javafx.application.Platform;
+import javafx.concurrent.Worker;
 import javafx.event.ActionEvent;
+import javafx.scene.web.WebEngine;
+import javafx.scene.web.WebView;
+import tn.dhc.services.CaptchaService;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -47,12 +53,101 @@ public class Registration {
     private TextField addTelUser;
 
     private final UserService userService = new UserService();
+    private final CaptchaService captchaService = new CaptchaService();
+
+    // ── reCAPTCHA v3 ──────────────────────────────────────────────────────
+    @FXML private WebView captchaWebView;
+    private WebEngine     webEngine;
+    private String        captchaToken = "";
+    private HttpServer    captchaServer;
 
     @FXML
     public void initialize() {
         for (MenuItem item : addRoleUser.getItems()) {
             item.setOnAction(e -> addRoleUser.setText(item.getText()));
         }
+        initCaptcha();
+    }
+
+    private void initCaptcha() {
+        webEngine = captchaWebView.getEngine();
+        webEngine.setJavaScriptEnabled(true);
+
+        // Listener : token ready → poll
+        webEngine.getLoadWorker().stateProperty().addListener((obs, oldState, newState) -> {
+            if (newState == Worker.State.SUCCEEDED) {
+                pollCaptchaToken(null);
+            }
+        });
+
+        // Démarrer le serveur HTTP et charger l'URL APRÈS que le WebView
+        // soit attaché à la scène (sceneProperty listener) pour éviter 830x0
+        captchaWebView.sceneProperty().addListener((obs, oldScene, newScene) -> {
+            if (newScene != null && captchaServer == null) {
+                Platform.runLater(() -> {
+                    try {
+                        // Chercher un port libre à partir de 8765
+                        int port = 8765;
+                        while (port < 8800) {
+                            try {
+                                captchaServer = HttpServer.create(
+                                        new java.net.InetSocketAddress("127.0.0.1", port), 0);
+                                break;
+                            } catch (java.net.BindException ex) {
+                                port++;
+                            }
+                        }
+                        final int finalPort = port;
+                        captchaServer.createContext("/captcha.html", exchange -> {
+                            byte[] bytes = getClass()
+                                    .getResourceAsStream("/captcha.html").readAllBytes();
+                            exchange.getResponseHeaders()
+                                    .set("Content-Type", "text/html; charset=UTF-8");
+                            exchange.sendResponseHeaders(200, bytes.length);
+                            try (var os = exchange.getResponseBody()) { os.write(bytes); }
+                        });
+                        captchaServer.start();
+                        webEngine.load("http://127.0.0.1:" + finalPort + "/captcha.html");
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                });
+            }
+        });
+    }
+
+    /**
+     * Poll le token jusqu'à ce qu'il soit disponible, puis STOPPE.
+     * Le token est valide 2 minutes — on le régénère à chaque clic S'inscrire.
+     */
+    private void pollCaptchaToken(Runnable onTokenReady) {
+        captchaToken = "";
+        final int[] attempts = {0};
+        javafx.animation.Timeline[] holder = new javafx.animation.Timeline[1];
+        // Délai initial 600ms pour laisser grecaptcha.execute() démarrer
+        javafx.animation.Timeline timeline = new javafx.animation.Timeline(
+                new javafx.animation.KeyFrame(javafx.util.Duration.millis(600), e -> {
+                    attempts[0]++;
+                    try {
+                        String token = (String) webEngine.executeScript("getCaptchaToken()");
+                        if (token != null && !token.isBlank()) {
+                            captchaToken = token;
+                            holder[0].stop(); // STOP dès qu'on a le token
+                            System.out.println("[reCAPTCHA] Token frais récupéré ✓");
+                            if (onTokenReady != null) onTokenReady.run();
+                            return;
+                        }
+                    } catch (Exception ex) { /* JS pas encore prêt */ }
+                    if (attempts[0] >= 30) { // 9 secondes max
+                        holder[0].stop();
+                        System.out.println("[reCAPTCHA] Timeout");
+                        if (onTokenReady != null) onTokenReady.run(); // continuer même en timeout
+                    }
+                })
+        );
+        holder[0] = timeline;
+        timeline.setCycleCount(javafx.animation.Animation.INDEFINITE);
+        timeline.play();
     }
 
     @FXML
@@ -63,50 +158,80 @@ public class Registration {
     @FXML
     public void inscription(ActionEvent event) {
         try {
+            // ── reCAPTCHA v3 : token FRAIS à chaque clic ─────────────────
+            // 1. Vider le token JS pour être sûr de lire un nouveau
+            webEngine.executeScript("captchaToken = '';");
+            captchaToken = "";
+            // 2. Demander un nouveau token
+            webEngine.executeScript("executeCaptcha();");
+            // 3. Poller jusqu'à ce que le nouveau token soit disponible
+            pollCaptchaToken(() -> Platform.runLater(() -> continueInscription(event)));
+            return;
+
+        } catch (Exception e) {
+            showAlert(Alert.AlertType.ERROR, "Erreur", e.getMessage() != null ? e.getMessage() : "Erreur inconnue");
+        }
+    }
+
+    /**
+     * Appelé après récupération du token frais.
+     * Vérifie le score puis procède à l'inscription.
+     */
+    private void continueInscription(ActionEvent event) {
+        try {
+            // Vérifier le token frais auprès de Google
+            if (captchaToken == null || captchaToken.isBlank()) {
+                showAlert(Alert.AlertType.WARNING, "Vérification",
+                        "Impossible d'obtenir la vérification. Vérifiez votre connexion.");
+                return;
+            }
+            boolean human;
+            try {
+                System.out.println("[reCAPTCHA] Token envoyé (longueur=" + captchaToken.length() + ") : " + captchaToken.substring(0, Math.min(40, captchaToken.length())) + "...");
+                human = captchaService.verify(captchaToken);
+            } catch (Exception ex) {
+                showAlert(Alert.AlertType.ERROR, "Erreur réseau",
+                        "Impossible de vérifier le captcha. Vérifiez votre connexion internet.");
+                return;
+            }
+            if (!human) {
+                showAlert(Alert.AlertType.ERROR, "Vérification échouée",
+                        "Score insuffisant. Veuillez réessayer.");
+                return;
+            }
+
             if (!addMdpUser.getText().equals(addMdpCUser.getText())) {
                 showAlert(Alert.AlertType.WARNING, "Erreur", "Les mots de passe ne correspondent pas !");
                 return;
             }
-
             String roleUi = addRoleUser.getText();
             if (roleUi == null || roleUi.isBlank() || roleUi.equals(ROLE_PROMPT)) {
                 showAlert(Alert.AlertType.WARNING, "Erreur", "Veuillez choisir un rôle (Patient ou Médecin).");
                 return;
             }
-
-            String nom = addNomUser.getText();
-            String prenom = addPrenomUser.getText();
-            String email = addEmailUser.getText();
-            int tel = Integer.parseInt(addTelUser.getText());
-            String mdp = addMdpUser.getText();
-            String role = normalizeRoleForStorage(roleUi);
+            String nom      = addNomUser.getText();
+            String prenom   = addPrenomUser.getText();
+            String email    = addEmailUser.getText();
+            String mdp      = addMdpUser.getText();
+            String role     = normalizeRoleForStorage(roleUi);
             String specialite = addSpecialiteUser.getText() != null ? addSpecialiteUser.getText().trim() : "";
-
-            if (nom == null || nom.isBlank() || prenom == null || prenom.isBlank()
-                    || email == null || email.isBlank()) {
+            int    tel;
+            try { tel = Integer.parseInt(addTelUser.getText()); }
+            catch (NumberFormatException e) {
+                showAlert(Alert.AlertType.ERROR, "Erreur", "Numéro de téléphone invalide !");
+                return;
+            }
+            if (nom == null || nom.isBlank() || prenom == null || prenom.isBlank() || email == null || email.isBlank()) {
                 showAlert(Alert.AlertType.WARNING, "Erreur", "Veuillez remplir tous les champs obligatoires.");
                 return;
             }
-
-            User u = new User(
-                    nom.trim(),
-                    prenom.trim(),
-                    email.trim(),
-                    tel,
-                    mdp,
-                    role,
-                    specialite,
-                    LocalDateTime.now(),
-                    0
-            );
-
+            User u = new User(nom.trim(), prenom.trim(), email.trim(), tel, mdp, role, specialite, LocalDateTime.now(), 0);
             userService.ajouter(u);
 
+            captchaToken = "";
             showAlert(Alert.AlertType.INFORMATION, "Succès", "Inscription réussie ! Vous pouvez vous connecter.");
             loadScene("/Login.fxml", event);
 
-        } catch (NumberFormatException e) {
-            showAlert(Alert.AlertType.ERROR, "Erreur", "Numéro de téléphone invalide !");
         } catch (Exception e) {
             showAlert(Alert.AlertType.ERROR, "Erreur", e.getMessage() != null ? e.getMessage() : "Erreur inconnue");
         }
@@ -125,6 +250,11 @@ public class Registration {
 
     private void loadScene(String resource, ActionEvent event) {
         try {
+            if (captchaServer != null) {
+                captchaServer.stop(0);
+                captchaServer = null;
+                System.out.println("[Captcha] Serveur HTTP arrêté.");
+            }
             Parent root = FXMLLoader.load(getClass().getResource(resource));
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             stage.setScene(new Scene(root));

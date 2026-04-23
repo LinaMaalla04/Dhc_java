@@ -16,8 +16,11 @@ public class User {
     private String mdp;
     private String role;
     private String specialite;
+    @Column(name = "login_count", nullable = false, columnDefinition = "int DEFAULT 0")
+    private int loginCount = 0;  // ← initialisation Java aussi
+
+    @Column(name = "last_login_at")
     private LocalDateTime lastLoginAt;
-    private int loginCount;
 
     public User() {
     }
@@ -77,6 +80,11 @@ public class User {
     public LocalDateTime getLastLoginAt() { return lastLoginAt; }
     public void setLastLoginAt(LocalDateTime lastLoginAt) { this.lastLoginAt = lastLoginAt; }
 
+    @PrePersist
+    private void prePersist() {
+        if (loginCount <= 0) loginCount = 0;
+        if (lastLoginAt == null) lastLoginAt = LocalDateTime.now();
+    }
     public int getLoginCount() { return loginCount; }
     public void setLoginCount(int loginCount) { this.loginCount = loginCount; }
 
