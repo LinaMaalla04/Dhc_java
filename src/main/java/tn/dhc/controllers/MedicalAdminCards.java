@@ -98,7 +98,38 @@ public final class MedicalAdminCards {
         return card;
     }
 
+    /** Carte fiche sans actions (patient / médecin consultation). */
+    public static VBox ficheCardViewOnly(Fiche f, String patientLabel) {
+        Label allergy = wrapMetaComfort("Allergies / chroniques : "
+                + shorten(nullSafe(f.getAllergie()) + " · " + nullSafe(f.getMaladieChronique()), 220));
+        VBox card = wrapCardComfort(titleComfort("📋 " + nullSafe(f.getLibelleMaladie())),
+                metaComfort("👤 Patient : " + nullSafe(patientLabel)),
+                metaComfort(String.format("⚖ %.1f kg · %.0f cm · glycémie %.1f", f.getPoids(), f.getTaille(), f.getGlycemie())),
+                metaComfort("🩸 " + nullSafe(f.getGrpSanguin()) + " · tension " + nullSafe(f.getTension())),
+                metaComfort("📅 " + (f.getDate() != null ? f.getDate().toString() : "—")),
+                metaComfort("⚠ Gravité : " + nullSafe(f.getGravite())),
+                allergy);
+        card.setUserData(f);
+        return card;
+    }
 
+    /** Carte ordonnance avec bouton export PDF (patient). */
+    public static VBox ordonnanceCardWithPdfExport(Ordonnance o, String ficheSummary, String medicamentsSummary,
+                                                   Runnable onExportPdf) {
+        String d = o.getDate() != null ? o.getDate().toString() : "—";
+        HBox actions = actionRowSingle(comfortButton("Exporter en PDF", "btn-primary", onExportPdf));
+        VBox card = wrapCardComfort(
+                titleComfort("📜 Ordonnance"),
+                metaComfort("📎 Fiche : " + nullSafe(ficheSummary)),
+                wrapMetaComfort("💊 Médicaments : " + shorten(nullSafe(medicamentsSummary), 200)),
+                wrapMetaComfort("Posologie : " + shorten(nullSafe(o.getPosologie()), 320)),
+                metaComfort("⏱ " + nullSafe(o.getFrequence()) + " · durée " + o.getDureeTraitement() + " jour(s)"),
+                metaComfort("📅 " + d),
+                new Separator(),
+                actions);
+        card.setUserData(o);
+        return card;
+    }
 
     /** Carte ordonnance lecture seule (médecin). */
     public static VBox ordonnanceCardViewOnly(Ordonnance o, String ficheSummary, String medicamentsSummary) {
@@ -136,36 +167,7 @@ public final class MedicalAdminCards {
         return v;
     }
 
-    private static Label titleComfort(String text) {
-        Label l = new Label(text);
-        l.setWrapText(true);
-        l.setFont(Font.font("Segoe UI", 20));
-        l.setStyle("-fx-font-weight: bold; -fx-text-fill: #008f85;");
-        return l;
-    }
-
-    private static Label metaComfort(String text) {
-        Label l = new Label(text);
-        l.setWrapText(true);
-        l.setStyle("-fx-text-fill: #2c3e50; -fx-font-size: 15px;");
-        return l;
-    }
-
-    private static Label wrapMetaComfort(String text) {
-        Label l = metaComfort(text);
-        l.setWrapText(true);
-        l.setMaxWidth(Double.MAX_VALUE);
-        return l;
-    }
-
-    private static Button comfortButton(String text, String styleClass, Runnable action) {
-        Button b = new Button(text);
-        b.getStyleClass().add(styleClass);
-        b.setStyle("-fx-font-size: 14px; -fx-font-weight: 600; -fx-padding: 10 22;");
-        b.setMinHeight(40);
-        b.setOnAction(e -> action.run());
-        return b;
-    }
+    
 
     private static VBox wrapCard(javafx.scene.Node... nodes) {
         VBox v = new VBox(8);
