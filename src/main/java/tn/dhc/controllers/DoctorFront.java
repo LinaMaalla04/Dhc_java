@@ -378,29 +378,7 @@ public class DoctorFront {
         List<Rdv> rdvs = rdvService.findByDoctorUserId(me.getId());
         List<Fiche> fiches = ficheService.findByMedecinUserId(me.getId());
 
-        if (doctorRdvStatusPie != null) {
-            Map<String, Integer> byStatus = new LinkedHashMap<>();
-            byStatus.put("En attente", 0);
-            byStatus.put("Confirmé", 0);
-            byStatus.put("Autres", 0);
-            for (Rdv r : rdvs) {
-                String s = safeText(r.getStatut()).toLowerCase(Locale.ROOT);
-                if (s.contains("attente")) {
-                    byStatus.put("En attente", byStatus.get("En attente") + 1);
-                } else if (s.contains("confirm")) {
-                    byStatus.put("Confirmé", byStatus.get("Confirmé") + 1);
-                } else {
-                    byStatus.put("Autres", byStatus.get("Autres") + 1);
-                }
-            }
-            doctorRdvStatusPie.setData(FXCollections.observableArrayList(
-                    byStatus.entrySet().stream()
-                            .filter(e -> e.getValue() > 0)
-                            .map(e -> new PieChart.Data(e.getKey(), e.getValue()))
-                            .toList()
-            ));
-        }
-
+       
         if (doctorRdvLineChart != null) {
             doctorRdvLineChart.getData().clear();
             XYChart.Series<String, Number> series = new XYChart.Series<>();
@@ -446,3 +424,41 @@ public class DoctorFront {
             doctorGraviteBarChart.getData().add(s);
         }
     }
+
+    private void syncAndSendSignedOrdonnanceIfReady(Ordonnance o) {
+        if (!signatureApiService.isConfigured()) {
+            return;
+        }
+        if (o.getSignatureEnvelopeId() == null || o.getSignatureEnvelopeId().isBlank()) {
+            return;
+        }
+        try {
+            SignatureApiService.DeliverableStatus deliverable = signatureApiService.fetchDeliverableStatus(o.getSignatureEnvelopeId());
+            if ("generated".equalsIgnoreCase(deliverable.status())
+                    && deliverable.deliverableUrl() != null
+                    && !deliverable.deliverableUrl().isBlank()
+                    && (o.getSignatureDeliverableUrl() == null || o.getSignatureDeliverableUrl().isBlank())) {
+                ordonnanceService.updateSignatureInfo(o.getId(), o.getSignatureEnvelopeId(), o.getSignatureCeremonyUrl(), deliverable.deliverableUrl(), deliverable.status());
+                o.setSignatureDeliverableUrl(deliverable.deliverableUrl());
+                o.setSignatureStatus(deliverable.status());
+            }
+            if (o.getSignatureEmailSentAt() == null
+                    && o.getSignatureDeliverableUrl() != null
+                    && !o.getSignatureDeliverableUrl().isBlank()) {
+                Fiche linked = ficheService.getOneById(o.getFicheId());
+                if (linked == null) {
+                    return;
+                }
+                User patient = userService.getOneById(linked.getUserId());
+                if (patient == null) {
+                    return;
+                }
+                byte[] signedPdf = signatureApiService.downloadSignedPdfBytes(o.getSignatureDeliverableUrl());
+                ordonnanceSignedMailService.sendSignedOrdonnance(patient, signedPdf, "ordonnance-signee-" + o.getId() + ".pdf");
+                ordonnanceService.markSignedEmailSent(o.getId());
+                o.setSignatureEmailSentAt(new java.sql.Timestamp(System.currentTimeMillis()));
+            }
+        } catch (Exception ignored) {
+        }
+    }
+}
