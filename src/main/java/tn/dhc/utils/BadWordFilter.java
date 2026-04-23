@@ -19,4 +19,12 @@ public class BadWordFilter {
             return text;
         }
 
-       
+        String filteredText = text;
+        for (String badWord : BAD_WORDS) {
+            // Case-insensitive replacement with regex to match whole words
+            String regex = "(?i)\\b" + badWord + "\\b";
+            filteredText = filteredText.replaceAll(regex, "****");
+        }
+        return filteredText;
+    }
+}
