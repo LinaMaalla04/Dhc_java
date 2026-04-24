@@ -5,6 +5,7 @@
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
+<<<<<<< HEAD
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
@@ -16,6 +17,12 @@
 <?import javafx.scene.chart.PieChart?>
 <?import javafx.scene.chart.ScatterChart?>
 <?import javafx.scene.control.Separator?>
+=======
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextField?>
+>>>>>>> 34f983539afbf1fbe48f8fe4cc4c438bec376064
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.layout.HBox?>
@@ -23,7 +30,11 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
+<<<<<<< HEAD
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="850.0" prefWidth="1250.0" style="-fx-background-color: #f5f5f5;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tn.dhc.controllers.Dashboard">
+=======
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="850.0" prefWidth="1250.0" style="-fx-background-color: #f5f5f5;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tn.dhc.controllers.Dashboard">
+>>>>>>> 34f983539afbf1fbe48f8fe4cc4c438bec376064
    <children>
       <VBox prefHeight="850.0" prefWidth="1250.0" spacing="0" stylesheets="@theme.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
@@ -40,7 +51,10 @@
                      </children>
                   </VBox>
                   <Region stylesheets="@theme.css" HBox.hgrow="ALWAYS" />
+<<<<<<< HEAD
                   <Button fx:id="adminNotifButton" mnemonicParsing="false" onAction="#showAdminNotifications" styleClass="btn-secondary" text="🔔 Notifications (0)" />
+=======
+>>>>>>> 34f983539afbf1fbe48f8fe4cc4c438bec376064
                   <Button mnemonicParsing="false" onAction="#deconnexion" styleClass="btn-logout" text="🚪 Deconnexion" />
                </children>
             </HBox>
@@ -51,6 +65,7 @@
                <tabs>
                   <Tab text="👥 Utilisateurs">
                      <content>
+<<<<<<< HEAD
                         <VBox spacing="15" style="-fx-background-color:white; -fx-background-radius:12; -fx-padding:20; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 10, 0, 0, 2);" VBox.vgrow="ALWAYS">
                            <children>
                               <!-- Toolbar -->
@@ -71,6 +86,22 @@
                                     <VBox fx:id="userCardsContainer" spacing="10" style="-fx-padding:4;" />
                                  </content>
                               </ScrollPane>
+=======
+                        <VBox spacing="15" style="-fx-background-color:white; -fx-background-radius:12; -fx-padding:20; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 10, 0, 0, 2);">
+                           <children>
+                              <HBox alignment="CENTER_LEFT" spacing="15">
+                                 <children>
+                                    <Label prefHeight="30.0" prefWidth="152.0" style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill:#00b3a6;" text="👥 Utilisateurs" />
+                                    <TextField fx:id="RechUserText" prefHeight="38.0" prefWidth="480.0" promptText="Recherche..." />
+                                    <Button mnemonicParsing="false" onAction="#RechUser" prefHeight="36.0" prefWidth="58.0" styleClass="btn-primary" text="🔍" />
+                                    <Region HBox.hgrow="ALWAYS" />
+                                    <Button mnemonicParsing="false" onAction="#refreshUsers" prefHeight="45" prefWidth="130" style="-fx-font-size:14px;" styleClass="btn-secondary" text="🔄 Actualiser" />
+                                    <Button mnemonicParsing="false" onAction="#editUser" prefHeight="45" prefWidth="130" style="-fx-font-size:14px;" styleClass="btn-secondary" text="🖊 Modifier" />
+                                    <Button mnemonicParsing="false" onAction="#deleteUser" prefHeight="45" prefWidth="130" style="-fx-font-size:14px;" styleClass="btn-secondary" text="❌ Supprimer" />
+                                 </children>
+                              </HBox>
+                              <ListView fx:id="AffUsers" prefHeight="626.0" prefWidth="1150.0" />
+>>>>>>> 34f983539afbf1fbe48f8fe4cc4c438bec376064
                            </children>
                         </VBox>
                      </content>
@@ -82,11 +113,20 @@
                               <HBox alignment="CENTER_LEFT" spacing="15">
                                  <children>
                                     <Label prefHeight="30.0" prefWidth="155.0" style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill:#00b3a6;" text="👨‍⚕️ Creneaux" />
+<<<<<<< HEAD
                                     <Region HBox.hgrow="ALWAYS" />
                                     <ComboBox fx:id="RechCreneau" prefHeight="47.0" prefWidth="255.0" promptText="Filtrage par disponibilité" />
                                     <ComboBox fx:id="triCreneau" prefHeight="47.0" prefWidth="150.0" promptText="Trier par..." />
                                     <Button mnemonicParsing="false" onAction="#editCreneau" prefHeight="45" prefWidth="130" style="-fx-font-size:14px;" styleClass="btn-secondary" text="🖊 Modifier" />
                                     <Button mnemonicParsing="false" onAction="#addCreneau" prefHeight="45" prefWidth="130" style="-fx-font-size:14px; -fx-font-weight:bold;" styleClass="btn-primary" text="➕ Ajouter" />
+=======
+                                    <TextField fx:id="RechCreneauText" prefHeight="38.0" prefWidth="372.0" promptText="Recherche..." />
+                                    <Button mnemonicParsing="false" onAction="#RechCreneau" prefHeight="36.0" prefWidth="69.0" styleClass="btn-primary" text="🔍" />
+                                    <Region HBox.hgrow="ALWAYS" />
+                                    <Button mnemonicParsing="false" onAction="#refreshCreneaux" prefHeight="45" prefWidth="130" style="-fx-font-size:14px;" styleClass="btn-secondary" text="🔄 Actualiser" />
+                                    <Button mnemonicParsing="false" onAction="#addCreneau" prefHeight="45" prefWidth="130" style="-fx-font-size:14px; -fx-font-weight:bold;" styleClass="btn-primary" text="➕ Ajouter" />
+                                    <Button mnemonicParsing="false" onAction="#editCreneau" prefHeight="45" prefWidth="130" style="-fx-font-size:14px;" styleClass="btn-secondary" text="🖊 Modifier" />
+>>>>>>> 34f983539afbf1fbe48f8fe4cc4c438bec376064
                                     <Button mnemonicParsing="false" onAction="#deleteCreneau" prefHeight="45" prefWidth="130" style="-fx-font-size:14px;" styleClass="btn-secondary" text="❌ Supprimer" />
                                  </children>
                               </HBox>
@@ -119,7 +159,11 @@
                                              </HBox>
                                              <ScrollPane fitToWidth="true" hbarPolicy="NEVER" pannable="true" styleClass="clinical-scroll" VBox.vgrow="ALWAYS">
                                                 <content>
+<<<<<<< HEAD
                                                    <FlowPane fx:id="pharmacyCardsFlow" alignment="TOP_LEFT" hgap="18" style="-fx-padding:8 4 32 4;" vgap="18" />
+=======
+                                                   <FlowPane fx:id="pharmacyCardsFlow" alignment="TOP_LEFT" hgap="18" vgap="18" style="-fx-padding:8 4 32 4;" />
+>>>>>>> 34f983539afbf1fbe48f8fe4cc4c438bec376064
                                                 </content>
                                              </ScrollPane>
                                           </VBox>
@@ -142,7 +186,11 @@
                                              </HBox>
                                              <ScrollPane fitToWidth="true" hbarPolicy="NEVER" pannable="true" styleClass="clinical-scroll" VBox.vgrow="ALWAYS">
                                                 <content>
+<<<<<<< HEAD
                                                    <FlowPane fx:id="medicamentCardsFlow" alignment="TOP_LEFT" hgap="18" style="-fx-padding:8 4 32 4;" vgap="18" />
+=======
+                                                   <FlowPane fx:id="medicamentCardsFlow" alignment="TOP_LEFT" hgap="18" vgap="18" style="-fx-padding:8 4 32 4;" />
+>>>>>>> 34f983539afbf1fbe48f8fe4cc4c438bec376064
                                                 </content>
                                              </ScrollPane>
                                           </VBox>
@@ -165,7 +213,11 @@
                                              </HBox>
                                              <ScrollPane fitToWidth="true" hbarPolicy="NEVER" pannable="true" styleClass="clinical-scroll" VBox.vgrow="ALWAYS">
                                                 <content>
+<<<<<<< HEAD
                                                    <FlowPane fx:id="ficheCardsFlow" alignment="TOP_LEFT" hgap="18" style="-fx-padding:8 4 32 4;" vgap="18" />
+=======
+                                                   <FlowPane fx:id="ficheCardsFlow" alignment="TOP_LEFT" hgap="18" vgap="18" style="-fx-padding:8 4 32 4;" />
+>>>>>>> 34f983539afbf1fbe48f8fe4cc4c438bec376064
                                                 </content>
                                              </ScrollPane>
                                           </VBox>
@@ -188,12 +240,17 @@
                                              </HBox>
                                              <ScrollPane fitToWidth="true" hbarPolicy="NEVER" pannable="true" styleClass="clinical-scroll" VBox.vgrow="ALWAYS">
                                                 <content>
+<<<<<<< HEAD
                                                    <FlowPane fx:id="ordonnanceCardsFlow" alignment="TOP_LEFT" hgap="18" style="-fx-padding:8 4 32 4;" vgap="18" />
+=======
+                                                   <FlowPane fx:id="ordonnanceCardsFlow" alignment="TOP_LEFT" hgap="18" vgap="18" style="-fx-padding:8 4 32 4;" />
+>>>>>>> 34f983539afbf1fbe48f8fe4cc4c438bec376064
                                                 </content>
                                              </ScrollPane>
                                           </VBox>
                                        </content>
                                     </Tab>
+<<<<<<< HEAD
                                     <Tab text="📈 Statistiques">
                                        <content>
                                           <ScrollPane fitToWidth="true" hbarPolicy="NEVER" style="-fx-background-color:transparent; -fx-background:transparent;">
@@ -266,6 +323,8 @@
                                           </ScrollPane>
                                        </content>
                                     </Tab>
+=======
+>>>>>>> 34f983539afbf1fbe48f8fe4cc4c438bec376064
                                  </tabs>
                               </TabPane>
                            </children>
@@ -280,8 +339,14 @@
                                  <children>
                                     <Label style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill:#00b3a6;" text="📅  Evenements" />
                                     <TextField fx:id="RechEventText" prefHeight="38.0" prefWidth="318.0" promptText="Recherche..." />
+<<<<<<< HEAD
                                     <Region HBox.hgrow="ALWAYS" />
                                     <ComboBox fx:id="triEvent" prefHeight="47.0" prefWidth="150.0" promptText="Trier par..." />
+=======
+                                    <Button mnemonicParsing="false" onAction="#RechEvent" prefHeight="36.0" prefWidth="58.0" styleClass="btn-primary" text="🔍" />
+                                    <Region HBox.hgrow="ALWAYS" />
+                                    <Button mnemonicParsing="false" onAction="#refreshEvent" prefHeight="45" prefWidth="130" style="-fx-font-size:14px;" styleClass="btn-secondary" text="🔄 Actualiser" />
+>>>>>>> 34f983539afbf1fbe48f8fe4cc4c438bec376064
                                     <Button mnemonicParsing="false" onAction="#addEvent" prefHeight="45" prefWidth="130" style="-fx-font-size:14px; -fx-font-weight:bold;" styleClass="btn-primary" text="➕ Ajouter" />
                                     <Button mnemonicParsing="false" onAction="#editEvent" prefHeight="45" prefWidth="130" style="-fx-font-size:14px;" styleClass="btn-secondary" text="🖊 Modifier" />
                                     <Button mnemonicParsing="false" onAction="#deleteEvent" prefHeight="45" prefWidth="130" style="-fx-font-size:14px;" styleClass="btn-secondary" text="❌ Supprimer" />
@@ -295,6 +360,7 @@
                   </Tab>
                   <Tab text="📊 Statistiques">
                      <content>
+<<<<<<< HEAD
                         <VBox spacing="0" style="-fx-background-color:white; -fx-background-radius:12; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 10, 0, 0, 2);" VBox.vgrow="ALWAYS">
                            <children>
                               <ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" pannable="true" style="-fx-background-color:transparent; -fx-background:transparent;" vbarPolicy="AS_NEEDED" VBox.vgrow="ALWAYS">
@@ -421,6 +487,12 @@
                                     <VBox fx:id="annonceAdminContainer" spacing="10" style="-fx-padding:8;" />
                                  </content>
                               </ScrollPane>
+=======
+                        <VBox spacing="15" style="-fx-background-color:white; -fx-background-radius:12; -fx-padding:20; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 10, 0, 0, 2);">
+                           <children>
+                              <Label style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill:#00b3a6;" text="📊 Statistiques" />
+                              <Label fx:id="reportLabel" style="-fx-font-size: 14px; -fx-padding: 20;" text="" wrapText="true" />
+>>>>>>> 34f983539afbf1fbe48f8fe4cc4c438bec376064
                            </children>
                         </VBox>
                      </content>

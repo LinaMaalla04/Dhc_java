@@ -2,6 +2,7 @@ package tn.dhc.controllers;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+<<<<<<< HEAD
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -14,12 +15,23 @@ import tn.dhc.entities.User;
 import tn.dhc.services.UserService;
 import javafx.scene.control.SplitMenuButton;
 import javafx.scene.control.MenuItem;
+=======
+import javafx.scene.control.PasswordField;
+import javafx.scene.control.SplitMenuButton;
+import javafx.scene.control.TextField;
+import tn.dhc.entities.User;
+import tn.dhc.services.UserService;
+>>>>>>> 34f983539afbf1fbe48f8fe4cc4c438bec376064
 
 public class ModifierUser {
 
     @FXML
     private TextField modEmailUser;
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 34f983539afbf1fbe48f8fe4cc4c438bec376064
     @FXML
     private TextField modNomUser;
 
@@ -42,6 +54,7 @@ public class ModifierUser {
     private PasswordField modMdpCUser;
 
     private User user;
+<<<<<<< HEAD
     private final UserService userService = new UserService();
 
     @FXML
@@ -53,6 +66,10 @@ public class ModifierUser {
             });
         }
     }
+=======
+
+    private UserService userService = new UserService();
+>>>>>>> 34f983539afbf1fbe48f8fe4cc4c438bec376064
 
     public void setUser(User user) {
         this.user = user;
@@ -67,6 +84,7 @@ public class ModifierUser {
 
     @FXML
     void modifier(ActionEvent event) {
+<<<<<<< HEAD
 
         try {
             if (user == null) {
@@ -126,10 +144,23 @@ public class ModifierUser {
 
         } catch (NumberFormatException e) {
             showAlert("Erreur téléphone", "Le numéro de téléphone doit être un nombre !");
+=======
+        try {
+            // 🔹 mettre à jour l'objet
+            user.setNom(modNomUser.getText());
+            user.setPrenom(modPrenomUser.getText());
+
+            // 🔹 appel service
+            userService.modifier(user);
+
+            System.out.println("✅ User modifié avec succès");
+
+>>>>>>> 34f983539afbf1fbe48f8fe4cc4c438bec376064
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
+<<<<<<< HEAD
 
     @FXML
     void annuler(ActionEvent event) {
@@ -148,4 +179,6 @@ public class ModifierUser {
         alert.setContentText(msg);
         alert.show();
     }
+=======
+>>>>>>> 34f983539afbf1fbe48f8fe4cc4c438bec376064
 }

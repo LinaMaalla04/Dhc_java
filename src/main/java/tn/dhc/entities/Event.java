@@ -15,6 +15,7 @@ public class Event {
     private Integer nbParticipant;
     private int userId;
     private int eventLieuId;
+<<<<<<< HEAD
     private Lieu lieu;
 
 
@@ -22,6 +23,14 @@ public class Event {
     public Event() {
     }
 
+=======
+
+    // 🔹 Constructeur vide
+    public Event() {
+    }
+
+    // 🔹 Constructeur sans id
+>>>>>>> 34f983539afbf1fbe48f8fe4cc4c438bec376064
     public Event(String titreEvent, String themeSante, String description,
                  LocalDate dateEvent, LocalTime heureDebut, LocalTime heureFin,
                  Integer nbParticipant, int userId, int eventLieuId) {
@@ -36,6 +45,10 @@ public class Event {
         this.eventLieuId = eventLieuId;
     }
 
+<<<<<<< HEAD
+=======
+    // 🔹 Constructeur avec id
+>>>>>>> 34f983539afbf1fbe48f8fe4cc4c438bec376064
     public Event(int id, String titreEvent, String themeSante, String description,
                  LocalDate dateEvent, LocalTime heureDebut, LocalTime heureFin,
                  Integer nbParticipant, int userId, int eventLieuId) {
@@ -51,6 +64,10 @@ public class Event {
         this.eventLieuId = eventLieuId;
     }
 
+<<<<<<< HEAD
+=======
+    // 🔹 Getters & Setters
+>>>>>>> 34f983539afbf1fbe48f8fe4cc4c438bec376064
 
     public int getId() {
         return id;
@@ -132,6 +149,7 @@ public class Event {
         this.eventLieuId = eventLieuId;
     }
 
+<<<<<<< HEAD
     public Lieu getLieu() {
         return lieu;
     }
@@ -140,6 +158,9 @@ public class Event {
         this.lieu = lieu;
     }
 
+=======
+    // 🔹 toString
+>>>>>>> 34f983539afbf1fbe48f8fe4cc4c438bec376064
     @Override
     public String toString() {
         return "📌 Titre: " + titreEvent + " | " +
@@ -147,7 +168,12 @@ public class Event {
                 "📝 Description: " + description + " | " +
                 "📅 Date: " + dateEvent + " | " +
                 "⏰ Horaire: " + heureDebut + " - " + heureFin + " | " +
+<<<<<<< HEAD
                 "👥 Participants: " + nbParticipant  ;
 //                "+ " | " +📍 Lieu ID: " + (lieu != null ? lieu.getId() : eventLieuId);
+=======
+                "👥 Participants: " + nbParticipant + " | " +
+                "👤 Organisateur (ID): " + userId;
+>>>>>>> 34f983539afbf1fbe48f8fe4cc4c438bec376064
     }
 }

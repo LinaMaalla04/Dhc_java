@@ -12,9 +12,17 @@ public class Creneau {
     private String statut;
     private int userId;
 
+<<<<<<< HEAD
     public Creneau() {
     }
 
+=======
+    // 🔹 Constructeur vide
+    public Creneau() {
+    }
+
+    // 🔹 Constructeur sans id
+>>>>>>> 34f983539afbf1fbe48f8fe4cc4c438bec376064
     public Creneau(LocalDate dateCreneau, LocalTime hdebut, LocalTime hfin,
                    String statut, int userId) {
         this.dateCreneau = dateCreneau;
@@ -24,6 +32,10 @@ public class Creneau {
         this.userId = userId;
     }
 
+<<<<<<< HEAD
+=======
+    // 🔹 Constructeur avec id
+>>>>>>> 34f983539afbf1fbe48f8fe4cc4c438bec376064
     public Creneau(int id, LocalDate dateCreneau, LocalTime hdebut, LocalTime hfin,
                    String statut, int userId) {
         this.id = id;
@@ -34,6 +46,10 @@ public class Creneau {
         this.userId = userId;
     }
 
+<<<<<<< HEAD
+=======
+    // 🔹 Getters & Setters
+>>>>>>> 34f983539afbf1fbe48f8fe4cc4c438bec376064
 
     public int getId() {
         return id;
@@ -83,10 +99,19 @@ public class Creneau {
         this.userId = userId;
     }
 
+<<<<<<< HEAD
+=======
+    // 🔹 toString
+>>>>>>> 34f983539afbf1fbe48f8fe4cc4c438bec376064
     @Override
     public String toString() {
         return "📅 " + dateCreneau +
                 " | 🕐 " + hdebut + " - " + hfin +
+<<<<<<< HEAD
                 " | 📌 " + statut;
+=======
+                " | 📌 " + statut +
+                " | 👤 User ID: " + userId;
+>>>>>>> 34f983539afbf1fbe48f8fe4cc4c438bec376064
     }
 }

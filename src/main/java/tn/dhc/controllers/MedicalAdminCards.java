@@ -100,6 +100,7 @@ public final class MedicalAdminCards {
 
     /** Carte fiche sans actions (patient / médecin consultation). */
     public static VBox ficheCardViewOnly(Fiche f, String patientLabel) {
+<<<<<<< HEAD
         return ficheCardViewOnly(f, patientLabel, "");
     }
 
@@ -108,14 +109,22 @@ public final class MedicalAdminCards {
         Label allergy = wrapMetaComfort("Allergies / chroniques : "
                 + shorten(nullSafe(f.getAllergie()) + " · " + nullSafe(f.getMaladieChronique()), 220));
         Label rdvs = wrapMetaComfort("🗓 Rendez-vous : " + (rdvSummary == null || rdvSummary.isBlank() ? "Aucun rendez-vous" : rdvSummary));
+=======
+        Label allergy = wrapMetaComfort("Allergies / chroniques : "
+                + shorten(nullSafe(f.getAllergie()) + " · " + nullSafe(f.getMaladieChronique()), 220));
+>>>>>>> 34f983539afbf1fbe48f8fe4cc4c438bec376064
         VBox card = wrapCardComfort(titleComfort("📋 " + nullSafe(f.getLibelleMaladie())),
                 metaComfort("👤 Patient : " + nullSafe(patientLabel)),
                 metaComfort(String.format("⚖ %.1f kg · %.0f cm · glycémie %.1f", f.getPoids(), f.getTaille(), f.getGlycemie())),
                 metaComfort("🩸 " + nullSafe(f.getGrpSanguin()) + " · tension " + nullSafe(f.getTension())),
                 metaComfort("📅 " + (f.getDate() != null ? f.getDate().toString() : "—")),
                 metaComfort("⚠ Gravité : " + nullSafe(f.getGravite())),
+<<<<<<< HEAD
                 allergy,
                 rdvs);
+=======
+                allergy);
+>>>>>>> 34f983539afbf1fbe48f8fe4cc4c438bec376064
         card.setUserData(f);
         return card;
     }
@@ -124,7 +133,11 @@ public final class MedicalAdminCards {
     public static VBox ordonnanceCardWithPdfExport(Ordonnance o, String ficheSummary, String medicamentsSummary,
                                                    Runnable onExportPdf) {
         String d = o.getDate() != null ? o.getDate().toString() : "—";
+<<<<<<< HEAD
         HBox actions = actionRowSingle(comfortButton("Télécharger PDF signé", "btn-primary", onExportPdf));
+=======
+        HBox actions = actionRowSingle(comfortButton("Exporter en PDF", "btn-primary", onExportPdf));
+>>>>>>> 34f983539afbf1fbe48f8fe4cc4c438bec376064
         VBox card = wrapCardComfort(
                 titleComfort("📜 Ordonnance"),
                 metaComfort("📎 Fiche : " + nullSafe(ficheSummary)),
@@ -237,3 +250,36 @@ public final class MedicalAdminCards {
         l.setWrapText(true);
         return l;
     }
+<<<<<<< HEAD
+=======
+
+    private static HBox actionRow(Button edit, Button del) {
+        HBox h = new HBox(10, edit, del);
+        h.setAlignment(Pos.CENTER_LEFT);
+        h.setPadding(new Insets(8, 0, 0, 0));
+        Region spacer = new Region();
+        HBox.setHgrow(spacer, Priority.ALWAYS);
+        return new HBox(10, h, spacer);
+    }
+
+    private static Button smallButton(String text, String styleClass, Runnable action) {
+        Button b = new Button(text);
+        b.getStyleClass().add(styleClass);
+        b.setStyle("-fx-font-size: 12px; -fx-padding: 6 14;");
+        b.setOnAction(e -> action.run());
+        return b;
+    }
+
+    private static String nullSafe(String s) {
+        return s == null ? "" : s;
+    }
+
+    private static String shorten(String s, int max) {
+        if (s == null) {
+            return "";
+        }
+        String t = s.trim();
+        return t.length() <= max ? t : t.substring(0, max - 1) + "…";
+    }
+}
+>>>>>>> 34f983539afbf1fbe48f8fe4cc4c438bec376064

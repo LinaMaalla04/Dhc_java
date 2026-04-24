@@ -14,9 +14,12 @@ import tn.dhc.entities.Medicament;
 import tn.dhc.entities.Ordonnance;
 import tn.dhc.entities.Pharmacie;
 import tn.dhc.entities.User;
+<<<<<<< HEAD
 import tn.dhc.services.HuggingFaceIllnessService;
 import tn.dhc.services.OpenFdaDrugInfoService;
 import tn.dhc.services.OpenFdaMedicationRecommendationService;
+=======
+>>>>>>> 34f983539afbf1fbe48f8fe4cc4c438bec376064
 
 import java.sql.Date;
 import java.time.LocalDate;
@@ -38,10 +41,13 @@ public final class MedicalFormDialogs {
     private MedicalFormDialogs() {
     }
 
+<<<<<<< HEAD
     private static final HuggingFaceIllnessService HUGGING_FACE_ILLNESS_SERVICE = new HuggingFaceIllnessService();
     private static final OpenFdaMedicationRecommendationService OPEN_FDA_MED_RECOMMENDER = new OpenFdaMedicationRecommendationService();
     private static final OpenFdaDrugInfoService OPEN_FDA_DRUG_INFO_SERVICE = new OpenFdaDrugInfoService();
 
+=======
+>>>>>>> 34f983539afbf1fbe48f8fe4cc4c438bec376064
     /** Rôle patient (inscription / base). */
     public static boolean isPatientUser(User u) {
         if (u == null || u.getRole() == null) {
@@ -67,6 +73,7 @@ public final class MedicalFormDialogs {
         TextField nom = new TextField();
         TextField adresse = new TextField();
         TextField telephone = new TextField();
+<<<<<<< HEAD
         telephone.setTextFormatter(new TextFormatter<>(change -> {
             String next = change.getControlNewText();
             if (next == null) {
@@ -77,6 +84,8 @@ public final class MedicalFormDialogs {
             }
             return null;
         }));
+=======
+>>>>>>> 34f983539afbf1fbe48f8fe4cc4c438bec376064
         TextField responsable = new TextField();
         TextField hopital = new TextField();
 
@@ -151,6 +160,7 @@ public final class MedicalFormDialogs {
         TextField categorie = new TextField();
         TextField dosage = new TextField();
         TextField forme = new TextField();
+<<<<<<< HEAD
         Button generateFromOpenFdaBtn = new Button("🌐 Générer via OpenFDA");
         generateFromOpenFdaBtn.getStyleClass().add("btn-secondary");
         generateFromOpenFdaBtn.setOnAction(ev -> {
@@ -178,6 +188,10 @@ public final class MedicalFormDialogs {
         DatePicker exp = new DatePicker(LocalDate.now().plusMonths(6));
         Spinner<Integer> stock = new Spinner<>(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 9_999_999, 1));
         VBox nomBlock = new VBox(6, nom, generateFromOpenFdaBtn);
+=======
+        DatePicker exp = new DatePicker(LocalDate.now().plusMonths(6));
+        Spinner<Integer> stock = new Spinner<>(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 9_999_999, 0));
+>>>>>>> 34f983539afbf1fbe48f8fe4cc4c438bec376064
 
         if (existing != null) {
             nom.setText(s(existing.getNomMedicament()));
@@ -187,11 +201,19 @@ public final class MedicalFormDialogs {
             if (existing.getDateExpiration() != null) {
                 exp.setValue(existing.getDateExpiration().toLocalDate());
             }
+<<<<<<< HEAD
             stock.getValueFactory().setValue(Math.max(1, existing.getStock()));
         }
 
         GridPane grid = formGrid(
                 new Row("Nom", nomBlock),
+=======
+            stock.getValueFactory().setValue(Math.max(0, existing.getStock()));
+        }
+
+        GridPane grid = formGrid(
+                new Row("Nom", nom),
+>>>>>>> 34f983539afbf1fbe48f8fe4cc4c438bec376064
                 new Row("Catégorie", categorie),
                 new Row("Dosage", dosage),
                 new Row("Forme", forme),
@@ -241,7 +263,11 @@ public final class MedicalFormDialogs {
             m.setDosage(trimOrNull(dosage.getText()));
             m.setForme(trimOrNull(forme.getText()));
             m.setDateExpiration(Date.valueOf(exp.getValue()));
+<<<<<<< HEAD
             m.setStock(stock.getValue() != null ? stock.getValue() : 1);
+=======
+            m.setStock(stock.getValue() != null ? stock.getValue() : 0);
+>>>>>>> 34f983539afbf1fbe48f8fe4cc4c438bec376064
             return m;
         });
 
@@ -263,12 +289,15 @@ public final class MedicalFormDialogs {
 
     public static Optional<Fiche> showFicheDialog(Window owner, String title, Fiche existing, List<User> patientUsers,
                                                    User preselectPatient, Integer medecinUserId) {
+<<<<<<< HEAD
         return showFicheDialog(owner, title, existing, patientUsers, preselectPatient, medecinUserId, false);
     }
 
     public static Optional<Fiche> showFicheDialog(Window owner, String title, Fiche existing, List<User> patientUsers,
                                                    User preselectPatient, Integer medecinUserId,
                                                    boolean forceTodayDateForNewFiche) {
+=======
+>>>>>>> 34f983539afbf1fbe48f8fe4cc4c438bec376064
         Dialog<Fiche> dialog = new Dialog<>();
         dialog.initOwner(owner);
         dialog.setTitle(title);
@@ -304,6 +333,7 @@ public final class MedicalFormDialogs {
         TextField glycemie = new TextField();
         DatePicker date = new DatePicker(LocalDate.now());
         TextField libelle = new TextField();
+<<<<<<< HEAD
         TextArea symptomesDescription = new TextArea();
         symptomesDescription.setPrefRowCount(3);
         symptomesDescription.setWrapText(true);
@@ -327,6 +357,8 @@ public final class MedicalFormDialogs {
             }
         });
         VBox aiPredictBox = new VBox(8, symptomesDescription, predictIllnessBtn);
+=======
+>>>>>>> 34f983539afbf1fbe48f8fe4cc4c438bec376064
         ComboBox<String> graviteCombo = new ComboBox<>(FXCollections.observableArrayList("Faible", "Modérée", "Élevée"));
         graviteCombo.setPrefWidth(360);
         TextArea reco = new TextArea();
@@ -359,6 +391,7 @@ public final class MedicalFormDialogs {
             patientUsers.stream().filter(u -> u.getId() == preselectPatient.getId()).findFirst().ifPresent(userBox::setValue);
         }
 
+<<<<<<< HEAD
         boolean isNewFiche = existing == null;
         if (forceTodayDateForNewFiche && isNewFiche) {
             date.setValue(LocalDate.now());
@@ -366,6 +399,8 @@ public final class MedicalFormDialogs {
             date.setEditable(false);
         }
 
+=======
+>>>>>>> 34f983539afbf1fbe48f8fe4cc4c438bec376064
         GridPane grid = formGrid(
                 new Row("Patient", userBox),
                 new Row("Poids (kg)", poids),
@@ -376,11 +411,15 @@ public final class MedicalFormDialogs {
                 new Row("Tension", tension),
                 new Row("Glycémie", glycemie),
                 new Row("Date", date),
+<<<<<<< HEAD
                 new Row("Description symptômes", aiPredictBox),
+=======
+>>>>>>> 34f983539afbf1fbe48f8fe4cc4c438bec376064
                 new Row("Libellé maladie", libelle),
                 new Row("Gravité", graviteCombo),
                 new Row("Recommandations", reco)
         );
+<<<<<<< HEAD
         ScrollPane ficheScroll = new ScrollPane(grid);
         ficheScroll.setFitToWidth(true);
         ficheScroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
@@ -389,6 +428,10 @@ public final class MedicalFormDialogs {
         dialog.getDialogPane().setContent(ficheScroll);
         dialog.getDialogPane().setPrefWidth(560);
         dialog.getDialogPane().setPrefHeight(700);
+=======
+        dialog.getDialogPane().setContent(grid);
+        dialog.getDialogPane().setPrefWidth(560);
+>>>>>>> 34f983539afbf1fbe48f8fe4cc4c438bec376064
         dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
 
         MedicalFieldFeedback.wireComboClear(userBox);
@@ -400,7 +443,10 @@ public final class MedicalFormDialogs {
         MedicalFieldFeedback.wireTextClear(tension);
         MedicalFieldFeedback.wireTextClear(glycemie);
         MedicalFieldFeedback.wireDateClear(date);
+<<<<<<< HEAD
         MedicalFieldFeedback.wireTextClear(symptomesDescription);
+=======
+>>>>>>> 34f983539afbf1fbe48f8fe4cc4c438bec376064
         MedicalFieldFeedback.wireTextClear(libelle);
         MedicalFieldFeedback.wireComboClear(graviteCombo);
         MedicalFieldFeedback.wireTextClear(reco);
@@ -554,6 +600,7 @@ public final class MedicalFormDialogs {
 
         Label medHint = new Label("Ctrl + clic pour sélectionner plusieurs médicaments.");
         medHint.setStyle("-fx-text-fill:#7f8c8d; -fx-font-size:12px;");
+<<<<<<< HEAD
         Label medRecoInfo = new Label();
         medRecoInfo.setStyle("-fx-text-fill:#00796b; -fx-font-size:12px;");
         Button recoBtn = new Button("🧪 Recommander médicaments (OpenFDA)");
@@ -572,6 +619,9 @@ public final class MedicalFormDialogs {
             }
         });
         VBox medBlock = new VBox(6, medHint, recoBtn, medRecoInfo, medList);
+=======
+        VBox medBlock = new VBox(6, medHint, medList);
+>>>>>>> 34f983539afbf1fbe48f8fe4cc4c438bec376064
 
         GridPane grid = formGrid(
                 new Row("Fiche médicale", ficheBox),
@@ -730,6 +780,7 @@ public final class MedicalFormDialogs {
         return (f.getLibelleMaladie() != null ? f.getLibelleMaladie() : "Fiche") + " · " + d;
     }
 
+<<<<<<< HEAD
     private static void applyOpenFdaRecommendations(Fiche fiche, List<Medicament> medicaments,
                                                     ListView<Medicament> medList, Label infoLabel) {
         String illness = fiche != null ? fiche.getLibelleMaladie() : null;
@@ -753,6 +804,8 @@ public final class MedicalFormDialogs {
         infoLabel.setText("Recommandé (" + illness + "): " + String.join(", ", chosen));
     }
 
+=======
+>>>>>>> 34f983539afbf1fbe48f8fe4cc4c438bec376064
     private static void alert(Alert.AlertType type, String msg) {
         Alert a = new Alert(type);
         a.setHeaderText(null);

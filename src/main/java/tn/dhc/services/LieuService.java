@@ -15,6 +15,10 @@ public class LieuService implements IService<Lieu> {
         cnx = MyConnection.getInstance().getConnection();
     }
 
+<<<<<<< HEAD
+=======
+    // ✅ CREATE
+>>>>>>> 34f983539afbf1fbe48f8fe4cc4c438bec376064
     @Override
     public void ajouter(Lieu l) {
         try {
@@ -40,6 +44,10 @@ public class LieuService implements IService<Lieu> {
         }
     }
 
+<<<<<<< HEAD
+=======
+    // ✅ DELETE
+>>>>>>> 34f983539afbf1fbe48f8fe4cc4c438bec376064
     @Override
     public void supprimer(Lieu l) {
         try {
@@ -53,6 +61,10 @@ public class LieuService implements IService<Lieu> {
         }
     }
 
+<<<<<<< HEAD
+=======
+    // ✅ UPDATE
+>>>>>>> 34f983539afbf1fbe48f8fe4cc4c438bec376064
     @Override
     public void modifier(Lieu l) {
         try {
@@ -79,6 +91,10 @@ public class LieuService implements IService<Lieu> {
         }
     }
 
+<<<<<<< HEAD
+=======
+    // ✅ GET ALL
+>>>>>>> 34f983539afbf1fbe48f8fe4cc4c438bec376064
     @Override
     public List<Lieu> getAll() {
         List<Lieu> lieux = new ArrayList<>();
@@ -99,6 +115,10 @@ public class LieuService implements IService<Lieu> {
         return lieux;
     }
 
+<<<<<<< HEAD
+=======
+    // ✅ GET ONE
+>>>>>>> 34f983539afbf1fbe48f8fe4cc4c438bec376064
     @Override
     public Lieu getOneById(int id) {
         try {
@@ -119,6 +139,10 @@ public class LieuService implements IService<Lieu> {
         return null;
     }
 
+<<<<<<< HEAD
+=======
+    // 🔁 MAPPING
+>>>>>>> 34f983539afbf1fbe48f8fe4cc4c438bec376064
     private Lieu mapResultSetToLieu(ResultSet rs) throws SQLException {
         return new Lieu(
                 rs.getInt("id"),

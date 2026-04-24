@@ -6,9 +6,13 @@ import tn.dhc.utils.MyConnection;
 
 import java.sql.*;
 import java.util.ArrayList;
+<<<<<<< HEAD
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+=======
+import java.util.List;
+>>>>>>> 34f983539afbf1fbe48f8fe4cc4c438bec376064
 
 public class ServiceOrdonnance implements IService<Ordonnance> {
 
@@ -27,7 +31,10 @@ public class ServiceOrdonnance implements IService<Ordonnance> {
         if (id > 0) {
             o.setId(id);
             replaceOrdonnanceMedicaments(id, medicamentIds);
+<<<<<<< HEAD
             decrementMedicamentsStock(medicamentIds);
+=======
+>>>>>>> 34f983539afbf1fbe48f8fe4cc4c438bec376064
         }
         return id;
     }
@@ -41,7 +48,11 @@ public class ServiceOrdonnance implements IService<Ordonnance> {
     }
 
     private int insertOrdonnanceReturningId(Ordonnance o) {
+<<<<<<< HEAD
         String req = "INSERT INTO `ordonnance` (`posologie`, `frequence`, `duree_traitement`, `date`, `fiche_id`, `medecin_user_id`, `signature_envelope_id`, `signature_ceremony_url`, `signature_deliverable_url`, `signature_status`, `signature_email_sent_at`) VALUES (?,?,?,?,?,?,?,?,?,?,?)";
+=======
+        String req = "INSERT INTO `ordonnance` (`posologie`, `frequence`, `duree_traitement`, `date`, `fiche_id`, `medecin_user_id`) VALUES (?,?,?,?,?,?)";
+>>>>>>> 34f983539afbf1fbe48f8fe4cc4c438bec376064
         try (PreparedStatement ps = connection.prepareStatement(req, Statement.RETURN_GENERATED_KEYS)) {
             ps.setString(1, o.getPosologie());
             ps.setString(2, o.getFrequence());
@@ -53,11 +64,14 @@ public class ServiceOrdonnance implements IService<Ordonnance> {
             } else {
                 ps.setNull(6, Types.INTEGER);
             }
+<<<<<<< HEAD
             ps.setString(7, o.getSignatureEnvelopeId());
             ps.setString(8, o.getSignatureCeremonyUrl());
             ps.setString(9, o.getSignatureDeliverableUrl());
             ps.setString(10, o.getSignatureStatus());
             ps.setTimestamp(11, o.getSignatureEmailSentAt());
+=======
+>>>>>>> 34f983539afbf1fbe48f8fe4cc4c438bec376064
             ps.executeUpdate();
             try (ResultSet keys = ps.getGeneratedKeys()) {
                 if (keys.next()) {
@@ -101,6 +115,7 @@ public class ServiceOrdonnance implements IService<Ordonnance> {
         }
     }
 
+<<<<<<< HEAD
     private void decrementMedicamentsStock(List<Integer> medicamentIds) {
         if (medicamentIds == null || medicamentIds.isEmpty()) {
             return;
@@ -122,6 +137,8 @@ public class ServiceOrdonnance implements IService<Ordonnance> {
         }
     }
 
+=======
+>>>>>>> 34f983539afbf1fbe48f8fe4cc4c438bec376064
     public List<Integer> findMedicamentIdsByOrdonnance(int ordonnanceId) {
         List<Integer> ids = new ArrayList<>();
         String sql = "SELECT medicament_id FROM ordonnance_medicament WHERE ordonnance_id = ? ORDER BY medicament_id";
@@ -176,7 +193,11 @@ public class ServiceOrdonnance implements IService<Ordonnance> {
 
     @Override
     public void modifier(Ordonnance o) {
+<<<<<<< HEAD
         String req = "UPDATE `ordonnance` SET `posologie`=?, `frequence`=?, `duree_traitement`=?, `date`=?, `fiche_id`=?, `medecin_user_id`=?, `signature_envelope_id`=?, `signature_ceremony_url`=?, `signature_deliverable_url`=?, `signature_status`=?, `signature_email_sent_at`=? WHERE `id`=?";
+=======
+        String req = "UPDATE `ordonnance` SET `posologie`=?, `frequence`=?, `duree_traitement`=?, `date`=?, `fiche_id`=?, `medecin_user_id`=? WHERE `id`=?";
+>>>>>>> 34f983539afbf1fbe48f8fe4cc4c438bec376064
         try (PreparedStatement ps = connection.prepareStatement(req)) {
             ps.setString(1, o.getPosologie());
             ps.setString(2, o.getFrequence());
@@ -188,6 +209,7 @@ public class ServiceOrdonnance implements IService<Ordonnance> {
             } else {
                 ps.setNull(6, Types.INTEGER);
             }
+<<<<<<< HEAD
             ps.setString(7, o.getSignatureEnvelopeId());
             ps.setString(8, o.getSignatureCeremonyUrl());
             ps.setString(9, o.getSignatureDeliverableUrl());
@@ -218,6 +240,9 @@ public class ServiceOrdonnance implements IService<Ordonnance> {
         String req = "UPDATE `ordonnance` SET `signature_email_sent_at` = CURRENT_TIMESTAMP WHERE `id` = ?";
         try (PreparedStatement ps = connection.prepareStatement(req)) {
             ps.setInt(1, ordonnanceId);
+=======
+            ps.setInt(7, o.getId());
+>>>>>>> 34f983539afbf1fbe48f8fe4cc4c438bec376064
             ps.executeUpdate();
         } catch (SQLException e) {
             System.err.println(e.getMessage());
@@ -318,11 +343,14 @@ public class ServiceOrdonnance implements IService<Ordonnance> {
         } catch (SQLException ignored) {
             o.setMedecinUserId(null);
         }
+<<<<<<< HEAD
         o.setSignatureEnvelopeId(rs.getString("signature_envelope_id"));
         o.setSignatureCeremonyUrl(rs.getString("signature_ceremony_url"));
         o.setSignatureDeliverableUrl(rs.getString("signature_deliverable_url"));
         o.setSignatureStatus(rs.getString("signature_status"));
         o.setSignatureEmailSentAt(rs.getTimestamp("signature_email_sent_at"));
+=======
+>>>>>>> 34f983539afbf1fbe48f8fe4cc4c438bec376064
         return o;
     }
 }

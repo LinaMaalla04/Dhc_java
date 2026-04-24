@@ -46,6 +46,7 @@ public class LoginController {
 
     @FXML
     public void handleForgotPassword(ActionEvent event) {
+<<<<<<< HEAD
         try {
             Parent root = FXMLLoader.load(getClass().getResource("/ForgotPassword.fxml"));
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
@@ -53,6 +54,13 @@ public class LoginController {
         } catch (Exception e) {
             e.printStackTrace();
         }
+=======
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Mot de passe oublié");
+        alert.setHeaderText(null);
+        alert.setContentText("Contactez l'administrateur pour réinitialiser votre mot de passe.");
+        alert.showAndWait();
+>>>>>>> 34f983539afbf1fbe48f8fe4cc4c438bec376064
     }
 
     @FXML

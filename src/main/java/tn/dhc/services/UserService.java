@@ -18,6 +18,10 @@ public class UserService implements IService<User> {
         cnx = MyConnection.getInstance().getConnection();
     }
 
+<<<<<<< HEAD
+=======
+    // ✅ CREATE
+>>>>>>> 34f983539afbf1fbe48f8fe4cc4c438bec376064
     @Override
     public void ajouter(User u) {
         try {
@@ -37,6 +41,10 @@ public class UserService implements IService<User> {
         }
     }
 
+<<<<<<< HEAD
+=======
+    // ✅ DELETE
+>>>>>>> 34f983539afbf1fbe48f8fe4cc4c438bec376064
     @Override
     public void supprimer(User u) {
         try {
@@ -49,6 +57,10 @@ public class UserService implements IService<User> {
         }
     }
 
+<<<<<<< HEAD
+=======
+    // ✅ UPDATE
+>>>>>>> 34f983539afbf1fbe48f8fe4cc4c438bec376064
     @Override
     public void modifier(User u) {
         try {
@@ -68,6 +80,10 @@ public class UserService implements IService<User> {
         }
     }
 
+<<<<<<< HEAD
+=======
+    // ✅ GET ALL
+>>>>>>> 34f983539afbf1fbe48f8fe4cc4c438bec376064
     @Override
     public List<User> getAll() {
         List<User> users = new ArrayList<>();
@@ -87,6 +103,10 @@ public class UserService implements IService<User> {
         return users;
     }
 
+<<<<<<< HEAD
+=======
+    // ✅ GET ONE
+>>>>>>> 34f983539afbf1fbe48f8fe4cc4c438bec376064
     @Override
     public User getOneById(int id) {
         try {
@@ -105,6 +125,10 @@ public class UserService implements IService<User> {
         return null;
     }
 
+<<<<<<< HEAD
+=======
+    // 🔐 LOGIN (hors interface)
+>>>>>>> 34f983539afbf1fbe48f8fe4cc4c438bec376064
     public boolean login(String email, String mdp) {
         try {
             String sql = "SELECT * FROM user WHERE mail=?";
@@ -157,6 +181,10 @@ public class UserService implements IService<User> {
         return plain.equals(stored);
     }
 
+<<<<<<< HEAD
+=======
+    // 🔁 mapping
+>>>>>>> 34f983539afbf1fbe48f8fe4cc4c438bec376064
     private User mapResultSetToUser(ResultSet rs) throws SQLException {
         return new User(
                 rs.getInt("id"),
@@ -173,7 +201,10 @@ public class UserService implements IService<User> {
                 rs.getInt("login_count")
         );
     }
+<<<<<<< HEAD
     public static void setCurrentUser(User u) {
         currentUser = u;
     }
+=======
+>>>>>>> 34f983539afbf1fbe48f8fe4cc4c438bec376064
 }

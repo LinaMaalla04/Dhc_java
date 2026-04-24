@@ -1,5 +1,6 @@
 package tn.dhc.controllers;
 
+<<<<<<< HEAD
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -109,3 +110,7 @@ public class ModifierCreneau {
         alert.show();
     }
 }
+=======
+public class ModifierCreneau {
+}
+>>>>>>> 34f983539afbf1fbe48f8fe4cc4c438bec376064

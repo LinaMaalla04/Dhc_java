@@ -7,21 +7,32 @@ import java.sql.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
+<<<<<<< HEAD
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 import tn.dhc.entities.EventStatistics;
+=======
+import java.util.List;
+>>>>>>> 34f983539afbf1fbe48f8fe4cc4c438bec376064
 
 public class EventService implements IService<Event> {
 
     private Connection cnx;
+<<<<<<< HEAD
     private Integer cachedDescriptionMaxLength;
+=======
+>>>>>>> 34f983539afbf1fbe48f8fe4cc4c438bec376064
 
     public EventService() {
         cnx = MyConnection.getInstance().getConnection();
     }
 
+<<<<<<< HEAD
+=======
+    // ✅ CREATE
+>>>>>>> 34f983539afbf1fbe48f8fe4cc4c438bec376064
     @Override
     public void ajouter(Event e) {
         try {
@@ -32,7 +43,11 @@ public class EventService implements IService<Event> {
 
             ps.setString(1, e.getTitreEvent());
             ps.setString(2, e.getThemeSante());
+<<<<<<< HEAD
             ps.setString(3, normalizeDescriptionForDb(e.getDescription()));
+=======
+            ps.setString(3, e.getDescription());
+>>>>>>> 34f983539afbf1fbe48f8fe4cc4c438bec376064
 
             ps.setDate(4, Date.valueOf(e.getDateEvent()));
 
@@ -54,10 +69,18 @@ public class EventService implements IService<Event> {
             ps.executeUpdate();
 
         } catch (SQLException ex) {
+<<<<<<< HEAD
             throw new RuntimeException("Insertion event impossible: " + ex.getMessage(), ex);
         }
     }
 
+=======
+            System.out.println(ex.getMessage());
+        }
+    }
+
+    // ✅ DELETE
+>>>>>>> 34f983539afbf1fbe48f8fe4cc4c438bec376064
     @Override
     public void supprimer(Event e) {
         try {
@@ -72,6 +95,10 @@ public class EventService implements IService<Event> {
         }
     }
 
+<<<<<<< HEAD
+=======
+    // ✅ UPDATE
+>>>>>>> 34f983539afbf1fbe48f8fe4cc4c438bec376064
     @Override
     public void modifier(Event e) {
         try {
@@ -81,7 +108,11 @@ public class EventService implements IService<Event> {
 
             ps.setString(1, e.getTitreEvent());
             ps.setString(2, e.getThemeSante());
+<<<<<<< HEAD
             ps.setString(3, normalizeDescriptionForDb(e.getDescription()));
+=======
+            ps.setString(3, e.getDescription());
+>>>>>>> 34f983539afbf1fbe48f8fe4cc4c438bec376064
 
             ps.setDate(4, Date.valueOf(e.getDateEvent()));
 
@@ -111,6 +142,10 @@ public class EventService implements IService<Event> {
         }
     }
 
+<<<<<<< HEAD
+=======
+    // ✅ GET ALL
+>>>>>>> 34f983539afbf1fbe48f8fe4cc4c438bec376064
     @Override
     public List<Event> getAll() {
         List<Event> events = new ArrayList<>();
@@ -131,6 +166,7 @@ public class EventService implements IService<Event> {
         return events;
     }
 
+<<<<<<< HEAD
     /**
      * Agrégats pour le tableau de bord (totaux, thèmes, fenêtre de mois, lieux).
      */
@@ -186,6 +222,9 @@ public class EventService implements IService<Event> {
         return map;
     }
 
+=======
+    // ✅ GET ONE
+>>>>>>> 34f983539afbf1fbe48f8fe4cc4c438bec376064
     @Override
     public Event getOneById(int id) {
         try {
@@ -206,6 +245,7 @@ public class EventService implements IService<Event> {
         return null;
     }
 
+<<<<<<< HEAD
     /**
      * Incrémente le nombre de participants d'un événement.
      */
@@ -220,6 +260,9 @@ public class EventService implements IService<Event> {
         }
     }
 
+=======
+    // 🔁 MAPPING
+>>>>>>> 34f983539afbf1fbe48f8fe4cc4c438bec376064
     private Event mapResultSetToEvent(ResultSet rs) throws SQLException {
         return new Event(
                 rs.getInt("id"),
@@ -234,6 +277,7 @@ public class EventService implements IService<Event> {
                 rs.getInt("event_lieu_id")
         );
     }
+<<<<<<< HEAD
 
     private String normalizeDescriptionForDb(String description) {
         if (description == null) {
@@ -276,4 +320,6 @@ public class EventService implements IService<Event> {
         }
         return cachedDescriptionMaxLength;
     }
+=======
+>>>>>>> 34f983539afbf1fbe48f8fe4cc4c438bec376064
 }

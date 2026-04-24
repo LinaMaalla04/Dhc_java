@@ -1,7 +1,10 @@
 package tn.dhc.entities;
 
 import java.sql.Date;
+<<<<<<< HEAD
 import java.sql.Timestamp;
+=======
+>>>>>>> 34f983539afbf1fbe48f8fe4cc4c438bec376064
 
 public class Ordonnance {
     private int id;
@@ -11,11 +14,14 @@ public class Ordonnance {
     private Date date;
     private int ficheId;
     private Integer medecinUserId;
+<<<<<<< HEAD
     private String signatureEnvelopeId;
     private String signatureCeremonyUrl;
     private String signatureDeliverableUrl;
     private String signatureStatus;
     private Timestamp signatureEmailSentAt;
+=======
+>>>>>>> 34f983539afbf1fbe48f8fe4cc4c438bec376064
 
     public Ordonnance() {
     }
@@ -93,6 +99,7 @@ public class Ordonnance {
         this.medecinUserId = medecinUserId;
     }
 
+<<<<<<< HEAD
     public String getSignatureEnvelopeId() {
         return signatureEnvelopeId;
     }
@@ -133,6 +140,8 @@ public class Ordonnance {
         this.signatureEmailSentAt = signatureEmailSentAt;
     }
 
+=======
+>>>>>>> 34f983539afbf1fbe48f8fe4cc4c438bec376064
     @Override
     public String toString() {
         return "Ordonnance{" +
@@ -143,9 +152,12 @@ public class Ordonnance {
                 ", date=" + date +
                 ", ficheId=" + ficheId +
                 ", medecinUserId=" + medecinUserId +
+<<<<<<< HEAD
                 ", signatureEnvelopeId='" + signatureEnvelopeId + '\'' +
                 ", signatureStatus='" + signatureStatus + '\'' +
                 ", signatureEmailSentAt=" + signatureEmailSentAt +
+=======
+>>>>>>> 34f983539afbf1fbe48f8fe4cc4c438bec376064
                 '}';
     }
 }

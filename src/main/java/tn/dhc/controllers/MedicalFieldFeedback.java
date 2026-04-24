@@ -4,6 +4,11 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Control;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Spinner;
+<<<<<<< HEAD
+=======
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
+>>>>>>> 34f983539afbf1fbe48f8fe4cc4c438bec376064
 import javafx.scene.control.TextInputControl;
 
 /**

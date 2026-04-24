@@ -44,6 +44,7 @@
             <artifactId>pdfbox</artifactId>
             <version>3.0.3</version>
         </dependency>
+<<<<<<< HEAD
 <!--        mailing-->
         <dependency>
             <groupId>com.sun.mail</groupId>
@@ -75,6 +76,8 @@
             <version>21</version>
         </dependency>
 
+=======
+>>>>>>> 34f983539afbf1fbe48f8fe4cc4c438bec376064
     </dependencies>
 
     <build>

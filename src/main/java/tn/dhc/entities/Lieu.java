@@ -9,9 +9,17 @@ public class Lieu {
     private Integer capaciteMax; // nullable
     private boolean disponible;
 
+<<<<<<< HEAD
     public Lieu() {
     }
 
+=======
+    // 🔹 Constructeur vide
+    public Lieu() {
+    }
+
+    // 🔹 Constructeur sans id
+>>>>>>> 34f983539afbf1fbe48f8fe4cc4c438bec376064
     public Lieu(String nomLieu, String adresse, String ville,
                 Integer capaciteMax, boolean disponible) {
         this.nomLieu = nomLieu;
@@ -21,6 +29,10 @@ public class Lieu {
         this.disponible = disponible;
     }
 
+<<<<<<< HEAD
+=======
+    // 🔹 Constructeur avec id
+>>>>>>> 34f983539afbf1fbe48f8fe4cc4c438bec376064
     public Lieu(int id, String nomLieu, String adresse, String ville,
                 Integer capaciteMax, boolean disponible) {
         this.id = id;
@@ -31,6 +43,10 @@ public class Lieu {
         this.disponible = disponible;
     }
 
+<<<<<<< HEAD
+=======
+    // 🔹 Getters & Setters
+>>>>>>> 34f983539afbf1fbe48f8fe4cc4c438bec376064
 
     public int getId() {
         return id;
@@ -80,6 +96,7 @@ public class Lieu {
         this.disponible = disponible;
     }
 
+<<<<<<< HEAD
     @Override
     public String toString() {
         return "📍 Nom: " + nomLieu + " | " +
@@ -87,5 +104,18 @@ public class Lieu {
                 "🌆 Ville: " + ville + " | " +
                 "👥 Capacité: " + (capaciteMax != null ? capaciteMax : "Non définie") + " | " +
                 "✅ Disponible: " + (disponible ? "Oui" : "Non");
+=======
+    // 🔹 toString
+    @Override
+    public String toString() {
+        return "Lieu{" +
+                "id=" + id +
+                ", nomLieu='" + nomLieu + '\'' +
+                ", adresse='" + adresse + '\'' +
+                ", ville='" + ville + '\'' +
+                ", capaciteMax=" + capaciteMax +
+                ", disponible=" + disponible +
+                '}';
+>>>>>>> 34f983539afbf1fbe48f8fe4cc4c438bec376064
     }
 }

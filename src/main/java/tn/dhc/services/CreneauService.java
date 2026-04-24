@@ -13,6 +13,10 @@ public class CreneauService {
 
     private Connection cnx = MyConnection.getInstance().getConnection();
 
+<<<<<<< HEAD
+=======
+    // 🔹 Ajouter
+>>>>>>> 34f983539afbf1fbe48f8fe4cc4c438bec376064
     public void add(Creneau c) {
 
         String sql = "INSERT INTO creneau (date_creneau, hdebut, hfin, statut, user_id) VALUES (?,?,?,?,?)";
@@ -23,6 +27,10 @@ public class CreneauService {
             ps.setTime(2, Time.valueOf(c.getHdebut()));
             ps.setTime(3, Time.valueOf(c.getHfin()));
 
+<<<<<<< HEAD
+=======
+            // 🔥 statut par défaut
+>>>>>>> 34f983539afbf1fbe48f8fe4cc4c438bec376064
             ps.setString(4, "Dispo");
 
             ps.setInt(5, c.getUserId());
@@ -34,6 +42,10 @@ public class CreneauService {
         }
     }
 
+<<<<<<< HEAD
+=======
+    // 🔹 Afficher tout
+>>>>>>> 34f983539afbf1fbe48f8fe4cc4c438bec376064
     public List<Creneau> getAll() {
         List<Creneau> list = new ArrayList<>();
         String sql = "SELECT * FROM creneau";
@@ -60,6 +72,10 @@ public class CreneauService {
         return list;
     }
 
+<<<<<<< HEAD
+=======
+    // 🔹 Delete
+>>>>>>> 34f983539afbf1fbe48f8fe4cc4c438bec376064
     public void delete(int id) {
         String sql = "DELETE FROM creneau WHERE id=?";
 
@@ -71,6 +87,7 @@ public class CreneauService {
             System.out.println(e.getMessage());
         }
     }
+<<<<<<< HEAD
 
     public Creneau getOneById(int id) {
         try {
@@ -116,4 +133,6 @@ public class CreneauService {
             System.out.println(e.getMessage());
         }
     }
+=======
+>>>>>>> 34f983539afbf1fbe48f8fe4cc4c438bec376064
 }

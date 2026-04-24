@@ -12,8 +12,14 @@ public class RdvService {
 
     private Connection cnx = MyConnection.getInstance().getConnection();
 
+<<<<<<< HEAD
     public void add(Rdv r) {
         String sql = "INSERT INTO rdv (motif, priorite, statut, date_rdv, creneau_id, user_id, fiche_id) VALUES (?,?,?,?,?,?,?)";
+=======
+    // 🔹 Ajouter
+    public void add(Rdv r) {
+        String sql = "INSERT INTO rdv (motif, priorite, statut, date_rdv, creneau_id, user_id) VALUES (?,?,?,?,?,?)";
+>>>>>>> 34f983539afbf1fbe48f8fe4cc4c438bec376064
 
         try (PreparedStatement ps = cnx.prepareStatement(sql)) {
 
@@ -23,11 +29,14 @@ public class RdvService {
             ps.setDate(4, Date.valueOf(r.getDateRdv()));
             ps.setInt(5, r.getCreneauId());
             ps.setInt(6, r.getUserId());
+<<<<<<< HEAD
             if (r.getFicheId() != null) {
                 ps.setInt(7, r.getFicheId());
             } else {
                 ps.setNull(7, Types.INTEGER);
             }
+=======
+>>>>>>> 34f983539afbf1fbe48f8fe4cc4c438bec376064
 
             ps.executeUpdate();
             System.out.println("RDV ajouté !");
@@ -36,6 +45,10 @@ public class RdvService {
         }
     }
 
+<<<<<<< HEAD
+=======
+    // 🔹 Afficher tout
+>>>>>>> 34f983539afbf1fbe48f8fe4cc4c438bec376064
     public List<Rdv> getAll() {
         List<Rdv> list = new ArrayList<>();
         String sql = "SELECT * FROM rdv";
@@ -51,8 +64,12 @@ public class RdvService {
                         rs.getString("statut"),
                         rs.getDate("date_rdv").toLocalDate(),
                         rs.getInt("creneau_id"),
+<<<<<<< HEAD
                         rs.getInt("user_id"),
                         rs.getObject("fiche_id") != null ? rs.getInt("fiche_id") : null
+=======
+                        rs.getInt("user_id")
+>>>>>>> 34f983539afbf1fbe48f8fe4cc4c438bec376064
                 );
                 list.add(r);
             }
@@ -64,6 +81,7 @@ public class RdvService {
         return list;
     }
 
+<<<<<<< HEAD
     public List<Rdv> findByFicheId(int ficheId) {
         List<Rdv> list = new ArrayList<>();
         String sql = "SELECT * FROM rdv WHERE fiche_id = ? ORDER BY date_rdv DESC, id DESC";
@@ -128,6 +146,9 @@ public class RdvService {
         }
     }
 
+=======
+    // 🔹 Delete
+>>>>>>> 34f983539afbf1fbe48f8fe4cc4c438bec376064
     public void delete(int id) {
         String sql = "DELETE FROM rdv WHERE id=?";
 
@@ -139,6 +160,7 @@ public class RdvService {
             System.out.println(e.getMessage());
         }
     }
+<<<<<<< HEAD
     public void modifier(Rdv r) {
 
         String sql = "UPDATE rdv SET motif=?, priorite=?, statut=?, date_rdv=?, creneau_id=?, user_id=?, fiche_id=? WHERE id=?";
@@ -165,4 +187,6 @@ public class RdvService {
             System.out.println(e.getMessage());
         }
     }
+=======
+>>>>>>> 34f983539afbf1fbe48f8fe4cc4c438bec376064
 }

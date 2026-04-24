@@ -1,5 +1,6 @@
 package tn.dhc.controllers;
 
+<<<<<<< HEAD
 import com.sun.net.httpserver.HttpServer;
 import javafx.application.Platform;
 import javafx.concurrent.Worker;
@@ -7,6 +8,9 @@ import javafx.event.ActionEvent;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import tn.dhc.services.CaptchaService;
+=======
+import javafx.event.ActionEvent;
+>>>>>>> 34f983539afbf1fbe48f8fe4cc4c438bec376064
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -53,6 +57,7 @@ public class Registration {
     private TextField addTelUser;
 
     private final UserService userService = new UserService();
+<<<<<<< HEAD
     private final CaptchaService captchaService = new CaptchaService();
 
     // ── reCAPTCHA v3 ──────────────────────────────────────────────────────
@@ -60,12 +65,15 @@ public class Registration {
     private WebEngine     webEngine;
     private String        captchaToken = "";
     private HttpServer    captchaServer;
+=======
+>>>>>>> 34f983539afbf1fbe48f8fe4cc4c438bec376064
 
     @FXML
     public void initialize() {
         for (MenuItem item : addRoleUser.getItems()) {
             item.setOnAction(e -> addRoleUser.setText(item.getText()));
         }
+<<<<<<< HEAD
         initCaptcha();
     }
 
@@ -148,6 +156,8 @@ public class Registration {
         holder[0] = timeline;
         timeline.setCycleCount(javafx.animation.Animation.INDEFINITE);
         timeline.play();
+=======
+>>>>>>> 34f983539afbf1fbe48f8fe4cc4c438bec376064
     }
 
     @FXML
@@ -158,6 +168,7 @@ public class Registration {
     @FXML
     public void inscription(ActionEvent event) {
         try {
+<<<<<<< HEAD
             // ── reCAPTCHA v3 : token FRAIS à chaque clic ─────────────────
             // 1. Vider le token JS pour être sûr de lire un nouveau
             webEngine.executeScript("captchaToken = '';");
@@ -200,15 +211,22 @@ public class Registration {
                 return;
             }
 
+=======
+>>>>>>> 34f983539afbf1fbe48f8fe4cc4c438bec376064
             if (!addMdpUser.getText().equals(addMdpCUser.getText())) {
                 showAlert(Alert.AlertType.WARNING, "Erreur", "Les mots de passe ne correspondent pas !");
                 return;
             }
+<<<<<<< HEAD
+=======
+
+>>>>>>> 34f983539afbf1fbe48f8fe4cc4c438bec376064
             String roleUi = addRoleUser.getText();
             if (roleUi == null || roleUi.isBlank() || roleUi.equals(ROLE_PROMPT)) {
                 showAlert(Alert.AlertType.WARNING, "Erreur", "Veuillez choisir un rôle (Patient ou Médecin).");
                 return;
             }
+<<<<<<< HEAD
             String nom      = addNomUser.getText();
             String prenom   = addPrenomUser.getText();
             String email    = addEmailUser.getText();
@@ -232,6 +250,42 @@ public class Registration {
             showAlert(Alert.AlertType.INFORMATION, "Succès", "Inscription réussie ! Vous pouvez vous connecter.");
             loadScene("/Login.fxml", event);
 
+=======
+
+            String nom = addNomUser.getText();
+            String prenom = addPrenomUser.getText();
+            String email = addEmailUser.getText();
+            int tel = Integer.parseInt(addTelUser.getText());
+            String mdp = addMdpUser.getText();
+            String role = normalizeRoleForStorage(roleUi);
+            String specialite = addSpecialiteUser.getText() != null ? addSpecialiteUser.getText().trim() : "";
+
+            if (nom == null || nom.isBlank() || prenom == null || prenom.isBlank()
+                    || email == null || email.isBlank()) {
+                showAlert(Alert.AlertType.WARNING, "Erreur", "Veuillez remplir tous les champs obligatoires.");
+                return;
+            }
+
+            User u = new User(
+                    nom.trim(),
+                    prenom.trim(),
+                    email.trim(),
+                    tel,
+                    mdp,
+                    role,
+                    specialite,
+                    LocalDateTime.now(),
+                    0
+            );
+
+            userService.ajouter(u);
+
+            showAlert(Alert.AlertType.INFORMATION, "Succès", "Inscription réussie ! Vous pouvez vous connecter.");
+            loadScene("/Login.fxml", event);
+
+        } catch (NumberFormatException e) {
+            showAlert(Alert.AlertType.ERROR, "Erreur", "Numéro de téléphone invalide !");
+>>>>>>> 34f983539afbf1fbe48f8fe4cc4c438bec376064
         } catch (Exception e) {
             showAlert(Alert.AlertType.ERROR, "Erreur", e.getMessage() != null ? e.getMessage() : "Erreur inconnue");
         }
@@ -250,11 +304,14 @@ public class Registration {
 
     private void loadScene(String resource, ActionEvent event) {
         try {
+<<<<<<< HEAD
             if (captchaServer != null) {
                 captchaServer.stop(0);
                 captchaServer = null;
                 System.out.println("[Captcha] Serveur HTTP arrêté.");
             }
+=======
+>>>>>>> 34f983539afbf1fbe48f8fe4cc4c438bec376064
             Parent root = FXMLLoader.load(getClass().getResource(resource));
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             stage.setScene(new Scene(root));
@@ -270,4 +327,8 @@ public class Registration {
         alert.setContentText(message);
         alert.showAndWait();
     }
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 34f983539afbf1fbe48f8fe4cc4c438bec376064

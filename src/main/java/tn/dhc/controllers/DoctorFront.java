@@ -7,6 +7,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+<<<<<<< HEAD
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.PieChart;
@@ -18,11 +19,20 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
+=======
+import javafx.scene.control.Alert;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.ListCell;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.layout.FlowPane;
+>>>>>>> 34f983539afbf1fbe48f8fe4cc4c438bec376064
 import javafx.stage.Stage;
 import javafx.stage.Window;
 import tn.dhc.entities.Fiche;
 import tn.dhc.entities.Medicament;
 import tn.dhc.entities.Ordonnance;
+<<<<<<< HEAD
 import tn.dhc.entities.Rdv;
 import tn.dhc.entities.Creneau;
 import tn.dhc.entities.User;
@@ -45,6 +55,16 @@ import java.util.Map;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
+=======
+import tn.dhc.entities.User;
+import tn.dhc.services.ServiceFiche;
+import tn.dhc.services.ServiceMedicament;
+import tn.dhc.services.ServiceOrdonnance;
+import tn.dhc.services.UserService;
+
+import java.util.ArrayList;
+import java.util.List;
+>>>>>>> 34f983539afbf1fbe48f8fe4cc4c438bec376064
 
 /**
  * Espace médecin : création de fiches et ordonnances pour un patient sélectionné,
@@ -63,6 +83,7 @@ public class DoctorFront {
 
     @FXML
     private FlowPane doctorMyOrdonnancesFlow;
+<<<<<<< HEAD
     @FXML
     private FlowPane doctorPendingRdvsFlow;
     @FXML
@@ -73,15 +94,20 @@ public class DoctorFront {
     private BarChart<String, Number> doctorGraviteBarChart;
 
 
+=======
+>>>>>>> 34f983539afbf1fbe48f8fe4cc4c438bec376064
 
     private final UserService userService = new UserService();
     private final ServiceFiche ficheService = new ServiceFiche();
     private final ServiceOrdonnance ordonnanceService = new ServiceOrdonnance();
     private final ServiceMedicament medicamentService = new ServiceMedicament();
+<<<<<<< HEAD
     private final RdvService rdvService = new RdvService();
     private final CreneauService creneauService = new CreneauService();
     private final SignatureApiService signatureApiService = new SignatureApiService();
     private final OrdonnanceSignedMailService ordonnanceSignedMailService = new OrdonnanceSignedMailService();
+=======
+>>>>>>> 34f983539afbf1fbe48f8fe4cc4c438bec376064
 
     @FXML
     public void initialize() {
@@ -100,6 +126,7 @@ public class DoctorFront {
         if (doctorMyOrdonnancesFlow != null) {
             bindFlowWrap(doctorMyOrdonnancesFlow);
         }
+<<<<<<< HEAD
         if (doctorPendingRdvsFlow != null) {
             bindFlowWrap(doctorPendingRdvsFlow);
         }
@@ -119,6 +146,12 @@ public class DoctorFront {
                 break;
             }
         }
+=======
+        doctorRefreshMyCare(null);
+    }
+
+    
+>>>>>>> 34f983539afbf1fbe48f8fe4cc4c438bec376064
         if (sp == null) {
             return;
         }
@@ -197,7 +230,11 @@ public class DoctorFront {
         }
         List<User> one = new ArrayList<>();
         one.add(p);
+<<<<<<< HEAD
         MedicalFormDialogs.showFicheDialog(window(), "Nouvelle fiche médicale", null, one, p, me.getId(), true)
+=======
+        MedicalFormDialogs.showFicheDialog(window(), "Nouvelle fiche médicale", null, one, p, me.getId())
+>>>>>>> 34f983539afbf1fbe48f8fe4cc4c438bec376064
                 .ifPresent(ficheService::ajouter);
         doctorRefreshMyCare(null);
     }
@@ -224,6 +261,7 @@ public class DoctorFront {
             return;
         }
         MedicalFormDialogs.showOrdonnanceDialog(window(), "Nouvelle ordonnance", null, fiches, meds, List.of(), me.getId())
+<<<<<<< HEAD
                 .ifPresent(r -> {
                     int newId = ordonnanceService.ajouterAvecMedicaments(r.ordonnance(), r.medicamentIds());
                     if (newId <= 0) {
@@ -251,6 +289,9 @@ public class DoctorFront {
                         alert(Alert.AlertType.WARNING, "Ordonnance créée, mais la signature n'a pas pu démarrer: " + ex.getMessage());
                     }
                 });
+=======
+                .ifPresent(r -> ordonnanceService.ajouterAvecMedicaments(r.ordonnance(), r.medicamentIds()));
+>>>>>>> 34f983539afbf1fbe48f8fe4cc4c438bec376064
         doctorRefreshMyCare(null);
     }
 
@@ -273,16 +314,23 @@ public class DoctorFront {
             return;
         }
         for (Fiche f : ficheService.findByMedecinUserId(me.getId())) {
+<<<<<<< HEAD
             String rdvSummary = formatRdvSummaryForFiche(f);
             doctorMyFichesFlow.getChildren().add(MedicalAdminCards.ficheCardViewOnly(f, patientLabel(f.getUserId()), rdvSummary));
         }
         for (Ordonnance o : ordonnanceService.findByMedecinUserId(me.getId())) {
             syncAndSendSignedOrdonnanceIfReady(o);
+=======
+            doctorMyFichesFlow.getChildren().add(MedicalAdminCards.ficheCardViewOnly(f, patientLabel(f.getUserId())));
+        }
+        for (Ordonnance o : ordonnanceService.findByMedecinUserId(me.getId())) {
+>>>>>>> 34f983539afbf1fbe48f8fe4cc4c438bec376064
             Fiche linked = ficheService.getOneById(o.getFicheId());
             String ficheSummary = formatFicheSummary(linked);
             String medSummary = ordonnanceService.getMedicamentsSummaryForOrdonnance(o.getId());
             doctorMyOrdonnancesFlow.getChildren().add(MedicalAdminCards.ordonnanceCardViewOnly(o, ficheSummary, medSummary));
         }
+<<<<<<< HEAD
         doctorRefreshRendezVous(null);
         loadDoctorStats();
     }
@@ -333,6 +381,8 @@ public class DoctorFront {
         box.getStyleClass().addAll("clinical-entity-card", "clinical-entity-card-comfort");
         box.setStyle("-fx-padding:18; -fx-background-color:white;");
         return box;
+=======
+>>>>>>> 34f983539afbf1fbe48f8fe4cc4c438bec376064
     }
 
     private Window window() {
@@ -348,6 +398,7 @@ public class DoctorFront {
         a.setContentText(msg);
         a.showAndWait();
     }
+<<<<<<< HEAD
 
     private String formatRdvSummaryForFiche(Fiche fiche) {
         List<Rdv> rdvs = rdvService.findByFicheId(fiche.getId());
@@ -463,4 +514,6 @@ public class DoctorFront {
         } catch (Exception ignored) {
         }
     }
+=======
+>>>>>>> 34f983539afbf1fbe48f8fe4cc4c438bec376064
 }

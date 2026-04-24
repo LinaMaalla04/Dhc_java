@@ -11,6 +11,7 @@ public class Rdv {
     private LocalDate dateRdv;
     private int creneauId;
     private int userId;
+<<<<<<< HEAD
     private Integer ficheId;
     private Creneau creneau;
 
@@ -25,12 +26,23 @@ public class Rdv {
 
     public Rdv(String motif, String priorite, String statut,
                LocalDate dateRdv, int creneauId, int userId, Integer ficheId) {
+=======
+
+    // 🔹 Constructeur vide
+    public Rdv() {
+    }
+
+    // 🔹 Constructeur sans id
+    public Rdv(String motif, String priorite, String statut,
+               LocalDate dateRdv, int creneauId, int userId) {
+>>>>>>> 34f983539afbf1fbe48f8fe4cc4c438bec376064
         this.motif = motif;
         this.priorite = priorite;
         this.statut = statut;
         this.dateRdv = dateRdv;
         this.creneauId = creneauId;
         this.userId = userId;
+<<<<<<< HEAD
         this.ficheId = ficheId;
     }
 
@@ -41,6 +53,13 @@ public class Rdv {
 
     public Rdv(int id, String motif, String priorite, String statut,
                LocalDate dateRdv, int creneauId, int userId, Integer ficheId) {
+=======
+    }
+
+    // 🔹 Constructeur avec id
+    public Rdv(int id, String motif, String priorite, String statut,
+               LocalDate dateRdv, int creneauId, int userId) {
+>>>>>>> 34f983539afbf1fbe48f8fe4cc4c438bec376064
         this.id = id;
         this.motif = motif;
         this.priorite = priorite;
@@ -48,9 +67,15 @@ public class Rdv {
         this.dateRdv = dateRdv;
         this.creneauId = creneauId;
         this.userId = userId;
+<<<<<<< HEAD
         this.ficheId = ficheId;
     }
 
+=======
+    }
+
+    // 🔹 Getters & Setters
+>>>>>>> 34f983539afbf1fbe48f8fe4cc4c438bec376064
 
     public int getId() {
         return id;
@@ -107,6 +132,7 @@ public class Rdv {
     public void setUserId(int userId) {
         this.userId = userId;
     }
+<<<<<<< HEAD
     public Integer getFicheId() {
         return ficheId;
     }
@@ -130,5 +156,20 @@ public class Rdv {
                 "📅 Date: " + dateRdv ;
 //                "  + | 🕐 " + (creneau != null ?
 //                creneau.getHdebut() + "-" + creneau.getHfin() : creneauId) ;
+=======
+
+    // 🔹 toString
+    @Override
+    public String toString() {
+        return "Rdv{" +
+                "id=" + id +
+                ", motif='" + motif + '\'' +
+                ", priorite='" + priorite + '\'' +
+                ", statut='" + statut + '\'' +
+                ", dateRdv=" + dateRdv +
+                ", creneauId=" + creneauId +
+                ", userId=" + userId +
+                '}';
+>>>>>>> 34f983539afbf1fbe48f8fe4cc4c438bec376064
     }
 }

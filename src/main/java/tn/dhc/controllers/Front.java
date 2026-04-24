@@ -1,12 +1,16 @@
 package tn.dhc.controllers;
 
+<<<<<<< HEAD
 import javafx.concurrent.Task;
+=======
+>>>>>>> 34f983539afbf1fbe48f8fe4cc4c438bec376064
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+<<<<<<< HEAD
 import javafx.collections.FXCollections;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.LineChart;
@@ -37,6 +41,25 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+=======
+import javafx.scene.control.Alert;
+import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.layout.FlowPane;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
+import tn.dhc.entities.Fiche;
+import tn.dhc.entities.Medicament;
+import tn.dhc.entities.Ordonnance;
+import tn.dhc.entities.User;
+import tn.dhc.services.ServiceFiche;
+import tn.dhc.services.ServiceOrdonnance;
+import tn.dhc.services.UserService;
+import tn.dhc.utils.OrdonnancePdfExporter;
+
+import java.nio.file.Path;
+import java.util.List;
+>>>>>>> 34f983539afbf1fbe48f8fe4cc4c438bec376064
 
 public class Front {
 
@@ -49,6 +72,7 @@ public class Front {
     @FXML
     private Label reportLabel;
 
+<<<<<<< HEAD
     @FXML
     private TextField modEmailUser;
 
@@ -114,6 +138,11 @@ public class Front {
     private final OpenWeatherForecastService openWeatherForecastService = new OpenWeatherForecastService();
     private final ServiceMedicament medicamentService = new ServiceMedicament();
     private final OpenFdaDrugInfoService openFdaDrugInfoService = new OpenFdaDrugInfoService();
+=======
+    private final UserService userService = new UserService();
+    private final ServiceFiche ficheService = new ServiceFiche();
+    private final ServiceOrdonnance ordonnanceService = new ServiceOrdonnance();
+>>>>>>> 34f983539afbf1fbe48f8fe4cc4c438bec376064
 
     @FXML
     public void initialize() {
@@ -123,6 +152,7 @@ public class Front {
         if (patientOrdonnancesFlow != null) {
             bindFlowWrap(patientOrdonnancesFlow);
         }
+<<<<<<< HEAD
 
         refreshPatientMedical();
         initPatientMedSafetyTab();
@@ -381,6 +411,32 @@ public class Front {
     //_________________________FICHES ET ORDONNANCES_________________________________________________________
 
     @FXML
+=======
+        refreshPatientMedical();
+    }
+
+    private static void bindFlowWrap(FlowPane flow) {
+        if (flow == null) {
+            return;
+        }
+        ScrollPane sp = null;
+        for (javafx.scene.Parent walk = flow.getParent(); walk != null; walk = walk.getParent()) {
+            if (walk instanceof ScrollPane scroll) {
+                sp = scroll;
+                break;
+            }
+        }
+        if (sp == null) {
+            return;
+        }
+        javafx.beans.value.ChangeListener<Number> listener = (obs, old, w) ->
+                flow.setPrefWrapLength(Math.max(480, w.doubleValue() - 56));
+        sp.widthProperty().addListener(listener);
+        listener.changed(sp.widthProperty(), sp.getWidth(), sp.getWidth());
+    }
+
+    @FXML
+>>>>>>> 34f983539afbf1fbe48f8fe4cc4c438bec376064
     public void refreshPatientMedical() {
         if (patientFichesFlow == null || patientOrdonnancesFlow == null) {
             return;
@@ -393,11 +449,17 @@ public class Front {
         }
         String selfLabel = me.getPrenom() + " " + me.getNom();
         for (Fiche f : ficheService.findByPatientUserId(me.getId())) {
+<<<<<<< HEAD
             String rdvSummary = formatRdvSummaryForFiche(f);
             patientFichesFlow.getChildren().add(MedicalAdminCards.ficheCardViewOnly(f, selfLabel, rdvSummary));
         }
         for (Ordonnance o : ordonnanceService.findByPatientUserId(me.getId())) {
             syncSignedDeliverableIfReady(o);
+=======
+            patientFichesFlow.getChildren().add(MedicalAdminCards.ficheCardViewOnly(f, selfLabel));
+        }
+        for (Ordonnance o : ordonnanceService.findByPatientUserId(me.getId())) {
+>>>>>>> 34f983539afbf1fbe48f8fe4cc4c438bec376064
             Fiche linked = ficheService.getOneById(o.getFicheId());
             String ficheSummary = formatFicheSummary(linked);
             String medSummary = ordonnanceService.getMedicamentsSummaryForOrdonnance(o.getId());
@@ -414,11 +476,16 @@ public class Front {
         String d = f.getDate() != null ? f.getDate().toString() : "";
         return (f.getLibelleMaladie() != null ? f.getLibelleMaladie() : "Fiche") + " · " + d;
     }
+<<<<<<< HEAD
+=======
+
+>>>>>>> 34f983539afbf1fbe48f8fe4cc4c438bec376064
     private void exportOrdonnanceToPdf(Ordonnance sel) {
         User me = UserService.getCurrentUser();
         if (me == null || patientOrdonnancesFlow == null) {
             return;
         }
+<<<<<<< HEAD
         if (signatureApiService.isConfigured() && sel.getSignatureEnvelopeId() != null && !sel.getSignatureEnvelopeId().isBlank()) {
             try {
                 SignatureApiService.DeliverableStatus deliverable = signatureApiService.fetchDeliverableStatus(sel.getSignatureEnvelopeId());
@@ -444,6 +511,8 @@ public class Front {
                 return;
             }
         }
+=======
+>>>>>>> 34f983539afbf1fbe48f8fe4cc4c438bec376064
         Fiche fiche = ficheService.getOneById(sel.getFicheId());
         if (fiche == null) {
             alert(Alert.AlertType.ERROR, "Fiche liée introuvable.");
@@ -471,6 +540,7 @@ public class Front {
         }
     }
 
+<<<<<<< HEAD
 
     //_________________________________________________________________________________________________________________
     //_________________________________________________________________________________________________________________
@@ -522,6 +592,8 @@ public class Front {
         }
     }
 
+=======
+>>>>>>> 34f983539afbf1fbe48f8fe4cc4c438bec376064
     @FXML
     public void deconnexion(ActionEvent event) {
         new UserService().logout();
@@ -534,6 +606,7 @@ public class Front {
         }
     }
 
+<<<<<<< HEAD
 
     //_________________________________________________________________________________________________________________
     //_________________________________________________________________________________________________________________
@@ -1238,10 +1311,16 @@ public class Front {
 
 
     //_______________________________________________________________________________________________
+=======
+>>>>>>> 34f983539afbf1fbe48f8fe4cc4c438bec376064
     private void alert(Alert.AlertType type, String msg) {
         Alert a = new Alert(type);
         a.setHeaderText(null);
         a.setContentText(msg);
         a.showAndWait();
     }
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 34f983539afbf1fbe48f8fe4cc4c438bec376064

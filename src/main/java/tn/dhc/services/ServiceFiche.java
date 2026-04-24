@@ -145,6 +145,7 @@ public class ServiceFiche implements IService<Fiche> {
         return list;
     }
 
+<<<<<<< HEAD
     public Fiche findLatestByPatientAndMedecin(int patientUserId, int medecinUserId) {
         String req = "SELECT * FROM `fiche` WHERE `user_id` = ? AND `medecin_user_id` = ? ORDER BY `date` DESC, `id` DESC LIMIT 1";
         try (PreparedStatement ps = connection.prepareStatement(req)) {
@@ -161,6 +162,8 @@ public class ServiceFiche implements IService<Fiche> {
         return null;
     }
 
+=======
+>>>>>>> 34f983539afbf1fbe48f8fe4cc4c438bec376064
     private static Fiche mapRow(ResultSet rs) throws SQLException {
         Fiche f = new Fiche();
         f.setId(rs.getInt("id"));

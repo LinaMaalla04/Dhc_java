@@ -48,9 +48,15 @@ public final class MedicalInputValidation {
         }
         if (telephone != null && !telephone.isBlank()) {
             String t = telephone.trim();
+<<<<<<< HEAD
             if (!t.matches("^\\d{8}$")) {
                 issues.add(new FieldIssue("telephone",
                         "Téléphone : saisissez exactement 8 chiffres."));
+=======
+            if (!t.matches("^[0-9+().\\s-]{6,25}$")) {
+                issues.add(new FieldIssue("telephone",
+                        "Téléphone : utilisez 6 à 25 caractères (chiffres, +, espaces, parenthèses, point ou tiret)."));
+>>>>>>> 34f983539afbf1fbe48f8fe4cc4c438bec376064
             }
         }
         if (responsable != null && !responsable.isBlank()) {
@@ -122,8 +128,13 @@ public final class MedicalInputValidation {
             }
         }
         int s = stock != null ? stock : 0;
+<<<<<<< HEAD
         if (s < 1 || s > 9_999_999) {
             issues.add(new FieldIssue("stock", "Le stock doit être compris entre 1 et 9 999 999."));
+=======
+        if (s < 0 || s > 9_999_999) {
+            issues.add(new FieldIssue("stock", "Le stock doit être compris entre 0 et 9 999 999."));
+>>>>>>> 34f983539afbf1fbe48f8fe4cc4c438bec376064
         }
         return issues;
     }

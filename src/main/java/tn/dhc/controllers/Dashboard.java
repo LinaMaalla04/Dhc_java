@@ -1,8 +1,11 @@
 package tn.dhc.controllers;
 
 import javafx.application.Platform;
+<<<<<<< HEAD
 import javafx.concurrent.Task;
 import javafx.collections.ObservableList;
+=======
+>>>>>>> 34f983539afbf1fbe48f8fe4cc4c438bec376064
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -10,6 +13,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.collections.FXCollections;
+<<<<<<< HEAD
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.PieChart;
@@ -42,12 +46,48 @@ import java.util.Map;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.util.stream.Collectors;
+=======
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
+import javafx.stage.Window;
+import tn.dhc.entities.Creneau;
+import tn.dhc.entities.Event;
+import tn.dhc.entities.Fiche;
+import tn.dhc.entities.Medicament;
+import tn.dhc.entities.Ordonnance;
+import tn.dhc.entities.Pharmacie;
+import tn.dhc.entities.User;
+import tn.dhc.services.CreneauService;
+import tn.dhc.services.EventService;
+import tn.dhc.services.ServiceFiche;
+import tn.dhc.services.ServiceMedicament;
+import tn.dhc.services.ServiceOrdonnance;
+import tn.dhc.services.ServicePharmacie;
+import tn.dhc.services.UserService;
+
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Locale;
+>>>>>>> 34f983539afbf1fbe48f8fe4cc4c438bec376064
 
 public class Dashboard {
 
     @FXML
+<<<<<<< HEAD
     private VBox userCardsContainer;
     private User selectedUser = null;
+=======
+    private ListView<User> AffUsers;
+>>>>>>> 34f983539afbf1fbe48f8fe4cc4c438bec376064
 
     @FXML
     private ListView<Creneau> AffCreneaux;
@@ -56,7 +96,11 @@ public class Dashboard {
     private ListView<Event> AffEvents;
 
     @FXML
+<<<<<<< HEAD
     private ComboBox<String> RechCreneau;
+=======
+    private TextField RechCreneauText;
+>>>>>>> 34f983539afbf1fbe48f8fe4cc4c438bec376064
 
     @FXML
     private TextField RechEventText;
@@ -66,8 +110,14 @@ public class Dashboard {
 
     @FXML
     private Label adminNameLabel;
+<<<<<<< HEAD
     @FXML
     private Button adminNotifButton;
+=======
+
+    @FXML
+    private Label reportLabel;
+>>>>>>> 34f983539afbf1fbe48f8fe4cc4c438bec376064
 
     @FXML
     private FlowPane pharmacyCardsFlow;
@@ -116,6 +166,7 @@ public class Dashboard {
 
     @FXML
     private ComboBox<String> ordonnanceSortCombo;
+<<<<<<< HEAD
     @FXML
     private PieChart pharmacyHospitalPieChart;
     @FXML
@@ -149,20 +200,28 @@ public class Dashboard {
     @FXML private BarChart<String, Number> userRecencyBarChart;
     @FXML private LineChart<String, Number> userAvgLoginsLineChart;
     @FXML private ScatterChart<Number, Number> userLoginScatterChart;
+=======
+>>>>>>> 34f983539afbf1fbe48f8fe4cc4c438bec376064
 
     private final UserService userService = new UserService();
     private final CreneauService creneauService = new CreneauService();
     private final EventService eventService = new EventService();
+<<<<<<< HEAD
     private final LieuService lieuService = new LieuService();
+=======
+>>>>>>> 34f983539afbf1fbe48f8fe4cc4c438bec376064
     private final ServicePharmacie pharmacieService = new ServicePharmacie();
     private final ServiceMedicament medicamentService = new ServiceMedicament();
     private final ServiceFiche ficheService = new ServiceFiche();
     private final ServiceOrdonnance ordonnanceService = new ServiceOrdonnance();
+<<<<<<< HEAD
     private final ServiceAnnonce serviceAnnonce = new ServiceAnnonce();
     private final HuggingFaceEngagementInsightService engagementInsightService = new HuggingFaceEngagementInsightService();
     private final java.util.Map<Integer, Integer> lastKnownMedStock = new java.util.HashMap<>();
     private final java.util.Set<Integer> activeLowStockMedIds = new java.util.HashSet<>();
     private final List<String> unreadStockNotifications = new ArrayList<>();
+=======
+>>>>>>> 34f983539afbf1fbe48f8fe4cc4c438bec376064
 
     private Window primaryWindow;
 
@@ -171,7 +230,10 @@ public class Dashboard {
         loadUsers();
         loadCreneaux();
         loadEvents();
+<<<<<<< HEAD
         initAnnoncesAdmin();
+=======
+>>>>>>> 34f983539afbf1fbe48f8fe4cc4c438bec376064
 
         User cur = UserService.getCurrentUser();
         if (cur != null && adminNameLabel != null) {
@@ -183,6 +245,7 @@ public class Dashboard {
                 primaryWindow = adminNameLabel.getScene().getWindow();
             }
             wireClinicalSection();
+<<<<<<< HEAD
             evaluateLowStockNotifications();
             refreshNotificationBadge();
         });
@@ -625,6 +688,10 @@ public class Dashboard {
     //_________________________________________________________________________________________________________________
     //_________________________________________________________________________________________________________________
     //_________________________________________________________________________________________________________________
+=======
+        });
+    }
+>>>>>>> 34f983539afbf1fbe48f8fe4cc4c438bec376064
 
     private void wireClinicalSection() {
         if (pharmacyCardsFlow == null) {
@@ -642,12 +709,18 @@ public class Dashboard {
         searchFiche.textProperty().addListener((obs, o, n) -> loadFicheCards());
         searchOrdonnance.textProperty().addListener((obs, o, n) -> loadOrdonnanceCards());
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 34f983539afbf1fbe48f8fe4cc4c438bec376064
         loadPharmacyCards();
         loadMedicamentCards();
         loadFicheCards();
         loadOrdonnanceCards();
+<<<<<<< HEAD
         loadClinicalStats();
+=======
+>>>>>>> 34f983539afbf1fbe48f8fe4cc4c438bec376064
     }
 
     private void initClinicalFilterSortCombos() {
@@ -766,7 +839,10 @@ public class Dashboard {
                     () -> editPharmacie(p),
                     () -> deletePharmacie(p)));
         }
+<<<<<<< HEAD
         loadClinicalStats();
+=======
+>>>>>>> 34f983539afbf1fbe48f8fe4cc4c438bec376064
     }
 
     private boolean passesPharmacyFilters(Pharmacie p, String q) {
@@ -844,6 +920,7 @@ public class Dashboard {
                     () -> editMedicament(m),
                     () -> deleteMedicament(m)));
         }
+<<<<<<< HEAD
         evaluateLowStockNotifications();
         refreshNotificationBadge();
         loadClinicalStats();
@@ -1058,6 +1135,8 @@ public class Dashboard {
             }
             medicamentExpiryLineChart.getData().add(s);
         }
+=======
+>>>>>>> 34f983539afbf1fbe48f8fe4cc4c438bec376064
     }
 
     private boolean passesMedicamentFilters(Medicament m, String q, String filter) {
@@ -1360,6 +1439,7 @@ public class Dashboard {
         return s == null ? "" : s.toLowerCase(Locale.ROOT);
     }
 
+<<<<<<< HEAD
     //_________________________________________________________________________________________________________________
     //_________________________________________________________________________________________________________________
     //_________________________USERS LINA_________________________________________________________
@@ -1573,13 +1653,66 @@ public class Dashboard {
         if (confirm("Supprimer", "Supprimer " + u.getPrenom() + " " + u.getNom() + " ?")) {
             userService.supprimer(u);
             loadUsers();
+=======
+    /* ---------- Utilisateurs / créneaux / événements (existant) ---------- */
+
+    private void loadUsers() {
+        AffUsers.getItems().clear();
+        AffUsers.getItems().addAll(userService.getAll());
+    }
+
+    private void loadCreneaux() {
+        AffCreneaux.getItems().clear();
+        AffCreneaux.getItems().addAll(creneauService.getAll());
+    }
+
+    private void loadEvents() {
+        AffEvents.getItems().clear();
+        AffEvents.getItems().addAll(eventService.getAll());
+    }
+
+    @FXML
+    void refreshUsers(ActionEvent event) {
+        loadUsers();
+    }
+
+    @FXML
+    void deleteUser(ActionEvent event) {
+        User selected = AffUsers.getSelectionModel().getSelectedItem();
+        if (selected != null) {
+            userService.supprimer(selected);
+            loadUsers();
+        } else {
+            System.out.println("Aucun user sélectionne");
+>>>>>>> 34f983539afbf1fbe48f8fe4cc4c438bec376064
         }
     }
 
     @FXML
+<<<<<<< HEAD
     void deleteUser(ActionEvent event) { /* handled via card buttons */ }
     @FXML
     void editUser(ActionEvent event) { /* handled via card buttons */ }
+=======
+    void RechCreneau(ActionEvent event) {
+    }
+
+    @FXML
+    void RechEvent(ActionEvent event) {
+    }
+
+    @FXML
+    void RechUser(ActionEvent event) {
+    }
+
+    @FXML
+    void addCreneau(ActionEvent event) {
+    }
+
+    @FXML
+    void addEvent(ActionEvent event) {
+    }
+>>>>>>> 34f983539afbf1fbe48f8fe4cc4c438bec376064
 
     @FXML
     public void deconnexion(ActionEvent event) {
@@ -1592,6 +1725,7 @@ public class Dashboard {
             e.printStackTrace();
         }
     }
+<<<<<<< HEAD
     //Tri et Recherche
     private void trierUsers() {
 
@@ -1709,6 +1843,8 @@ public class Dashboard {
             e.printStackTrace();
         }
     }
+=======
+>>>>>>> 34f983539afbf1fbe48f8fe4cc4c438bec376064
 
     @FXML
     void deleteCreneau(ActionEvent event) {
@@ -1721,6 +1857,7 @@ public class Dashboard {
         }
     }
 
+<<<<<<< HEAD
     //Tri et Recherche
     private void trierCreneaux() {
 
@@ -1921,6 +2058,8 @@ public class Dashboard {
         }
     }
 
+=======
+>>>>>>> 34f983539afbf1fbe48f8fe4cc4c438bec376064
     @FXML
     void deleteEvent(ActionEvent event) {
         Event selected = AffEvents.getSelectionModel().getSelectedItem();
@@ -1931,6 +2070,7 @@ public class Dashboard {
             System.out.println("Aucun evenement sélectionne");
         }
     }
+<<<<<<< HEAD
     //Tri et Recherche
     private void trierEvents() {
 
@@ -2026,11 +2166,36 @@ public class Dashboard {
             Stage stage = (Stage) userCardsContainer.getScene().getWindow();
             stage.setScene(new Scene(root));
 
+=======
+
+    @FXML
+    void editCreneau(ActionEvent event) {
+    }
+
+    @FXML
+    void editEvent(ActionEvent event) {
+    }
+
+    @FXML
+    void editUser(ActionEvent event) {
+        try {
+            User selected = AffUsers.getSelectionModel().getSelectedItem();
+            if (selected == null) {
+                return;
+            }
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ModifierUser.fxml"));
+            Parent root = loader.load();
+            ModifierUser controller = loader.getController();
+            controller.setUser(selected);
+            Stage stage = (Stage) AffUsers.getScene().getWindow();
+            stage.setScene(new Scene(root));
+>>>>>>> 34f983539afbf1fbe48f8fe4cc4c438bec376064
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
+<<<<<<< HEAD
 
 
 
@@ -2063,6 +2228,25 @@ public class Dashboard {
 
 
 
+=======
+    @FXML
+    void goToLieux(ActionEvent event) {
+    }
+
+    @FXML
+    void goToRdv(ActionEvent event) {
+    }
+
+    @FXML
+    void refreshCreneaux(ActionEvent event) {
+        loadCreneaux();
+    }
+
+    @FXML
+    void refreshEvent(ActionEvent event) {
+        loadEvents();
+    }
+>>>>>>> 34f983539afbf1fbe48f8fe4cc4c438bec376064
 
     /* ---------- helpers ---------- */
 
@@ -2088,4 +2272,8 @@ public class Dashboard {
         a.setContentText(msg);
         a.showAndWait();
     }
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 34f983539afbf1fbe48f8fe4cc4c438bec376064
