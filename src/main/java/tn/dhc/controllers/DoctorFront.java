@@ -378,21 +378,30 @@ public class DoctorFront {
         List<Rdv> rdvs = rdvService.findByDoctorUserId(me.getId());
         List<Fiche> fiches = ficheService.findByMedecinUserId(me.getId());
 
-       
-        if (doctorRdvLineChart != null) {
-            doctorRdvLineChart.getData().clear();
-            XYChart.Series<String, Number> series = new XYChart.Series<>();
-            series.setName("RDV");
-            LocalDate start = LocalDate.now().minusDays(29);
-            Map<LocalDate, Integer> byDay = new LinkedHashMap<>();
-            for (int i = 0; i < 30; i++) {
-                byDay.put(start.plusDays(i), 0);
-            }
+        if (doctorRdvStatusPie != null) {
+            Map<String, Integer> byStatus = new LinkedHashMap<>();
+            byStatus.put("En attente", 0);
+            byStatus.put("Confirmé", 0);
+            byStatus.put("Autres", 0);
             for (Rdv r : rdvs) {
-                if (r.getDateRdv() != null && !r.getDateRdv().isBefore(start)) {
-                    byDay.put(r.getDateRdv(), byDay.getOrDefault(r.getDateRdv(), 0) + 1);
+                String s = safeText(r.getStatut()).toLowerCase(Locale.ROOT);
+                if (s.contains("attente")) {
+                    byStatus.put("En attente", byStatus.get("En attente") + 1);
+                } else if (s.contains("confirm")) {
+                    byStatus.put("Confirmé", byStatus.get("Confirmé") + 1);
+                } else {
+                    byStatus.put("Autres", byStatus.get("Autres") + 1);
                 }
             }
+            doctorRdvStatusPie.setData(FXCollections.observableArrayList(
+                    byStatus.entrySet().stream()
+                            .filter(e -> e.getValue() > 0)
+                            .map(e -> new PieChart.Data(e.getKey(), e.getValue()))
+                            .toList()
+            ));
+        }
+
+       
             DateTimeFormatter fmt = DateTimeFormatter.ofPattern("dd/MM");
             for (Map.Entry<LocalDate, Integer> e : byDay.entrySet()) {
                 series.getData().add(new XYChart.Data<>(e.getKey().format(fmt), e.getValue()));
