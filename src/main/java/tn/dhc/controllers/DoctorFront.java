@@ -401,7 +401,20 @@ public class DoctorFront {
             ));
         }
 
-       
+        if (doctorRdvLineChart != null) {
+            doctorRdvLineChart.getData().clear();
+            XYChart.Series<String, Number> series = new XYChart.Series<>();
+            series.setName("RDV");
+            LocalDate start = LocalDate.now().minusDays(29);
+            Map<LocalDate, Integer> byDay = new LinkedHashMap<>();
+            for (int i = 0; i < 30; i++) {
+                byDay.put(start.plusDays(i), 0);
+            }
+            for (Rdv r : rdvs) {
+                if (r.getDateRdv() != null && !r.getDateRdv().isBefore(start)) {
+                    byDay.put(r.getDateRdv(), byDay.getOrDefault(r.getDateRdv(), 0) + 1);
+                }
+            }
             DateTimeFormatter fmt = DateTimeFormatter.ofPattern("dd/MM");
             for (Map.Entry<LocalDate, Integer> e : byDay.entrySet()) {
                 series.getData().add(new XYChart.Data<>(e.getKey().format(fmt), e.getValue()));
@@ -409,21 +422,7 @@ public class DoctorFront {
             doctorRdvLineChart.getData().add(series);
         }
 
-        if (doctorGraviteBarChart != null) {
-            doctorGraviteBarChart.getData().clear();
-            int faible = 0, moderee = 0, elevee = 0, autres = 0;
-            for (Fiche f : fiches) {
-                String g = safeText(f.getGravite()).toLowerCase(Locale.ROOT);
-                if (g.contains("faible")) {
-                    faible++;
-                } else if (g.contains("mod")) {
-                    moderee++;
-                } else if (g.contains("élev") || g.contains("elev")) {
-                    elevee++;
-                } else {
-                    autres++;
-                }
-            }
+        
             XYChart.Series<String, Number> s = new XYChart.Series<>();
             s.setName("Fiches");
             s.getData().add(new XYChart.Data<>("Faible", faible));
