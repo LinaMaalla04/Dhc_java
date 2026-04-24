@@ -393,13 +393,7 @@ public class DoctorFront {
                     byStatus.put("Autres", byStatus.get("Autres") + 1);
                 }
             }
-            doctorRdvStatusPie.setData(FXCollections.observableArrayList(
-                    byStatus.entrySet().stream()
-                            .filter(e -> e.getValue() > 0)
-                            .map(e -> new PieChart.Data(e.getKey(), e.getValue()))
-                            .toList()
-            ));
-        }
+         
 
         if (doctorRdvLineChart != null) {
             doctorRdvLineChart.getData().clear();
