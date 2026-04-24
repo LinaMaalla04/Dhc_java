@@ -219,7 +219,180 @@ public final class MedicalFormDialogs {
         return showFicheDialog(owner, title, existing, patientUsers, preselectPatient, null);
     }
 
-    
+    public static Optional<Fiche> showFicheDialog(Window owner, String title, Fiche existing, List<User> patientUsers,
+                                                   User preselectPatient, Integer medecinUserId) {
+        Dialog<Fiche> dialog = new Dialog<>();
+        dialog.initOwner(owner);
+        dialog.setTitle(title);
+        style(dialog);
+
+        ComboBox<User> userBox = new ComboBox<>();
+        userBox.setItems(FXCollections.observableArrayList(patientUsers));
+        userBox.setPrefWidth(360);
+        userBox.setCellFactory(lv -> new ListCell<>() {
+            @Override
+            protected void updateItem(User u, boolean empty) {
+                super.updateItem(u, empty);
+                setText(empty || u == null ? null : patientNomPrenom(u).trim());
+            }
+        });
+        userBox.setButtonCell(new ListCell<>() {
+            @Override
+            protected void updateItem(User u, boolean empty) {
+                super.updateItem(u, empty);
+                setText(empty || u == null ? null : patientNomPrenom(u).trim());
+            }
+        });
+
+        TextField poids = new TextField();
+        TextField taille = new TextField();
+        ComboBox<String> grpSang = new ComboBox<>(FXCollections.observableArrayList(
+                "", "A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"));
+        grpSang.setEditable(false);
+        grpSang.setPrefWidth(360);
+        TextField allergie = new TextField();
+        TextField chronique = new TextField();
+        TextField tension = new TextField();
+        TextField glycemie = new TextField();
+        DatePicker date = new DatePicker(LocalDate.now());
+        TextField libelle = new TextField();
+        ComboBox<String> graviteCombo = new ComboBox<>(FXCollections.observableArrayList("Faible", "Modérée", "Élevée"));
+        graviteCombo.setPrefWidth(360);
+        TextArea reco = new TextArea();
+        reco.setPrefRowCount(3);
+        reco.setWrapText(true);
+
+        if (existing != null) {
+            patientUsers.stream().filter(u -> u.getId() == existing.getUserId()).findFirst().ifPresent(userBox::setValue);
+            poids.setText(String.valueOf(existing.getPoids()));
+            taille.setText(String.valueOf(existing.getTaille()));
+            String gs = existing.getGrpSanguin();
+            if (gs != null && !gs.isBlank() && !grpSang.getItems().contains(gs)) {
+                grpSang.getItems().add(gs);
+            }
+            grpSang.setValue(gs == null || gs.isBlank() ? "" : gs);
+            allergie.setText(s(existing.getAllergie()));
+            chronique.setText(s(existing.getMaladieChronique()));
+            tension.setText(s(existing.getTension()));
+            glycemie.setText(String.valueOf(existing.getGlycemie()));
+            if (existing.getDate() != null) {
+                date.setValue(existing.getDate().toLocalDate());
+            }
+            libelle.setText(s(existing.getLibelleMaladie()));
+            String gCanon = MedicalInputValidation.canonicalGraviteLabel(existing.getGravite());
+            if (!gCanon.isEmpty()) {
+                graviteCombo.setValue(gCanon);
+            }
+            reco.setText(s(existing.getRecommandation()));
+        } else if (preselectPatient != null) {
+            patientUsers.stream().filter(u -> u.getId() == preselectPatient.getId()).findFirst().ifPresent(userBox::setValue);
+        }
+
+        GridPane grid = formGrid(
+                new Row("Patient", userBox),
+                new Row("Poids (kg)", poids),
+                new Row("Taille (cm)", taille),
+                new Row("Groupe sanguin", grpSang),
+                new Row("Allergies", allergie),
+                new Row("Maladie chronique", chronique),
+                new Row("Tension", tension),
+                new Row("Glycémie", glycemie),
+                new Row("Date", date),
+                new Row("Libellé maladie", libelle),
+                new Row("Gravité", graviteCombo),
+                new Row("Recommandations", reco)
+        );
+        dialog.getDialogPane().setContent(grid);
+        dialog.getDialogPane().setPrefWidth(560);
+        dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
+
+        MedicalFieldFeedback.wireComboClear(userBox);
+        MedicalFieldFeedback.wireTextClear(poids);
+        MedicalFieldFeedback.wireTextClear(taille);
+        MedicalFieldFeedback.wireComboClear(grpSang);
+        MedicalFieldFeedback.wireTextClear(allergie);
+        MedicalFieldFeedback.wireTextClear(chronique);
+        MedicalFieldFeedback.wireTextClear(tension);
+        MedicalFieldFeedback.wireTextClear(glycemie);
+        MedicalFieldFeedback.wireDateClear(date);
+        MedicalFieldFeedback.wireTextClear(libelle);
+        MedicalFieldFeedback.wireComboClear(graviteCombo);
+        MedicalFieldFeedback.wireTextClear(reco);
+
+        Map<String, Control> ficheControls = new HashMap<>();
+        ficheControls.put("patient", userBox);
+        ficheControls.put("poids", poids);
+        ficheControls.put("taille", taille);
+        ficheControls.put("glycemie", glycemie);
+        ficheControls.put("libelle", libelle);
+        ficheControls.put("gravite", graviteCombo);
+        ficheControls.put("recommandation", reco);
+        ficheControls.put("date", date);
+        ficheControls.put("allergie", allergie);
+        ficheControls.put("chronique", chronique);
+        ficheControls.put("tension", tension);
+        ficheControls.put("grpSanguin", grpSang);
+
+        attachOkGuard(dialog, () -> {
+            List<MedicalInputValidation.FieldIssue> issues = new ArrayList<>();
+            if (userBox.getValue() == null) {
+                issues.add(new MedicalInputValidation.FieldIssue("patient", "Sélectionnez un patient."));
+            }
+            if (date.getValue() == null) {
+                issues.add(new MedicalInputValidation.FieldIssue("date", "Choisissez une date pour la fiche."));
+            }
+            String graviteVal = graviteCombo.getValue() != null ? graviteCombo.getValue() : "";
+            String grpVal = grpSang.getValue() == null ? "" : grpSang.getValue();
+            issues.addAll(MedicalInputValidation.collectFicheIssues(
+                    poids.getText(), taille.getText(), glycemie.getText(),
+                    libelle.getText(), graviteVal, reco.getText(),
+                    allergie.getText(), chronique.getText(), tension.getText(),
+                    grpVal,
+                    date.getValue()));
+            if (issues.isEmpty()) {
+                return true;
+            }
+            applyFieldIssues(issues, ficheControls);
+            alertFormIssues(issues);
+            return false;
+        });
+
+        dialog.setResultConverter(btn -> {
+            if (btn != ButtonType.OK) {
+                return null;
+            }
+            double po = Double.parseDouble(poids.getText().trim().replace(',', '.'));
+            double ta = Double.parseDouble(taille.getText().trim().replace(',', '.'));
+            double gl = Double.parseDouble(glycemie.getText().trim().replace(',', '.'));
+            Fiche f = existing != null ? existing : new Fiche();
+            if (existing != null) {
+                f.setId(existing.getId());
+            }
+            f.setUserId(userBox.getValue().getId());
+            f.setPoids(po);
+            f.setTaille(ta);
+            String gv = grpSang.getValue();
+            f.setGrpSanguin(gv == null || gv.isBlank() ? null : gv.trim());
+            f.setAllergie(trimOrNull(allergie.getText()));
+            f.setMaladieChronique(trimOrNull(chronique.getText()));
+            f.setTension(trimOrNull(tension.getText()));
+            f.setGlycemie(gl);
+            f.setDate(Date.valueOf(date.getValue()));
+            f.setLibelleMaladie(libelle.getText().trim());
+            f.setGravite(MedicalInputValidation.canonicalGraviteLabel(graviteCombo.getValue()));
+            f.setRecommandation(trimOrNull(reco.getText()));
+            if (existing != null) {
+                f.setMedecinUserId(existing.getMedecinUserId());
+            } else if (medecinUserId != null) {
+                f.setMedecinUserId(medecinUserId);
+            } else {
+                f.setMedecinUserId(null);
+            }
+            return f;
+        });
+
+        return dialog.showAndWait();
+    }
 
     public static Optional<OrdonnanceDialogResult> showOrdonnanceDialog(Window owner, String title, Ordonnance existing,
                                                                         List<Fiche> fiches, List<Medicament> medicaments,
