@@ -433,40 +433,4 @@ public class DoctorFront {
         }
     }
 
-    private void syncAndSendSignedOrdonnanceIfReady(Ordonnance o) {
-        if (!signatureApiService.isConfigured()) {
-            return;
-        }
-        if (o.getSignatureEnvelopeId() == null || o.getSignatureEnvelopeId().isBlank()) {
-            return;
-        }
-        try {
-            SignatureApiService.DeliverableStatus deliverable = signatureApiService.fetchDeliverableStatus(o.getSignatureEnvelopeId());
-            if ("generated".equalsIgnoreCase(deliverable.status())
-                    && deliverable.deliverableUrl() != null
-                    && !deliverable.deliverableUrl().isBlank()
-                    && (o.getSignatureDeliverableUrl() == null || o.getSignatureDeliverableUrl().isBlank())) {
-                ordonnanceService.updateSignatureInfo(o.getId(), o.getSignatureEnvelopeId(), o.getSignatureCeremonyUrl(), deliverable.deliverableUrl(), deliverable.status());
-                o.setSignatureDeliverableUrl(deliverable.deliverableUrl());
-                o.setSignatureStatus(deliverable.status());
-            }
-            if (o.getSignatureEmailSentAt() == null
-                    && o.getSignatureDeliverableUrl() != null
-                    && !o.getSignatureDeliverableUrl().isBlank()) {
-                Fiche linked = ficheService.getOneById(o.getFicheId());
-                if (linked == null) {
-                    return;
-                }
-                User patient = userService.getOneById(linked.getUserId());
-                if (patient == null) {
-                    return;
-                }
-                byte[] signedPdf = signatureApiService.downloadSignedPdfBytes(o.getSignatureDeliverableUrl());
-                ordonnanceSignedMailService.sendSignedOrdonnance(patient, signedPdf, "ordonnance-signee-" + o.getId() + ".pdf");
-                ordonnanceService.markSignedEmailSent(o.getId());
-                o.setSignatureEmailSentAt(new java.sql.Timestamp(System.currentTimeMillis()));
-            }
-        } catch (Exception ignored) {
-        }
-    }
-}
+
