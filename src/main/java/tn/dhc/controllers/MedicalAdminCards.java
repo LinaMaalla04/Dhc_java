@@ -167,19 +167,8 @@ public final class MedicalAdminCards {
         return v;
     }
 
-    
 
-    private static VBox wrapCard(javafx.scene.Node... nodes) {
-        VBox v = new VBox(8);
-        v.getChildren().addAll(nodes);
-        v.setPadding(new Insets(16));
-        v.setMinWidth(280);
-        v.setPrefWidth(300);
-        v.setMaxWidth(340);
-        v.getStyleClass().add("clinical-entity-card");
-        v.setAlignment(Pos.TOP_LEFT);
-        return v;
-    }
+    
 
     private static Label titled(String text) {
         Label l = new Label(text);
