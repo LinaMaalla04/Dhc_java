@@ -206,18 +206,7 @@ public final class MedicalFormDialogs {
         return dialog.showAndWait();
     }
 
-    public static Optional<Fiche> showFicheDialog(Window owner, String title, Fiche existing, List<User> patientUsers) {
-        return showFicheDialog(owner, title, existing, patientUsers, null, null);
-    }
-
-    /**
-     * @param preselectPatient si non null et {@code existing == null}, pré-sélectionne ce patient dans la liste.
-     * @param medecinUserId    si non null et nouvelle fiche, enregistre l’id du médecin créateur.
-     */
-    public static Optional<Fiche> showFicheDialog(Window owner, String title, Fiche existing, List<User> patientUsers,
-                                                   User preselectPatient) {
-        return showFicheDialog(owner, title, existing, patientUsers, preselectPatient, null);
-    }
+    
 
     public static Optional<Fiche> showFicheDialog(Window owner, String title, Fiche existing, List<User> patientUsers,
                                                    User preselectPatient, Integer medecinUserId) {

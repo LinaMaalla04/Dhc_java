@@ -218,4 +218,45 @@ public final class MedicalAdminCards {
         return l;
     }
 
+    private static Label meta(String text) {
+        Label l = new Label(text);
+        l.setWrapText(true);
+        l.setStyle("-fx-text-fill: #34495e; -fx-font-size: 13px;");
+        return l;
+    }
 
+    private static Label wrapMeta(String text) {
+        Label l = meta(text);
+        l.setWrapText(true);
+        return l;
+    }
+
+    private static HBox actionRow(Button edit, Button del) {
+        HBox h = new HBox(10, edit, del);
+        h.setAlignment(Pos.CENTER_LEFT);
+        h.setPadding(new Insets(8, 0, 0, 0));
+        Region spacer = new Region();
+        HBox.setHgrow(spacer, Priority.ALWAYS);
+        return new HBox(10, h, spacer);
+    }
+
+    private static Button smallButton(String text, String styleClass, Runnable action) {
+        Button b = new Button(text);
+        b.getStyleClass().add(styleClass);
+        b.setStyle("-fx-font-size: 12px; -fx-padding: 6 14;");
+        b.setOnAction(e -> action.run());
+        return b;
+    }
+
+    private static String nullSafe(String s) {
+        return s == null ? "" : s;
+    }
+
+    private static String shorten(String s, int max) {
+        if (s == null) {
+            return "";
+        }
+        String t = s.trim();
+        return t.length() <= max ? t : t.substring(0, max - 1) + "…";
+    }
+}
