@@ -28,13 +28,14 @@ import java.util.stream.Collectors;
 public class Dashboard {
 
     @FXML
-    private ListView<User> AffUsers;
+    private VBox userCardsContainer;
+    private User selectedUser = null;
 
     @FXML
-    private ListView<Creneau> AffCreneaux;
+    private VBox creneauCardsContainer;
 
     @FXML
-    private ListView<Event> AffEvents;
+    private VBox eventCardsContainer;
 
     @FXML
     private ComboBox<String> RechCreneau;
@@ -1101,46 +1102,114 @@ public class Dashboard {
     //_________________________USERS LINA_________________________________________________________
 
     private void loadUsers() {
-        AffUsers.getItems().clear();
-        AffUsers.getItems().addAll(userService.getAll());
+        renderUserCards(userService.getAll());
     }
 
-
-    @FXML
-    void deleteUser(ActionEvent event) {
-        User selected = AffUsers.getSelectionModel().getSelectedItem();
-        if (selected != null) {
-            userService.supprimer(selected);
-            loadUsers();
-        } else {
-            System.out.println("Aucun user sélectionne");
+    private void renderUserCards(List<User> users) {
+        if (userCardsContainer == null) return;
+        userCardsContainer.getChildren().clear();
+        selectedUser = null;
+        if (users.isEmpty()) {
+            Label empty = new Label("Aucun utilisateur trouvé.");
+            empty.setStyle("-fx-text-fill:#999; -fx-font-size:14px;");
+            userCardsContainer.getChildren().add(empty);
+            return;
+        }
+        for (User u : users) {
+            userCardsContainer.getChildren().add(buildUserCard(u));
         }
     }
-    @FXML
-    void editUser(ActionEvent event) {
-        System.out.println("CLICK MODIFIER USER");
+
+    private HBox buildUserCard(User u) {
+        HBox card = new HBox(16);
+        card.setAlignment(javafx.geometry.Pos.CENTER_LEFT);
+        card.setPadding(new javafx.geometry.Insets(14, 18, 14, 18));
+        String baseStyle = "-fx-background-color:white; -fx-border-color:#e0e0e0; -fx-border-radius:10; -fx-background-radius:10; -fx-effect:dropshadow(gaussian,rgba(0,0,0,0.06),6,0,0,2); -fx-cursor:hand;";
+        card.setStyle(baseStyle);
+
+        // Avatar cercle avec initiales
+        Label avatar = new Label(initiales(u));
+        avatar.setMinSize(46, 46);
+        avatar.setMaxSize(46, 46);
+        avatar.setStyle("-fx-background-color:" + roleColor(u.getRole()) + "; -fx-background-radius:23; -fx-text-fill:white; -fx-font-weight:bold; -fx-font-size:16px; -fx-alignment:center;");
+
+        // Infos
+        VBox info = new VBox(3);
+        HBox.setHgrow(info, javafx.scene.layout.Priority.ALWAYS);
+        Label name = new Label(u.getPrenom() + " " + u.getNom());
+        name.setStyle("-fx-font-size:15px; -fx-font-weight:bold; -fx-text-fill:#2c3e50;");
+        Label email = new Label("📧 " + u.getMail() + "   📞 " + u.getTel());
+        email.setStyle("-fx-font-size:12px; -fx-text-fill:#7f8c8d;");
+        String spec = (u.getSpecialite() != null && !u.getSpecialite().isBlank()) ? "   •   " + u.getSpecialite() : "";
+        Label role = new Label(roleEmoji(u.getRole()) + " " + u.getRole() + spec);
+        role.setStyle("-fx-font-size:12px; -fx-text-fill:#00796b; -fx-font-weight:600;");
+        info.getChildren().addAll(name, email, role);
+
+        // Boutons
+        Button btnEdit = new Button("🖊 Modifier");
+        btnEdit.setStyle("-fx-background-color:#00b3a6; -fx-text-fill:white; -fx-background-radius:7; -fx-font-size:12px; -fx-padding:7 14; -fx-cursor:hand;");
+        btnEdit.setOnAction(ev -> editUserCard(u));
+
+        Button btnDel = new Button("❌ Supprimer");
+        btnDel.setStyle("-fx-background-color:#e74c3c; -fx-text-fill:white; -fx-background-radius:7; -fx-font-size:12px; -fx-padding:7 14; -fx-cursor:hand;");
+        btnDel.setOnAction(ev -> deleteUserCard(u));
+
+        card.getChildren().addAll(avatar, info, btnEdit, btnDel);
+
+        card.setOnMouseEntered(e -> card.setStyle(baseStyle.replace("white", "#f0fafa")));
+        card.setOnMouseExited(e -> card.setStyle(baseStyle));
+        return card;
+    }
+
+    private String initiales(User u) {
+        String p = (u.getPrenom() != null && !u.getPrenom().isBlank()) ? u.getPrenom().substring(0,1).toUpperCase() : "?";
+        String n = (u.getNom()    != null && !u.getNom().isBlank())    ? u.getNom().substring(0,1).toUpperCase()    : "?";
+        return p + n;
+    }
+
+    private String roleColor(String role) {
+        if (role == null) return "#95a5a6";
+        String r = role.toLowerCase();
+        if (r.contains("admin"))   return "#8e44ad";
+        if (r.contains("medecin") || r.contains("médecin")) return "#2980b9";
+        if (r.contains("patient")) return "#27ae60";
+        return "#95a5a6";
+    }
+
+    private String roleEmoji(String role) {
+        if (role == null) return "👤";
+        String r = role.toLowerCase();
+        if (r.contains("admin"))   return "🛡️";
+        if (r.contains("medecin") || r.contains("médecin")) return "👨‍⚕️";
+        if (r.contains("patient")) return "🩺";
+        return "👤";
+    }
+
+    private void editUserCard(User u) {
         try {
-            User selected = AffUsers.getSelectionModel().getSelectedItem();
-
-            if (selected == null) {
-                System.out.println("Aucun user sélectionné");
-                return;
-            }
-
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/ModifierUser.fxml"));
             Parent root = loader.load();
-
             ModifierUser controller = loader.getController();
-
-            controller.setUser(selected);
-
-            Stage stage = (Stage) AffUsers.getScene().getWindow();
+            controller.setUser(u);
+            Stage stage = (Stage) userCardsContainer.getScene().getWindow();
             stage.setScene(new Scene(root));
-
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
+    private void deleteUserCard(User u) {
+        if (confirm("Supprimer", "Supprimer " + u.getPrenom() + " " + u.getNom() + " ?")) {
+            userService.supprimer(u);
+            loadUsers();
+        }
+    }
+
+
+    @FXML
+    void deleteUser(ActionEvent event) { /* handled via card buttons */ }
+    @FXML
+    void editUser(ActionEvent event) { /* handled via card buttons */ }
 
     @FXML
     public void deconnexion(ActionEvent event) {
@@ -1213,32 +1282,94 @@ public class Dashboard {
                 break;
         }
 
-        AffUsers.setItems(FXCollections.observableArrayList(list));
+        renderUserCards(list);
     }
     @FXML
     void RechUser(ActionEvent event) {
-
         String search = RechUserText.getText().toLowerCase();
-
-        ObservableList<User> filtered = FXCollections.observableArrayList(
-                userService.getAll().stream()
-                        .filter(u ->
-                                u.getNom().toLowerCase().contains(search) ||
-                                        u.getPrenom().toLowerCase().contains(search) ||
-                                        u.getMail().toLowerCase().contains(search)
-                        )
-                        .collect(Collectors.toList())
-        );
-
-        AffUsers.setItems(filtered);
+        List<User> filtered = userService.getAll().stream()
+                .filter(u -> u.getNom().toLowerCase().contains(search)
+                        || u.getPrenom().toLowerCase().contains(search)
+                        || u.getMail().toLowerCase().contains(search)
+                        || u.getRole().toLowerCase().contains(search))
+                .collect(Collectors.toList());
+        renderUserCards(filtered);
     }
     //_________________________________________________________________________________________________________________
     //_________________________________________________________________________________________________________________
     //_________________________CRENEAUX FERDAWS_________________________________________________________
 
     private void loadCreneaux() {
-        AffCreneaux.getItems().clear();
-        AffCreneaux.getItems().addAll(creneauService.getAll());
+        renderCreneauCards(creneauService.getAll());
+    }
+
+    private void renderCreneauCards(List<Creneau> list) {
+        if (creneauCardsContainer == null) return;
+        creneauCardsContainer.getChildren().clear();
+        if (list.isEmpty()) {
+            Label empty = new Label("Aucun créneau trouvé.");
+            empty.setStyle("-fx-text-fill:#999; -fx-font-size:14px;");
+            creneauCardsContainer.getChildren().add(empty);
+            return;
+        }
+        for (Creneau c : list) creneauCardsContainer.getChildren().add(buildCreneauCard(c));
+    }
+
+    private HBox buildCreneauCard(Creneau c) {
+        boolean isDispo = c.getStatut() == null || c.getStatut().equalsIgnoreCase("Dispo");
+        String bg     = isDispo ? "#e8f5e9" : "#fff3e0";
+        String border = isDispo ? "#2ecc71" : "#e67e22";
+        String badge  = isDispo ? "✅ Disponible" : "🔒 Réservé";
+        String badgeColor = isDispo ? "#27ae60" : "#e67e22";
+
+        HBox card = new HBox(16);
+        card.setAlignment(javafx.geometry.Pos.CENTER_LEFT);
+        card.setPadding(new javafx.geometry.Insets(14, 18, 14, 18));
+        card.setStyle("-fx-background-color:" + bg + "; -fx-border-color:" + border +
+                "; -fx-border-radius:10; -fx-background-radius:10;" +
+                " -fx-effect:dropshadow(gaussian,rgba(0,0,0,0.06),6,0,0,2);");
+
+        Label icon = new Label("🕐");
+        icon.setStyle("-fx-font-size:26px;");
+
+        VBox info = new VBox(3);
+        HBox.setHgrow(info, javafx.scene.layout.Priority.ALWAYS);
+        Label date  = new Label("📅 " + c.getDateCreneau());
+        date.setStyle("-fx-font-size:14px; -fx-font-weight:bold; -fx-text-fill:#2c3e50;");
+        Label heure = new Label("🕐 " + c.getHdebut() + "  →  " + c.getHfin());
+        heure.setStyle("-fx-font-size:13px; -fx-text-fill:#555;");
+        Label statut = new Label(badge);
+        statut.setStyle("-fx-font-size:12px; -fx-font-weight:bold; -fx-text-fill:" + badgeColor + ";");
+        info.getChildren().addAll(date, heure, statut);
+
+        Button btnEdit = new Button("🖊 Modifier");
+        btnEdit.setStyle("-fx-background-color:#00b3a6; -fx-text-fill:white; -fx-background-radius:7;" +
+                " -fx-font-size:12px; -fx-padding:7 14; -fx-cursor:hand;");
+        btnEdit.setOnAction(ev -> editCreneauCard(c));
+
+        Button btnDel = new Button("❌ Supprimer");
+        btnDel.setStyle("-fx-background-color:#e74c3c; -fx-text-fill:white; -fx-background-radius:7;" +
+                " -fx-font-size:12px; -fx-padding:7 14; -fx-cursor:hand;");
+        btnDel.setOnAction(ev -> {
+            if (confirm("Supprimer", "Supprimer ce créneau ?")) {
+                creneauService.delete(c.getId());
+                loadCreneaux();
+            }
+        });
+
+        card.getChildren().addAll(icon, info, btnEdit, btnDel);
+        return card;
+    }
+
+    private void editCreneauCard(Creneau c) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ModifierCreneau.fxml"));
+            Parent root = loader.load();
+            ModifierCreneau controller = loader.getController();
+            controller.setCreneau(c);
+            Stage stage = (Stage) creneauCardsContainer.getScene().getWindow();
+            stage.setScene(new Scene(root));
+        } catch (Exception e) { e.printStackTrace(); }
     }
 
     @FXML
@@ -1253,40 +1384,10 @@ public class Dashboard {
     }
 
     @FXML
-    void editCreneau(ActionEvent event) {
-
-        try {
-            Creneau selected = AffCreneaux.getSelectionModel().getSelectedItem();
-
-            if (selected == null) {
-                System.out.println("Aucun créneau sélectionné");
-                return;
-            }
-
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ModifierCreneau.fxml"));
-            Parent root = loader.load();
-
-            ModifierCreneau controller = loader.getController();
-            controller.setCreneau(selected);
-
-            Stage stage = (Stage) AffCreneaux.getScene().getWindow();
-            stage.setScene(new Scene(root));
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+    void editCreneau(ActionEvent event) { /* handled via card buttons */ }
 
     @FXML
-    void deleteCreneau(ActionEvent event) {
-        Creneau selected = AffCreneaux.getSelectionModel().getSelectedItem();
-        if (selected != null) {
-            creneauService.delete(selected.getId());
-            loadCreneaux();
-        } else {
-            System.out.println("Aucun creneau sélectionne");
-        }
-    }
+    void deleteCreneau(ActionEvent event) { /* handled via card buttons */ }
 
     //Tri et Recherche
     private void trierCreneaux() {
@@ -1332,7 +1433,7 @@ public class Dashboard {
                 break;
         }
 
-        AffCreneaux.setItems(FXCollections.observableArrayList(list));
+        renderCreneauCards(list);
     }
     @FXML
     void RechCreneau(ActionEvent event) {
@@ -1344,13 +1445,9 @@ public class Dashboard {
             return;
         }
 
-        AffCreneaux.setItems(
-                FXCollections.observableArrayList(
-                        creneauService.getAll().stream()
-                                .filter(c -> c.getStatut().equalsIgnoreCase(statut))
-                                .collect(Collectors.toList())
-                )
-        );
+        renderCreneauCards(creneauService.getAll().stream()
+                .filter(c -> c.getStatut() != null && c.getStatut().equalsIgnoreCase(statut))
+                .collect(Collectors.toList()));
     }
     //Rdvs
     @FXML
@@ -1359,7 +1456,7 @@ public class Dashboard {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/Rdvs.fxml"));
             Parent root = loader.load();
 
-            Stage stage = (Stage) AffUsers.getScene().getWindow();
+            Stage stage = (Stage) userCardsContainer.getScene().getWindow();
             stage.setScene(new Scene(root));
 
         } catch (Exception e) {
@@ -1371,8 +1468,74 @@ public class Dashboard {
     //_________________________________________________________________________________________________________________
     //_________________________EVENEMENTS HAIFA_________________________________________________________
     private void loadEvents() {
-        AffEvents.getItems().clear();
-        AffEvents.getItems().addAll(eventService.getAll());
+        renderEventCards(eventService.getAll());
+    }
+
+    private void renderEventCards(List<Event> list) {
+        if (eventCardsContainer == null) return;
+        eventCardsContainer.getChildren().clear();
+        if (list.isEmpty()) {
+            Label empty = new Label("Aucun événement trouvé.");
+            empty.setStyle("-fx-text-fill:#999; -fx-font-size:14px;");
+            eventCardsContainer.getChildren().add(empty);
+            return;
+        }
+        for (Event e : list) eventCardsContainer.getChildren().add(buildEventCard(e));
+    }
+
+    private HBox buildEventCard(Event e) {
+        HBox card = new HBox(16);
+        card.setAlignment(javafx.geometry.Pos.CENTER_LEFT);
+        card.setPadding(new javafx.geometry.Insets(14, 18, 14, 18));
+        card.setStyle("-fx-background-color:#f0fafa; -fx-border-color:#00b3a6;" +
+                " -fx-border-radius:10; -fx-background-radius:10;" +
+                " -fx-effect:dropshadow(gaussian,rgba(0,0,0,0.06),6,0,0,2);");
+
+        Label icon = new Label("📅");
+        icon.setStyle("-fx-font-size:26px;");
+
+        VBox info = new VBox(3);
+        HBox.setHgrow(info, javafx.scene.layout.Priority.ALWAYS);
+        Label title = new Label("📌 " + e.getTitreEvent());
+        title.setStyle("-fx-font-size:15px; -fx-font-weight:bold; -fx-text-fill:#00796b;");
+        Label theme = new Label("🏥 " + (e.getThemeSante() != null ? e.getThemeSante() : "-"));
+        theme.setStyle("-fx-font-size:12px; -fx-text-fill:#555;");
+        Label date  = new Label("📅 " + e.getDateEvent() + "   🕐 " +
+                (e.getHeureDebut() != null ? e.getHeureDebut() : "?") + " → " +
+                (e.getHeureFin()   != null ? e.getHeureFin()   : "?"));
+        date.setStyle("-fx-font-size:12px; -fx-text-fill:#555;");
+        Label participants = new Label("👥 " + (e.getNbParticipant() != null ? e.getNbParticipant() : 0) + " participants");
+        participants.setStyle("-fx-font-size:12px; -fx-text-fill:#00796b; -fx-font-weight:bold;");
+        info.getChildren().addAll(title, theme, date, participants);
+
+        Button btnEdit = new Button("🖊 Modifier");
+        btnEdit.setStyle("-fx-background-color:#00b3a6; -fx-text-fill:white; -fx-background-radius:7;" +
+                " -fx-font-size:12px; -fx-padding:7 14; -fx-cursor:hand;");
+        btnEdit.setOnAction(ev -> editEventCard(e));
+
+        Button btnDel = new Button("❌ Supprimer");
+        btnDel.setStyle("-fx-background-color:#e74c3c; -fx-text-fill:white; -fx-background-radius:7;" +
+                " -fx-font-size:12px; -fx-padding:7 14; -fx-cursor:hand;");
+        btnDel.setOnAction(ev -> {
+            if (confirm("Supprimer", "Supprimer \"" + e.getTitreEvent() + "\" ?")) {
+                eventService.supprimer(e);
+                loadEvents();
+            }
+        });
+
+        card.getChildren().addAll(icon, info, btnEdit, btnDel);
+        return card;
+    }
+
+    private void editEventCard(Event e) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ModifierEvent.fxml"));
+            Parent root = loader.load();
+            ModifierEvent controller = loader.getController();
+            controller.setEvent(e);
+            Stage stage = (Stage) eventCardsContainer.getScene().getWindow();
+            stage.setScene(new Scene(root));
+        } catch (Exception ex) { ex.printStackTrace(); }
     }
 
     @FXML
@@ -1386,43 +1549,10 @@ public class Dashboard {
         }
     }
     @FXML
-    void editEvent(ActionEvent actionEvent) {
-
-        System.out.println("CLICK MODIFIER EVENT");
-
-        try {
-            Event selected = AffEvents.getSelectionModel().getSelectedItem();
-
-            if (selected == null) {
-                System.out.println("Aucun evenement sélectionné");
-                return;
-            }
-
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ModifierEvent.fxml"));
-            Parent root = loader.load();
-
-            ModifierEvent controller = loader.getController();
-
-            controller.setEvent(selected);
-
-            Stage stage = (Stage) AffEvents.getScene().getWindow();
-            stage.setScene(new Scene(root));
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+    void editEvent(ActionEvent actionEvent) { /* handled via card buttons */ }
 
     @FXML
-    void deleteEvent(ActionEvent event) {
-        Event selected = AffEvents.getSelectionModel().getSelectedItem();
-        if (selected != null) {
-            eventService.supprimer(selected);
-            loadEvents();
-        } else {
-            System.out.println("Aucun evenement sélectionne");
-        }
-    }
+    void deleteEvent(ActionEvent event) { /* handled via card buttons */ }
     //Tri et Recherche
     private void trierEvents() {
 
@@ -1483,7 +1613,7 @@ public class Dashboard {
                 break;
         }
 
-        AffEvents.setItems(FXCollections.observableArrayList(list));
+        renderEventCards(list);
     }
     @FXML
     void RechEvent(ActionEvent event) {
@@ -1506,7 +1636,7 @@ public class Dashboard {
                         )
                         .collect(Collectors.toList())
         );
-        AffEvents.setItems(filtered);
+        renderEventCards(new java.util.ArrayList<>(filtered));
     }
     //Lieux
     @FXML
@@ -1515,7 +1645,7 @@ public class Dashboard {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/Lieux.fxml"));
             Parent root = loader.load();
 
-            Stage stage = (Stage) AffUsers.getScene().getWindow();
+            Stage stage = (Stage) userCardsContainer.getScene().getWindow();
             stage.setScene(new Scene(root));
 
         } catch (Exception e) {

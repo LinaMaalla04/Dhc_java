@@ -3,7 +3,7 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
@@ -31,11 +31,15 @@
                               <Button mnemonicParsing="false" onAction="#RechLieu" prefHeight="36.0" prefWidth="58.0" styleClass="btn-primary" text="🔍" />
                               <Region HBox.hgrow="ALWAYS" />
                               <Button mnemonicParsing="false" onAction="#refreshLieux" prefHeight="45" prefWidth="130" style="-fx-font-size:14px;" styleClass="btn-secondary" text="🔄 Actualiser" />
-                              <Button mnemonicParsing="false" onAction="#editLieu" prefHeight="45" prefWidth="130" style="-fx-font-size:14px;" styleClass="btn-secondary" text="🖊 Modifier" />
-                              <Button mnemonicParsing="false" onAction="#deleteLieu" prefHeight="45" prefWidth="130" style="-fx-font-size:14px;" styleClass="btn-secondary" text="❌ Supprimer" />
                            </children>
                         </HBox>
-                        <ListView fx:id="AffLieux" prefHeight="626.0" prefWidth="1150.0" />
+                        <ScrollPane fitToWidth="true" hbarPolicy="NEVER" prefHeight="580"
+                                   style="-fx-background-color:transparent; -fx-background:transparent;"
+                                   VBox.vgrow="ALWAYS">
+                           <content>
+                              <VBox fx:id="lieuCardsContainer" spacing="10" style="-fx-padding:4;" />
+                           </content>
+                        </ScrollPane>
                      </children>
                   </VBox>
                </content>

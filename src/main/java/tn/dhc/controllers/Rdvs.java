@@ -8,6 +8,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import tn.dhc.entities.Rdv;
 import tn.dhc.services.RdvService;
@@ -19,7 +21,7 @@ import java.util.stream.Collectors;
 public class Rdvs {
 
     @FXML
-    private ListView<Rdv> AffRdv;
+    private VBox rdvCardsContainer;
 
     @FXML
     private TextField RechRdvText;
@@ -37,7 +39,6 @@ public class Rdvs {
     private ComboBox<String> addRdvStatut;
 
     private RdvService rdvService = new RdvService();
-    private ObservableList<Rdv> rdvList = FXCollections.observableArrayList();
 
     @FXML
     public void initialize() {
@@ -48,10 +49,92 @@ public class Rdvs {
     }
 
     private void loadRdv() {
-        List<Rdv> list = rdvService.getAll();
-        rdvList.setAll(list);
-        AffRdv.setItems(rdvList);
+        renderRdvCards(rdvService.getAll());
+    }
 
+    private void renderRdvCards(List<Rdv> list) {
+        if (rdvCardsContainer == null) return;
+        rdvCardsContainer.getChildren().clear();
+        if (list.isEmpty()) {
+            Label empty = new Label("Aucun rendez-vous trouvé.");
+            empty.setStyle("-fx-text-fill:#999; -fx-font-size:14px;");
+            rdvCardsContainer.getChildren().add(empty);
+            return;
+        }
+        for (Rdv r : list) rdvCardsContainer.getChildren().add(buildRdvCard(r));
+    }
+
+    private HBox buildRdvCard(Rdv r) {
+        HBox card = new HBox(16);
+        card.setAlignment(javafx.geometry.Pos.CENTER_LEFT);
+        card.setPadding(new javafx.geometry.Insets(14, 18, 14, 18));
+
+        // Color by statut
+        String statut = r.getStatut() != null ? r.getStatut().toLowerCase() : "";
+        String bg, border;
+        if (statut.contains("confirm")) { bg = "#e8f5e9"; border = "#2ecc71"; }
+        else if (statut.contains("annul"))  { bg = "#fce4e4"; border = "#e74c3c"; }
+        else { bg = "#fff8e1"; border = "#f39c12"; }
+
+        card.setStyle("-fx-background-color:" + bg + "; -fx-border-color:" + border +
+                "; -fx-border-radius:10; -fx-background-radius:10;" +
+                " -fx-effect:dropshadow(gaussian,rgba(0,0,0,0.06),6,0,0,2);");
+
+        // Priority icon
+        String prioEmoji = "🟡";
+        if (r.getPriorite() != null) {
+            String p = r.getPriorite().toLowerCase();
+            if (p.contains("urgent") || p.contains("élevée") || p.contains("elevee")) prioEmoji = "🔴";
+            else if (p.contains("faible")) prioEmoji = "🟢";
+        }
+        Label icon = new Label(prioEmoji);
+        icon.setStyle("-fx-font-size:26px;");
+
+        VBox info = new VBox(3);
+        HBox.setHgrow(info, javafx.scene.layout.Priority.ALWAYS);
+
+        Label motif = new Label("📋 " + (r.getMotif() != null ? r.getMotif() : "—"));
+        motif.setStyle("-fx-font-size:15px; -fx-font-weight:bold; -fx-text-fill:#2c3e50;");
+
+        Label date = new Label("📅 " + (r.getDateRdv() != null ? r.getDateRdv() : "—") +
+                "   👤 Patient #" + r.getUserId() + "   📎 Créneau #" + r.getCreneauId());
+        date.setStyle("-fx-font-size:12px; -fx-text-fill:#7f8c8d;");
+
+        String statutLabel = statut.contains("confirm") ? "✅ Confirmé"
+                : statut.contains("annul")   ? "❌ Annulé"
+                : "⏳ En attente";
+        Label statutLbl = new Label(statutLabel + "   •   Priorité : " +
+                (r.getPriorite() != null ? r.getPriorite() : "—"));
+        statutLbl.setStyle("-fx-font-size:12px; -fx-font-weight:bold; -fx-text-fill:" + border + ";");
+
+        info.getChildren().addAll(motif, date, statutLbl);
+
+        Button btnEdit = new Button("🖊 Modifier");
+        btnEdit.setStyle("-fx-background-color:#00b3a6; -fx-text-fill:white; -fx-background-radius:7;" +
+                " -fx-font-size:12px; -fx-padding:7 14; -fx-cursor:hand;");
+        btnEdit.setOnAction(ev -> editRdvCard(r));
+
+        Button btnDel = new Button("❌ Supprimer");
+        btnDel.setStyle("-fx-background-color:#e74c3c; -fx-text-fill:white; -fx-background-radius:7;" +
+                " -fx-font-size:12px; -fx-padding:7 14; -fx-cursor:hand;");
+        btnDel.setOnAction(ev -> {
+            rdvService.delete(r.getId());
+            loadRdv();
+        });
+
+        card.getChildren().addAll(icon, info, btnEdit, btnDel);
+        return card;
+    }
+
+    private void editRdvCard(Rdv r) {
+        try {
+            javafx.fxml.FXMLLoader loader = new javafx.fxml.FXMLLoader(getClass().getResource("/ModifierRdv.fxml"));
+            javafx.scene.Parent root = loader.load();
+            ModifierRdv controller = loader.getController();
+            controller.setRdv(r);
+            Stage stage = (Stage) rdvCardsContainer.getScene().getWindow();
+            stage.setScene(new javafx.scene.Scene(root));
+        } catch (Exception e) { e.printStackTrace(); }
     }
 
 
@@ -65,7 +148,7 @@ public class Rdvs {
                         || r.getStatut().toLowerCase().contains(search))
                 .collect(Collectors.toList());
 
-        AffRdv.setItems(FXCollections.observableArrayList(filtered));
+        renderRdvCards(filtered);
     }
 
     @FXML
@@ -100,39 +183,10 @@ public class Rdvs {
     }
 
     @FXML
-    void deleteRdv(ActionEvent event) {
-        Rdv selected = AffRdv.getSelectionModel().getSelectedItem();
-
-        if (selected != null) {
-            rdvService.delete(selected.getId());
-            loadRdv();
-        }
-    }
+    void deleteRdv(ActionEvent event) { /* handled via card buttons */ }
 
     @FXML
-    void editRdv(ActionEvent event) {
-
-        Rdv selected = AffRdv.getSelectionModel().getSelectedItem();
-
-        if (selected == null) {
-            System.out.println("Aucun RDV sélectionné");
-            return;
-        }
-
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ModifierRdv.fxml"));
-            Parent root = loader.load();
-
-            ModifierRdv controller = loader.getController();
-            controller.setRdv(selected);
-
-            Stage stage = (Stage) AffRdv.getScene().getWindow();
-            stage.setScene(new Scene(root));
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+    void editRdv(ActionEvent event) { /* handled via card buttons */ }
     @FXML
     void refreshRdv(ActionEvent event) {
         loadRdv();

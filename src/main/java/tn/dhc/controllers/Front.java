@@ -15,8 +15,9 @@ import javafx.stage.Stage;
 import tn.dhc.entities.*;
 import tn.dhc.services.*;
 import tn.dhc.utils.OrdonnancePdfExporter;
-
+import tn.dhc.services.GoogleCalendarService;
 import java.nio.file.Path;
+import java.time.LocalDate;
 import java.util.List;
 
 public class Front {
@@ -69,6 +70,7 @@ public class Front {
     private final CreneauService creneauService = new CreneauService();
     private final RdvService rdvService = new RdvService();
     private final EventService eventService = new EventService();
+    private final GoogleCalendarService googleCalendar = GoogleCalendarService.getInstance();
     private final ServiceAnnonce svcAnnonce = new ServiceAnnonce();
     private final ServiceCommentaire svcCommentaire = new ServiceCommentaire();
 
@@ -84,6 +86,19 @@ public class Front {
         refreshPatientMedical();
 
         loadCreneauxCards();
+
+        // Connexion Google Calendar en arrière-plan
+        javafx.application.Platform.runLater(() -> {
+            new Thread(() -> {
+                try {
+                    googleCalendar.connect();
+                    // Reconstruire le calendrier une fois connecté
+                    javafx.application.Platform.runLater(this::buildCalendar);
+                } catch (Exception ex) {
+                    System.out.println("[Google Calendar] Connexion ignorée : " + ex.getMessage());
+                }
+            }, "google-cal-connect").start();
+        });
         loadEvenementCards();
 
         User u = UserService.getCurrentUser();
@@ -353,6 +368,27 @@ public class Front {
         }
     }
 
+
+    /**
+     * Extrait la LocalDate d'un événement Google Calendar.
+     */
+    private static LocalDate extractGoogleEventDate(com.google.api.services.calendar.model.Event ge) {
+        try {
+            if (ge.getStart() == null) return null;
+            if (ge.getStart().getDate() != null) {
+                return LocalDate.parse(ge.getStart().getDate().toString());
+            }
+            if (ge.getStart().getDateTime() != null) {
+                return java.time.Instant.ofEpochMilli(ge.getStart().getDateTime().getValue())
+                        .atZone(java.time.ZoneId.of("Africa/Tunis"))
+                        .toLocalDate();
+            }
+        } catch (Exception ex) {
+            System.err.println("[Google Calendar] Parse date : " + ex.getMessage());
+        }
+        return null;
+    }
+
     @FXML
     public void deconnexion(ActionEvent event) {
         new UserService().logout();
@@ -371,22 +407,31 @@ public class Front {
     //_________________________CRENEAUX FERDAWS_________________________________________________________
     @FXML
     public void loadCreneauxCards() {
-
         creneauFlow.getChildren().clear();
 
         User current = UserService.getCurrentUser();
         if (current == null) return;
 
-        List<Creneau> creneaux = creneauService.getAll();
+        List<Rdv> allRdvs = rdvService.getAll();
 
-        for (Creneau c : creneaux) {
+        for (Creneau c : creneauService.getAll()) {
 
-            boolean isReserved = rdvService.getAll().stream()
-                    .anyMatch(r -> r.getCreneauId() == c.getId());
+            // Chercher s'il y a un RDV sur ce créneau
+            java.util.Optional<Rdv> rdvOpt = allRdvs.stream()
+                    .filter(r -> r.getCreneauId() == c.getId())
+                    .findFirst();
 
-            if (isReserved) {
-                creneauFlow.getChildren().add(createReservedCard(c));
+            if (rdvOpt.isPresent()) {
+                Rdv rdv = rdvOpt.get();
+
+                if (rdv.getUserId() == current.getId()) {
+                    // C'est le RDV DU PATIENT CONNECTÉ → afficher sa card avec annulation
+                    creneauFlow.getChildren().add(createMyRdvCard(rdv));
+                }
+                // Réservé par un AUTRE patient → on ne l'affiche PAS du tout
+
             } else {
+                // Disponible → afficher normalement
                 creneauFlow.getChildren().add(createAvailableCard(c));
             }
         }
@@ -418,6 +463,7 @@ public class Front {
         return card;
     }
 
+
     private Node createReservedCard(Creneau c) {
 
         VBox card = new VBox(10);
@@ -442,33 +488,87 @@ public class Front {
     }
     //______________________________RDVS FERDAWS_________________________________________________
     private void reserverCreneau(Creneau c) {
-
-        try {
-            User current = UserService.getCurrentUser();
-
-            if (current == null) {
-                alert(Alert.AlertType.ERROR, "Vous devez être connecté !");
-                return;
-            }
-
-            Rdv rdv = new Rdv();
-            rdv.setDateRdv(c.getDateCreneau());
-            rdv.setCreneauId(c.getId());
-            rdv.setUserId(current.getId());
-            rdv.setStatut("en_attente");
-
-            rdvService.add(rdv);
-
-            c.setStatut("reserved");
-            creneauService.modifier(c);
-
-            loadCreneauxCards();
-            alert(Alert.AlertType.INFORMATION, "Rendez-vous pris avec succès !");
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            alert(Alert.AlertType.ERROR, e.getMessage());
+        User current = UserService.getCurrentUser();
+        if (current == null) {
+            alert(Alert.AlertType.ERROR, "Vous devez être connecté !");
+            return;
         }
+
+        // ── Popup de confirmation avec motif et priorité ──────────────────
+        javafx.stage.Stage popup = new javafx.stage.Stage();
+        popup.setTitle("Confirmer le rendez-vous");
+        popup.initModality(javafx.stage.Modality.APPLICATION_MODAL);
+
+        VBox root = new VBox(14);
+        root.setStyle("-fx-padding:24; -fx-background-color:white;");
+
+        Label title = new Label("📅 " + c.getDateCreneau() + "   🕐 " + c.getHdebut() + " - " + c.getHfin());
+        title.setStyle("-fx-font-size:15px; -fx-font-weight:bold; -fx-text-fill:#00b3a6;");
+
+        Label motifLabel = new Label("Motif de la consultation :");
+        TextField motifField = new TextField();
+        motifField.setPromptText("Ex : Consultation générale, suivi...");
+        motifField.setPrefHeight(38);
+
+        Label prioriteLabel = new Label("Priorité :");
+        ComboBox<String> prioriteCombo = new ComboBox<>();
+        prioriteCombo.getItems().addAll("Normale", "Urgente", "Faible");
+        prioriteCombo.setValue("Normale");
+        prioriteCombo.setPrefHeight(38);
+        prioriteCombo.setMaxWidth(Double.MAX_VALUE);
+
+        Button btnConfirm = new Button("✅ Confirmer le RDV");
+        btnConfirm.setStyle("-fx-background-color:#00b3a6; -fx-text-fill:white; -fx-font-size:14px; -fx-background-radius:8; -fx-padding:10 20;");
+        btnConfirm.setMaxWidth(Double.MAX_VALUE);
+
+        btnConfirm.setOnAction(ev -> {
+            try {
+                String motif = motifField.getText().trim();
+                if (motif.isEmpty()) {
+                    alert(Alert.AlertType.WARNING, "Veuillez saisir un motif.");
+                    return;
+                }
+
+                Rdv rdv = new Rdv();
+                rdv.setMotif(motif);
+                rdv.setPriorite(prioriteCombo.getValue().toLowerCase());
+                rdv.setStatut("en_attente");
+                rdv.setDateRdv(c.getDateCreneau());
+                rdv.setCreneauId(c.getId());
+                rdv.setUserId(current.getId());
+
+                rdvService.add(rdv);
+
+                // Marquer le créneau comme réservé
+                c.setStatut("reserved");
+                creneauService.modifier(c);
+
+                popup.close();
+                loadCreneauxCards();
+
+                // Connexion Google Calendar en arrière-plan
+                javafx.application.Platform.runLater(() -> {
+                    new Thread(() -> {
+                        try {
+                            googleCalendar.connect();
+                            // Reconstruire le calendrier une fois connecté
+                            javafx.application.Platform.runLater(this::buildCalendar);
+                        } catch (Exception ex) {
+                            System.out.println("[Google Calendar] Connexion ignorée : " + ex.getMessage());
+                        }
+                    }, "google-cal-connect").start();
+                });
+                alert(Alert.AlertType.INFORMATION, "Rendez-vous pris avec succès !");
+
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                alert(Alert.AlertType.ERROR, ex.getMessage());
+            }
+        });
+
+        root.getChildren().addAll(title, motifLabel, motifField, prioriteLabel, prioriteCombo, btnConfirm);
+        popup.setScene(new javafx.scene.Scene(root, 380, 300));
+        popup.showAndWait();
     }
     private Node createMyRdvCard(Rdv r) {
 
@@ -509,6 +609,19 @@ public class Front {
             creneauService.modifier(c);
 
             loadCreneauxCards();
+
+            // Connexion Google Calendar en arrière-plan
+            javafx.application.Platform.runLater(() -> {
+                new Thread(() -> {
+                    try {
+                        googleCalendar.connect();
+                        // Reconstruire le calendrier une fois connecté
+                        javafx.application.Platform.runLater(this::buildCalendar);
+                    } catch (Exception ex) {
+                        System.out.println("[Google Calendar] Connexion ignorée : " + ex.getMessage());
+                    }
+                }, "google-cal-connect").start();
+            });
 
             alert(Alert.AlertType.INFORMATION, "Rendez-vous annulé");
 
@@ -584,23 +697,65 @@ public class Front {
     private Node createEventCard(Event e) {
 
         VBox card = new VBox(10);
-        card.setPrefWidth(220);
+        card.setPrefWidth(240);
 
         card.setStyle("""
-        -fx-padding: 12;
-        -fx-background-color: #ffffff;
-        -fx-border-color: #ddd;
+        -fx-padding: 14;
+        -fx-background-color: #f0fafa;
+        -fx-border-color: #00b3a6;
         -fx-border-radius: 10;
         -fx-background-radius: 10;
     """);
 
         Label title = new Label("📌 " + e.getTitreEvent());
-        Label date = new Label("📅 " + e.getDateEvent());
+        title.setStyle("-fx-font-weight:bold; -fx-font-size:14px; -fx-text-fill:#00796b;");
 
-        Label desc = new Label("📝 " + e.getDescription());
+        Label theme = new Label("🏥 " + (e.getThemeSante() != null ? e.getThemeSante() : ""));
+        Label date  = new Label("📅 " + e.getDateEvent());
 
+        Label desc = new Label("📝 " + (e.getDescription() != null ? e.getDescription() : ""));
+        desc.setWrapText(true);
+        desc.setMaxWidth(210);
 
-        card.getChildren().addAll(title, date, desc);
+        // Compteur participants mis à jour dynamiquement
+        Label participants = new Label("👥 Participants : " + (e.getNbParticipant() != null ? e.getNbParticipant() : 0));
+        participants.setStyle("-fx-text-fill:#00796b; -fx-font-weight:bold;");
+
+        Button btnParticiper = new Button("✅ Participer");
+        btnParticiper.setStyle("-fx-background-color:#00b3a6; -fx-text-fill:white; -fx-background-radius:8; -fx-cursor:hand; -fx-padding:7 16;");
+
+        btnParticiper.setOnAction(ev -> {
+            // Incrémenter en DB
+            eventService.incrementerParticipant(e.getId());
+
+            // Mettre à jour l'affichage localement
+            int current = e.getNbParticipant() != null ? e.getNbParticipant() : 0;
+            e.setNbParticipant(current + 1);
+            participants.setText("👥 Participants : " + e.getNbParticipant());
+
+            btnParticiper.setDisable(true);
+            btnParticiper.setText("✔ Inscrit");
+            btnParticiper.setStyle("-fx-background-color:#a5d6a7; -fx-text-fill:#1b5e20; -fx-background-radius:8; -fx-padding:7 16;");
+
+            // ── Sync Google Calendar ──────────────────────────────
+            if (googleCalendar.isConnected()) {
+                new Thread(() -> {
+                    String gId = googleCalendar.addEvent(
+                            e.getTitreEvent(),
+                            e.getDescription(),
+                            e.getDateEvent(),
+                            e.getHeureDebut(),
+                            e.getHeureFin()
+                    );
+                    if (gId != null) {
+                        javafx.application.Platform.runLater(() -> buildCalendar());
+                        System.out.println("[Google Calendar] Événement synced ✓");
+                    }
+                }, "gc-sync").start();
+            }
+        });
+
+        card.getChildren().addAll(title, theme, date, desc, participants, btnParticiper);
 
         return card;
     }

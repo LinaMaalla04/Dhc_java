@@ -146,6 +146,42 @@ public class EventService implements IService<Event> {
         return null;
     }
 
+    /**
+     * Incrémente le nombre de participants d'un événement.
+     */
+    public void incrementerParticipant(int eventId) {
+        try {
+            String sql = "UPDATE event SET nb_participant = nb_participant + 1 WHERE id = ?";
+            PreparedStatement ps = cnx.prepareStatement(sql);
+            ps.setInt(1, eventId);
+            ps.executeUpdate();
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
+    }
+
+
+    /**
+     * Retourne les événements auxquels un utilisateur participe (via table participant).
+     */
+    public List<Event> getEventsByParticipant(int userId) {
+        List<Event> events = new ArrayList<>();
+        try {
+            String sql = "SELECT e.* FROM event e " +
+                    "INNER JOIN participant p ON p.event_id = e.id " +
+                    "WHERE p.user_id = ?";
+            PreparedStatement ps = cnx.prepareStatement(sql);
+            ps.setInt(1, userId);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                events.add(mapResultSetToEvent(rs));
+            }
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
+        return events;
+    }
+
     private Event mapResultSetToEvent(ResultSet rs) throws SQLException {
         return new Event(
                 rs.getInt("id"),

@@ -20,6 +20,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
@@ -94,10 +95,12 @@
                                             </HBox>
                                         </children>
                                     </VBox>
-                              <Pane prefHeight="200.0" prefWidth="515.0" stylesheets="@theme.css">
-                                 <children>
-                                     <FlowPane fx:id="creneauFlow" hgap="15" layoutX="14.0" prefHeight="600.0" prefWidth="900.0" stylesheets="@theme.css" vgap="15" />
-                                 </children></Pane>
+                              <ScrollPane fitToWidth="true" hbarPolicy="NEVER" prefHeight="500"
+                                          style="-fx-background-color:transparent; -fx-background:transparent;" VBox.vgrow="ALWAYS">
+                                 <content>
+                                     <FlowPane fx:id="creneauFlow" hgap="15" vgap="15" style="-fx-padding:10;" />
+                                 </content>
+                              </ScrollPane>
                                 </children>
                             </VBox>
                      </children>
@@ -171,11 +174,90 @@
                                     </HBox>
                                  </children>
                               </VBox>
-                              <Pane prefHeight="200.0" prefWidth="515.0">
-                                 <children>
-                                     <FlowPane fx:id="evenementFlow" hgap="15" prefHeight="600" prefWidth="800" vgap="15" />                                 </children></Pane>
+                              <ScrollPane fitToWidth="true" hbarPolicy="NEVER" prefHeight="500"
+                                          style="-fx-background-color:transparent; -fx-background:transparent;" VBox.vgrow="ALWAYS">
+                                 <content>
+                                     <FlowPane fx:id="evenementFlow" hgap="15" vgap="15" style="-fx-padding:10;" />
+                                 </content>
+                              </ScrollPane>
                            </children>
                         </VBox>
+                     </children>
+                  </VBox>
+               </content>
+            </Tab>
+            <Tab text="📅 Calendrier">
+               <content>
+                  <VBox spacing="0" style="-fx-background-color:white; -fx-background-radius:12;
+                                           -fx-effect:dropshadow(gaussian,rgba(0,0,0,0.08),10,0,0,2);"
+                        VBox.vgrow="ALWAYS">
+                     <children>
+
+                        <!-- ── Toolbar navigation ── -->
+                        <HBox alignment="CENTER" spacing="16"
+                              style="-fx-padding:16 20; -fx-background-color:#f0fafa;
+                                     -fx-border-color:#e0f2f0; -fx-border-width:0 0 1 0;">
+                           <Button fx:id="calPrevBtn" mnemonicParsing="false"
+                                   onAction="#calPrev"
+                                   text="◀"
+                                   style="-fx-background-color:#00b3a6; -fx-text-fill:white;
+                                          -fx-background-radius:8; -fx-font-size:14px;
+                                          -fx-padding:8 16; -fx-cursor:hand;" />
+                           <Label fx:id="calMonthLabel"
+                                  style="-fx-font-size:20px; -fx-font-weight:bold; -fx-text-fill:#00796b;"
+                                  text="Avril 2026" />
+                           <Button fx:id="calNextBtn" mnemonicParsing="false"
+                                   onAction="#calNext"
+                                   text="▶"
+                                   style="-fx-background-color:#00b3a6; -fx-text-fill:white;
+                                          -fx-background-radius:8; -fx-font-size:14px;
+                                          -fx-padding:8 16; -fx-cursor:hand;" />
+                           <Region HBox.hgrow="ALWAYS" />
+                           <Button mnemonicParsing="false" onAction="#calToday"
+                                   text="📅 Aujourd'hui"
+                                   style="-fx-background-color:white; -fx-text-fill:#00b3a6;
+                                          -fx-border-color:#00b3a6; -fx-border-radius:8;
+                                          -fx-background-radius:8; -fx-padding:8 14; -fx-cursor:hand;" />
+                        </HBox>
+
+                        <!-- ── Jours de la semaine header ── -->
+                        <GridPane fx:id="calDaysHeader" style="-fx-padding:8 12 0 12;">
+                           <columnConstraints>
+                              <javafx.scene.layout.ColumnConstraints hgrow="ALWAYS" percentWidth="14.28" />
+                              <javafx.scene.layout.ColumnConstraints hgrow="ALWAYS" percentWidth="14.28" />
+                              <javafx.scene.layout.ColumnConstraints hgrow="ALWAYS" percentWidth="14.28" />
+                              <javafx.scene.layout.ColumnConstraints hgrow="ALWAYS" percentWidth="14.28" />
+                              <javafx.scene.layout.ColumnConstraints hgrow="ALWAYS" percentWidth="14.28" />
+                              <javafx.scene.layout.ColumnConstraints hgrow="ALWAYS" percentWidth="14.28" />
+                              <javafx.scene.layout.ColumnConstraints hgrow="ALWAYS" percentWidth="14.32" />
+                           </columnConstraints>
+                        </GridPane>
+
+                        <!-- ── Grille des jours ── -->
+                        <ScrollPane fitToWidth="true" hbarPolicy="NEVER" VBox.vgrow="ALWAYS"
+                                    style="-fx-background-color:transparent; -fx-background:transparent;">
+                           <content>
+                              <GridPane fx:id="calGrid" hgap="6" vgap="6"
+                                        style="-fx-padding:8 12 12 12;">
+                                 <columnConstraints>
+                                    <javafx.scene.layout.ColumnConstraints hgrow="ALWAYS" percentWidth="14.28" />
+                                    <javafx.scene.layout.ColumnConstraints hgrow="ALWAYS" percentWidth="14.28" />
+                                    <javafx.scene.layout.ColumnConstraints hgrow="ALWAYS" percentWidth="14.28" />
+                                    <javafx.scene.layout.ColumnConstraints hgrow="ALWAYS" percentWidth="14.28" />
+                                    <javafx.scene.layout.ColumnConstraints hgrow="ALWAYS" percentWidth="14.28" />
+                                    <javafx.scene.layout.ColumnConstraints hgrow="ALWAYS" percentWidth="14.28" />
+                                    <javafx.scene.layout.ColumnConstraints hgrow="ALWAYS" percentWidth="14.32" />
+                                 </columnConstraints>
+                              </GridPane>
+                           </content>
+                        </ScrollPane>
+
+                        <!-- ── Détail événement sélectionné ── -->
+                        <VBox fx:id="calEventDetail" spacing="8"
+                              style="-fx-padding:14 20; -fx-background-color:#f0fafa;
+                                     -fx-border-color:#e0f2f0; -fx-border-width:1 0 0 0;"
+                              managed="false" visible="false" />
+
                      </children>
                   </VBox>
                </content>
