@@ -167,8 +167,48 @@ public final class MedicalAdminCards {
         return v;
     }
 
+    private static Label titleComfort(String text) {
+        Label l = new Label(text);
+        l.setWrapText(true);
+        l.setFont(Font.font("Segoe UI", 20));
+        l.setStyle("-fx-font-weight: bold; -fx-text-fill: #008f85;");
+        return l;
+    }
 
-    
+    private static Label metaComfort(String text) {
+        Label l = new Label(text);
+        l.setWrapText(true);
+        l.setStyle("-fx-text-fill: #2c3e50; -fx-font-size: 15px;");
+        return l;
+    }
+
+    private static Label wrapMetaComfort(String text) {
+        Label l = metaComfort(text);
+        l.setWrapText(true);
+        l.setMaxWidth(Double.MAX_VALUE);
+        return l;
+    }
+
+    private static Button comfortButton(String text, String styleClass, Runnable action) {
+        Button b = new Button(text);
+        b.getStyleClass().add(styleClass);
+        b.setStyle("-fx-font-size: 14px; -fx-font-weight: 600; -fx-padding: 10 22;");
+        b.setMinHeight(40);
+        b.setOnAction(e -> action.run());
+        return b;
+    }
+
+    private static VBox wrapCard(javafx.scene.Node... nodes) {
+        VBox v = new VBox(8);
+        v.getChildren().addAll(nodes);
+        v.setPadding(new Insets(16));
+        v.setMinWidth(280);
+        v.setPrefWidth(300);
+        v.setMaxWidth(340);
+        v.getStyleClass().add("clinical-entity-card");
+        v.setAlignment(Pos.TOP_LEFT);
+        return v;
+    }
 
     private static Label titled(String text) {
         Label l = new Label(text);
@@ -178,45 +218,4 @@ public final class MedicalAdminCards {
         return l;
     }
 
-    private static Label meta(String text) {
-        Label l = new Label(text);
-        l.setWrapText(true);
-        l.setStyle("-fx-text-fill: #34495e; -fx-font-size: 13px;");
-        return l;
-    }
 
-    private static Label wrapMeta(String text) {
-        Label l = meta(text);
-        l.setWrapText(true);
-        return l;
-    }
-
-    private static HBox actionRow(Button edit, Button del) {
-        HBox h = new HBox(10, edit, del);
-        h.setAlignment(Pos.CENTER_LEFT);
-        h.setPadding(new Insets(8, 0, 0, 0));
-        Region spacer = new Region();
-        HBox.setHgrow(spacer, Priority.ALWAYS);
-        return new HBox(10, h, spacer);
-    }
-
-    private static Button smallButton(String text, String styleClass, Runnable action) {
-        Button b = new Button(text);
-        b.getStyleClass().add(styleClass);
-        b.setStyle("-fx-font-size: 12px; -fx-padding: 6 14;");
-        b.setOnAction(e -> action.run());
-        return b;
-    }
-
-    private static String nullSafe(String s) {
-        return s == null ? "" : s;
-    }
-
-    private static String shorten(String s, int max) {
-        if (s == null) {
-            return "";
-        }
-        String t = s.trim();
-        return t.length() <= max ? t : t.substring(0, max - 1) + "…";
-    }
-}
