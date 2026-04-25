@@ -54,7 +54,10 @@ public class AjouterEvent {
             addEventFin.getItems().add(String.format("%02d:00", h));
             addEventFin.getItems().add(String.format("%02d:30", h));
         }
+//_________________
 
+
+        
         addEventDebut.setValue("08:00");
         addEventFin.setValue("08:30");
     }
