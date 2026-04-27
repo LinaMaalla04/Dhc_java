@@ -44,7 +44,7 @@
             <artifactId>pdfbox</artifactId>
             <version>3.0.3</version>
         </dependency>
-<!--        mailing-->
+        <!--        mailing-->
         <dependency>
             <groupId>com.sun.mail</groupId>
             <artifactId>jakarta.mail</artifactId>
@@ -62,7 +62,7 @@
             <artifactId>hibernate-core</artifactId>
             <version>6.4.4.Final</version>
         </dependency>
-<!--        Captcha-->
+        <!--        Captcha-->
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
@@ -106,6 +106,19 @@
                 <version>0.0.8</version>
                 <configuration>
                     <mainClass>tn.dhc.mains.MainFX</mainClass>
+                    <options>
+                        <!-- Expose prism internals (WebView rendering) -->
+                        <option>--add-opens</option>
+                        <option>javafx.graphics/com.sun.javafx.sg.prism=ALL-UNNAMED</option>
+                        <!-- Force chargement des modules JavaFX web sans module-info -->
+                        <option>--add-modules</option>
+                        <option>javafx.web</option>
+                        <!-- Autoriser l'accès aux internals WebKit -->
+                        <option>--add-opens</option>
+                        <option>javafx.web/com.sun.webkit=ALL-UNNAMED</option>
+                        <option>--add-opens</option>
+                        <option>javafx.web/com.sun.javafx.webkit=ALL-UNNAMED</option>
+                    </options>
                 </configuration>
             </plugin>
         </plugins>

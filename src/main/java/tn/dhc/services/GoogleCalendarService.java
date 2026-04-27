@@ -86,9 +86,16 @@ public class GoogleCalendarService {
                 .setAccessType("offline")
                 .build();
 
-        // LocalServerReceiver écoute sur localhost:8888 pour recevoir le code OAuth
+        // Chercher un port libre entre 8888 et 8920
+        int oauthPort = 8888;
+        for (int p = 8888; p <= 8920; p++) {
+            try (java.net.ServerSocket test = new java.net.ServerSocket(p)) {
+                oauthPort = p;
+                break;
+            } catch (java.io.IOException ignored) {}
+        }
         LocalServerReceiver receiver = new LocalServerReceiver.Builder()
-                .setPort(8888).build();
+                .setPort(oauthPort).build();
 
         Credential credential = new AuthorizationCodeInstalledApp(flow, receiver).authorize("user");
 

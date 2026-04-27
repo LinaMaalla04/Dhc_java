@@ -9,6 +9,8 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
 import tn.dhc.entities.Event;
+import tn.dhc.entities.Lieu;
+import tn.dhc.services.LieuService;
 import tn.dhc.services.EventService;
 
 import java.time.LocalDate;
@@ -34,16 +36,36 @@ public class ModifierEvent {
     @FXML
     private TextField modEventTitre;
 
-    private Event event; 
+    private Event event;
     private EventService eventService = new EventService();
+    private final LieuService lieuService = new LieuService();
+
+    @FXML
+    private ComboBox<Lieu> modEventLieu;
 
     @FXML
     public void initialize() {
-
         for (int i = 8; i <= 18; i++) {
             modEventDebut.getItems().add(LocalTime.of(i, 0));
             modEventFin.getItems().add(LocalTime.of(i, 0));
         }
+
+        // Charger les lieux avec affichage nom+adresse+ville
+        modEventLieu.getItems().addAll(lieuService.getAll());
+        modEventLieu.setCellFactory(lv -> new javafx.scene.control.ListCell<Lieu>() {
+            @Override protected void updateItem(Lieu l, boolean empty) {
+                super.updateItem(l, empty);
+                setText(empty || l == null ? null
+                        : l.getNomLieu() + " — " + l.getAdresse() + ", " + l.getVille());
+            }
+        });
+        modEventLieu.setButtonCell(new javafx.scene.control.ListCell<Lieu>() {
+            @Override protected void updateItem(Lieu l, boolean empty) {
+                super.updateItem(l, empty);
+                setText(empty || l == null ? null
+                        : l.getNomLieu() + " — " + l.getAdresse() + ", " + l.getVille());
+            }
+        });
     }
 
     public void setEvent(Event event) {
@@ -54,9 +76,16 @@ public class ModifierEvent {
             modEventTheme.setText(event.getThemeSante());
             modEventDescr.setText(event.getDescription());
             modEventDate.setValue(event.getDateEvent());
-
             modEventDebut.setValue(event.getHeureDebut());
             modEventFin.setValue(event.getHeureFin());
+
+            // Pré-sélectionner le lieu actuel de l'événement
+            if (event.getEventLieuId() > 0) {
+                modEventLieu.getItems().stream()
+                        .filter(l -> l.getId() == event.getEventLieuId())
+                        .findFirst()
+                        .ifPresent(modEventLieu::setValue);
+            }
         }
     }
 
@@ -95,12 +124,22 @@ public class ModifierEvent {
                 return;
             }
 
+            Lieu lieuSelectionne = modEventLieu.getValue();
+            if (lieuSelectionne == null) {
+                Alert alertLieu = new Alert(Alert.AlertType.WARNING);
+                alertLieu.setTitle("Lieu manquant");
+                alertLieu.setContentText("Veuillez choisir un lieu !");
+                alertLieu.show();
+                return;
+            }
+
             event.setTitreEvent(titre);
             event.setThemeSante(theme);
             event.setDescription(description);
             event.setDateEvent(date);
             event.setHeureDebut(debut);
             event.setHeureFin(fin);
+            event.setEventLieuId(lieuSelectionne.getId());
 
             eventService.modifier(event);
 

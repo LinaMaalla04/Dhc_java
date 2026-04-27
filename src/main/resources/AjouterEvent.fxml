@@ -101,6 +101,17 @@
                   </VBox>
                </children>
             </HBox>
+            <!-- ── Sélection du lieu ── -->
+            <VBox spacing="8" style="-fx-background-color:white; -fx-background-radius:12; -fx-padding:15;
+                                     -fx-effect:dropshadow(gaussian,rgba(0,0,0,0.1),8,0,0,2);">
+               <children>
+                  <Label style="-fx-font-size:16px; -fx-font-weight:bold; -fx-text-fill:#00b3a6;" text="📍 Lieu" />
+                  <ComboBox fx:id="addEventLieu" prefHeight="40" prefWidth="420"
+                            promptText="Choisissez un lieu..."
+                            style="-fx-background-radius:8; -fx-border-radius:8;" />
+               </children>
+            </VBox>
+
             <HBox alignment="CENTER" spacing="20" style="-fx-padding: 5 0 0 0;">
                <children>
                   <Button onAction="#ajouterEvent" prefHeight="40" prefWidth="180" style="-fx-background-color: linear-gradient(#00b3a6, #009988); -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14px; -fx-background-radius: 10; -fx-cursor: hand;" text="✓ Ajouter l'événement" />

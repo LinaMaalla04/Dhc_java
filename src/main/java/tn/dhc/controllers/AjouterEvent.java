@@ -9,6 +9,8 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
 import tn.dhc.entities.Event;
+import tn.dhc.entities.Lieu;
+import tn.dhc.services.LieuService;
 import tn.dhc.services.EventService;
 
 import java.io.IOException;
@@ -36,20 +38,38 @@ public class AjouterEvent {
     private TextField addEventTitre;
 
     private final EventService eventService = new EventService();
+    private final LieuService lieuService = new LieuService();
+
+    @FXML
+    private ComboBox<Lieu> addEventLieu;
 
     @FXML
     public void initialize() {
-
         for (int h = 8; h <= 18; h++) {
             addEventDebut.getItems().add(String.format("%02d:00", h));
             addEventDebut.getItems().add(String.format("%02d:30", h));
-
             addEventFin.getItems().add(String.format("%02d:00", h));
             addEventFin.getItems().add(String.format("%02d:30", h));
         }
-
         addEventDebut.setValue("08:00");
         addEventFin.setValue("08:30");
+
+        // Charger les lieux disponibles
+        addEventLieu.getItems().addAll(lieuService.getAll());
+        addEventLieu.setCellFactory(lv -> new javafx.scene.control.ListCell<Lieu>() {
+            @Override protected void updateItem(Lieu l, boolean empty) {
+                super.updateItem(l, empty);
+                setText(empty || l == null ? null
+                        : l.getNomLieu() + " — " + l.getAdresse() + ", " + l.getVille());
+            }
+        });
+        addEventLieu.setButtonCell(new javafx.scene.control.ListCell<Lieu>() {
+            @Override protected void updateItem(Lieu l, boolean empty) {
+                super.updateItem(l, empty);
+                setText(empty || l == null ? null
+                        : l.getNomLieu() + " — " + l.getAdresse() + ", " + l.getVille());
+            }
+        });
     }
 
     @FXML
@@ -82,6 +102,15 @@ public class AjouterEvent {
             }
 
 
+            Lieu lieuSelectionne = addEventLieu.getValue();
+            if (lieuSelectionne == null) {
+                showAlert(Alert.AlertType.ERROR, "Erreur", "Veuillez choisir un lieu !");
+                return;
+            }
+
+            int userId = tn.dhc.services.UserService.getCurrentUser() != null
+                    ? tn.dhc.services.UserService.getCurrentUser().getId() : 1;
+
             Event e = new Event(
                     0,
                     titre,
@@ -91,11 +120,11 @@ public class AjouterEvent {
                     debut,
                     fin,
                     null,
-                    1,
-                    1
+                    userId,
+                    lieuSelectionne.getId()
             );
 
-            eventService.ajouter(e); 
+            eventService.ajouter(e);
 
             showAlert(Alert.AlertType.INFORMATION, "Succès", "Event ajouté avec succès !");
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/Dashboard.fxml"));

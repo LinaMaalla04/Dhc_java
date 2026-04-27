@@ -182,6 +182,43 @@ public class EventService implements IService<Event> {
         return events;
     }
 
+
+    /**
+     * Insère un participant dans la table participant.
+     * Retourne false si déjà inscrit (évite les doublons).
+     */
+    public boolean ajouterParticipant(int eventId, int userId) {
+        if (isDejaParticipant(eventId, userId)) return false;
+        try {
+            String sql = "INSERT INTO participant (event_id, user_id) VALUES (?, ?)";
+            PreparedStatement ps = cnx.prepareStatement(sql);
+            ps.setInt(1, eventId);
+            ps.setInt(2, userId);
+            ps.executeUpdate();
+            return true;
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * Vérifie si l'utilisateur participe déjà à cet événement.
+     */
+    public boolean isDejaParticipant(int eventId, int userId) {
+        try {
+            String sql = "SELECT COUNT(*) FROM participant WHERE event_id = ? AND user_id = ?";
+            PreparedStatement ps = cnx.prepareStatement(sql);
+            ps.setInt(1, eventId);
+            ps.setInt(2, userId);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) return rs.getInt(1) > 0;
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
+        return false;
+    }
+
     private Event mapResultSetToEvent(ResultSet rs) throws SQLException {
         return new Event(
                 rs.getInt("id"),
