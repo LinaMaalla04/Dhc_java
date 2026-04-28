@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox alignment="TOP_CENTER" minHeight="0.0" prefWidth="950" spacing="0" style="-fx-background-color: #f5f5f5;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tn.dhc.controllers.Front">
+    <children>
+      <HBox alignment="CENTER_LEFT" spacing="12.0" style="-fx-background-color: linear-gradient(to right, #00b3a6, #00d4c8); -fx-padding: 10;" stylesheets="@theme.css">
+         <children>
+            <ImageView fitHeight="104.0" fitWidth="137.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@Logo.png" />
+               </image>
+            </ImageView>
+            <Label style="-fx-text-fill: #ffffff;" text="DHC - Espace Patient" textFill="WHITE">
+               <font>
+                  <Font name="Arial Unicode MS" size="40.0" />
+               </font>
+            </Label>
+            <Region prefHeight="104.0" prefWidth="99.0" stylesheets="@theme.css" HBox.hgrow="ALWAYS" />
+            <Button mnemonicParsing="false" onAction="#deconnexion" styleClass="btn-logout" text="🚪 Deconnexion" />
+         </children>
+      </HBox>
+      <TabPane minHeight="0.0" prefWidth="1250.0" style="-fx-font-size:14px; -fx-background-color:#f5f5f5;" stylesheets="@theme.css" tabClosingPolicy="UNAVAILABLE" VBox.vgrow="ALWAYS">
+         <padding>
+            <Insets bottom="20" left="20" right="20" top="20" />
+         </padding>
+         <tabs>
+            <Tab text="🏠 Accueil">
+               <content>
+                  <VBox spacing="15" style="-fx-background-color:white; -fx-background-radius:12; -fx-padding:20; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 10, 0, 0, 2);">
+                     <children>
+                        <HBox alignment="CENTER_LEFT" spacing="15" />
+                     </children>
+                  </VBox>
+               </content>
+            </Tab>
+            <Tab text="🕒 Rendez-vous">
+               <content>
+                  <VBox spacing="15" style="-fx-background-color:white; -fx-background-radius:12; -fx-padding:20; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 10, 0, 0, 2);">
+                     <children>
+                        <HBox alignment="CENTER_LEFT" spacing="15" />
+                            <VBox spacing="20" style="-fx-padding:25;">
+                                <children>
+                                    <Label style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: linear-gradient(to right, #00b3a6, #00d4c8);" text="🕒 Prendre un rendez-vous" />
+                                    <!-- Filter Section -->
+                                    <VBox spacing="15" style="-fx-background-color:white; -fx-background-radius:12; -fx-padding:20; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 10, 0, 0, 2);">
+                                        <children>
+                                            <Label style="-fx-font-size:18px; -fx-font-weight:bold; -fx-text-fill:#00b3a6;" text="🔍 Filtrer" />
+                                            
+                                                  <HBox alignment="CENTER_LEFT" fillHeight="true" spacing="15">
+                                                <children>
+                                                    <VBox minWidth="0" prefWidth="100" spacing="6" HBox.hgrow="ALWAYS">
+                                                        <Label style="-fx-font-size:13px; -fx-text-fill:#555; -fx-font-weight:600;" text="Ville" />
+                                                        <ComboBox fx:id="cityCombo" maxWidth="Infinity" minWidth="0" prefHeight="40" promptText="Choisissez une ville" style="-fx-font-size:14px; -fx-border-color:#d0d0d0; -fx-background-color:white; -fx-background-radius:8; -fx-border-radius:8; -fx-border-width:1.5;" />
+                                                    </VBox>
+                                                    <VBox minWidth="0" prefWidth="100" spacing="6" HBox.hgrow="ALWAYS">
+                                                        <Label style="-fx-font-size:13px; -fx-text-fill:#555; -fx-font-weight:600;" text="Specialité" />
+                                                        <ComboBox fx:id="hospitalCombo" maxWidth="Infinity" minWidth="0" prefHeight="40" promptText="Choisissez une specialité" style="-fx-font-size:14px; -fx-border-color:#d0d0d0; -fx-background-color:white; -fx-background-radius:8; -fx-border-radius:8; -fx-border-width:1.5;" />
+                                                    </VBox>
+                                                    <VBox minWidth="0" prefWidth="100" spacing="6" HBox.hgrow="ALWAYS">
+                                                        <Label style="-fx-font-size:13px; -fx-text-fill:#555; -fx-font-weight:600;" text="Date" />
+                                             <DatePicker />
+                                                    </VBox>
+                                                    <VBox minWidth="0" prefWidth="100" spacing="6" HBox.hgrow="ALWAYS">
+                                                        <Label style="-fx-font-size:13px; -fx-text-fill:#555; -fx-font-weight:600;" text="Medecin" />
+                                                        <ComboBox fx:id="doctorCombo" maxWidth="Infinity" minWidth="0" prefHeight="40" promptText="Choisissez un medecin" style="-fx-font-size:14px; -fx-border-color:#d0d0d0; -fx-background-color:white; -fx-background-radius:8; -fx-border-radius:8; -fx-border-width:1.5;" />
+                                                    </VBox>
+                                                </children>
+                                            </HBox>
+                                        </children>
+                                    </VBox>
+                              <Pane prefHeight="200.0" prefWidth="515.0" />
+                                </children>
+                            </VBox>
+                     </children>
+                  </VBox>
+               </content>
+            </Tab>
+            <Tab text="🏥  Fiches Medicales">
+               <content>
+                  <BorderPane minHeight="0.0" style="-fx-background-color: #f5f5f5;">
+                     <center>
+                        <ScrollPane fitToWidth="true" hbarPolicy="NEVER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minViewportHeight="120.0" pannable="true" styleClass="clinical-tab-outer-scroll" BorderPane.alignment="CENTER">
+                           <content>
+                              <VBox maxWidth="1.7976931348623157E308" spacing="14" style="-fx-background-color:white; -fx-background-radius:12; -fx-padding:20; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 10, 0, 0, 2);">
+                                 <children>
+                                    <Label style="-fx-font-size:22px; -fx-font-weight:bold; -fx-text-fill:#00b3a6;" text="Mes fiches &amp; ordonnances" />
+                                    <Label style="-fx-text-fill:#555;" text="Documents créés par votre médecin. Chaque ordonnance peut être exportée en PDF depuis sa carte." wrapText="true" />
+                                    <HBox spacing="10">
+                                       <children>
+                                          <Button mnemonicParsing="false" onAction="#refreshPatientMedical" styleClass="btn-secondary" text="🔄 Actualiser" />
+                                       </children>
+                                    </HBox>
+                                    <Label style="-fx-font-weight:bold;" text="Fiches médicales" />
+                                    <FlowPane fx:id="patientFichesFlow" alignment="TOP_LEFT" hgap="18" vgap="18" style="-fx-padding:8 4 16 4;" />
+                                    <Label style="-fx-font-weight:bold; -fx-padding: 12 0 0 0;" text="Ordonnances" />
+                                    <FlowPane fx:id="patientOrdonnancesFlow" alignment="TOP_LEFT" hgap="18" vgap="18" style="-fx-padding:8 4 16 4;" />
+                                 </children>
+                              </VBox>
+                           </content>
+                        </ScrollPane>
+                     </center>
+                  </BorderPane>
+               </content>
+            </Tab>
+            <Tab text="📅  Evenements">
+               <content>
+                  <VBox spacing="15" style="-fx-background-color:white; -fx-background-radius:12; -fx-padding:20; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 10, 0, 0, 2);">
+                     <children>
+                        <VBox spacing="20" style="-fx-padding:25;">
+                           <children>
+                              <Label style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: linear-gradient(to right, #00b3a6, #00d4c8);" text="📅 Evenements" />
+                              <VBox spacing="15" style="-fx-background-color:white; -fx-background-radius:12; -fx-padding:20; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 10, 0, 0, 2);">
+                                 <children>
+                                    <Label style="-fx-font-size:18px; -fx-font-weight:bold; -fx-text-fill:#00b3a6;" text="🔍 Filtrer" />
+                                    <HBox alignment="CENTER_LEFT" fillHeight="true" spacing="15">
+                                       <children>
+                                          <VBox minWidth="0" prefWidth="100" spacing="6" HBox.hgrow="ALWAYS">
+                                             <children>
+                                                <Label style="-fx-font-size:13px; -fx-text-fill:#555; -fx-font-weight:600;" text="Ville" />
+                                                <ComboBox fx:id="cityCombo1" maxWidth="Infinity" minWidth="0" prefHeight="40" promptText="Choisissez une ville" style="-fx-font-size:14px; -fx-border-color:#d0d0d0; -fx-background-color:white; -fx-background-radius:8; -fx-border-radius:8; -fx-border-width:1.5;" />
+                                             </children>
+                                          </VBox>
+                                          <VBox minWidth="0" prefWidth="100" spacing="6" HBox.hgrow="ALWAYS">
+                                             <children>
+                                                <Label style="-fx-font-size:13px; -fx-text-fill:#555; -fx-font-weight:600;" text="Specialité" />
+                                                <ComboBox fx:id="hospitalCombo1" maxWidth="Infinity" minWidth="0" prefHeight="40" promptText="Choisissez une specialité" style="-fx-font-size:14px; -fx-border-color:#d0d0d0; -fx-background-color:white; -fx-background-radius:8; -fx-border-radius:8; -fx-border-width:1.5;" />
+                                             </children>
+                                          </VBox>
+                                          <VBox minWidth="0" prefWidth="100" spacing="6" HBox.hgrow="ALWAYS">
+                                             <children>
+                                                <Label style="-fx-font-size:13px; -fx-text-fill:#555; -fx-font-weight:600;" text="Date" />
+                                                <DatePicker />
+                                             </children>
+                                          </VBox>
+                                          <VBox minWidth="0" prefWidth="100" spacing="6" HBox.hgrow="ALWAYS">
+                                             <children>
+                                                <Label style="-fx-font-size:13px; -fx-text-fill:#555; -fx-font-weight:600;" text="Medecin" />
+                                                <ComboBox fx:id="doctorCombo1" maxWidth="Infinity" minWidth="0" prefHeight="40" promptText="Choisissez un medecin" style="-fx-font-size:14px; -fx-border-color:#d0d0d0; -fx-background-color:white; -fx-background-radius:8; -fx-border-radius:8; -fx-border-width:1.5;" />
+                                             </children>
+                                          </VBox>
+                                       </children>
+                                    </HBox>
+                                 </children>
+                              </VBox>
+                              <Pane prefHeight="200.0" prefWidth="515.0" />
+                           </children>
+                        </VBox>
+                     </children>
+                  </VBox>
+               </content>
+            </Tab>
+            <Tab text="📊 Statistiques">
+               <content>
+                  <VBox spacing="15" style="-fx-background-color:white; -fx-background-radius:12; -fx-padding:20; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 10, 0, 0, 2);">
+                     <children>
+                        <Label style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill:#00b3a6;" text="📊 Statistiques" />
+                        <Label fx:id="reportLabel" style="-fx-font-size: 14px; -fx-padding: 20;" text="" wrapText="true" />
+                     </children>
+                  </VBox>
+               </content>
+            </Tab>
+            <Tab text="📢 Annonces">
+               <content>
+                  <VBox spacing="15" style="-fx-background-color:white; -fx-background-radius:12; -fx-padding:20; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 10, 0, 0, 2);" VBox.vgrow="ALWAYS">
+                     <children>
+                        <!-- Toolbar patient -->
+                        <HBox alignment="CENTER_LEFT" spacing="12" style="-fx-background-color: linear-gradient(to right, rgba(0,179,166,0.08), rgba(0,212,200,0.06)); -fx-background-radius:10; -fx-padding:12 16; -fx-border-color:#e0f2f0; -fx-border-radius:10; -fx-border-width:1;">
+                           <children>
+                              <Label style="-fx-font-size:20px; -fx-font-weight:bold; -fx-text-fill:#00b3a6;" text="📢 Annonces" />
+                              <TextField fx:id="annoncePatientSearch" prefHeight="38" prefWidth="280" promptText="🔍 Rechercher une annonce..." style="-fx-background-radius:20; -fx-border-radius:20; -fx-padding:8 14;" />
+                              <ComboBox fx:id="annoncePatientSort" prefHeight="38" prefWidth="200" promptText="🔀 Trier par..." />
+                           </children>
+                        </HBox>
+                        <!-- Card list -->
+                        <ScrollPane fitToWidth="true" hbarPolicy="NEVER" VBox.vgrow="ALWAYS" style="-fx-background-color:transparent; -fx-background:transparent;">
+                           <content>
+                              <VBox fx:id="annoncePatientContainer" spacing="10" style="-fx-padding:8;" />
+                           </content>
+                        </ScrollPane>
+                     </children>
+                  </VBox>
+               </content>
+            </Tab>
+         </tabs>
+      </TabPane>
+    </children>
+</VBox>
