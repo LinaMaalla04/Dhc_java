@@ -177,9 +177,3 @@ Le projet cible :
 - AI APIs
 - Speech-to-Text APIs
 
-# 📥 Installation
-
-## 1️⃣ Cloner le projet
-
-```bash
-git clone https://github.com/your-username/DHC.git
