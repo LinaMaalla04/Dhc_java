@@ -72,10 +72,14 @@ DHC apporte une solution digitale moderne pour centraliser et automatiser ces t�
 ##  Gestion du suivi santé
 
 - CRUD fiche santé
-- Recherche
-- Export PDF
-- Historique médical
-- IA de prédiction de maladies selon les symptômes
+- Recherche avancée
+- Mailing automatique
+- Recommandation de médicaments
+- Signature numérique des ordonnances
+- Prédiction de maladies grâce à l’IA
+- Génération PDF des fiches médicales
+- Statistiques et analyse des données santé
+- Historique médical des patients
 
 ---
 
@@ -124,7 +128,7 @@ DHC apporte une solution digitale moderne pour centraliser et automatiser ces t�
 - Google Calendar
 - IA génération description
 - Événements populaires
-- Partage réseaux sociaux
+- Partage event sur réseaux sociaux
 
 ---
 
